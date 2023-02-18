@@ -27,5 +27,13 @@ public class TestPathfidner : MonoBehaviour
                 }
             }
         }
+
+        if(Input.GetMouseButtonDown(1)) {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Debug.DrawLine(worldPosition, worldPosition + (Vector3.one * 5f), Color.red, 1000f);
+            Vector2Int xy = pathfinder.GetGrid().GetXY(worldPosition);
+            Pathnode node = pathfinder.GetGrid().GetValue(xy.x,xy.y);
+            node.isReachable = false;
+        }
     }
 }
