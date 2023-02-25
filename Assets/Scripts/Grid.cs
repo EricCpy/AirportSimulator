@@ -92,4 +92,8 @@ public class Grid<T>
     {
         return height;
     }
+
+    public int MaxSize() {
+        return height * width;
+    }
 }

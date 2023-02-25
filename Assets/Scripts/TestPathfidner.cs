@@ -21,8 +21,8 @@ public class TestPathfidner : MonoBehaviour
             List<Pathnode> path = pathfinder.FindPath(0,0, xy.x, xy.y);
             if(path != null) {
                 for(int i = 0; i < path.Count - 1; i++) {
-                    Debug.Log("old:" + new Vector3(path[i].x, path[i].y));
-                    Debug.Log("old:" + new Vector3(path[i+1].x, path[i+1].y));
+                   // Debug.Log("old:" + new Vector3(path[i].x, path[i].y));
+                   // Debug.Log("old:" + new Vector3(path[i+1].x, path[i+1].y));
                     Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + (Vector3.one * 5f), new Vector3(path[i+1].x, path[i+1].y) * 10f + (Vector3.one * 5f), Color.black, 5f);
                 }
             }

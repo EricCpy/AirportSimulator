@@ -105,4 +105,6 @@ ehthumbs.db
 Thumbs.db
 game/.idea/workspace.xml
 
-/CapybaraStudios/.idea/
+/Assets/GridBuildingSystem
+/Assets/Tilemap
+/Assets/helper

@@ -7,7 +7,8 @@ public class Pathfinder
 {
     private const int MOVE_STRAIGHT_COST = 1;
     private Grid<Pathnode> grid;
-    private List<Pathnode> openList, closedList;
+    private MinHeap<Pathnode> openList;
+    private HashSet<Pathnode> closedList;
     public Pathfinder(int width, int height)
     {
         grid = new Grid<Pathnode>(width, height, 10f, Vector3.zero, (g, x, y) => new Pathnode(g,x,y), true);
@@ -26,8 +27,8 @@ public class Pathfinder
     {
         Pathnode startNode = GetNode(startX, startY);
         Pathnode endNode = GetNode(endX, endY);
-        openList = new List<Pathnode> { startNode };
-        closedList = new List<Pathnode>();
+        openList = new MinHeap<Pathnode>(grid.MaxSize());
+        closedList = new HashSet<Pathnode>();
 
         for (int x = 0; x < grid.GetWidth(); x++)
         {
@@ -43,15 +44,16 @@ public class Pathfinder
         startNode.gCost = 0;
         startNode.hCost = CalculateDistance(startNode, endNode);
         startNode.CalculateFCost();
+        openList.Add(startNode);
 
         while (openList.Count > 0)
         {
-            Pathnode current = GetMinFCostNode(openList);
+            
+            Pathnode current = openList.RemoveMin();
             if (current == endNode)
             {
                 return CalculatePath(endNode);
             }
-            openList.Remove(current);
             closedList.Add(current);
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
@@ -67,8 +69,11 @@ public class Pathfinder
                     neighbour.gCost = nextGCost;
                     neighbour.hCost = CalculateDistance(neighbour, endNode);
                     neighbour.CalculateFCost();
-
-                    if (!openList.Contains(neighbour)) openList.Add(neighbour);
+                    if (!openList.Contains(neighbour)) {
+                        openList.Add(neighbour);
+                    } else {
+                        openList.UpdateItem(neighbour);
+                    }
                 }
             }
         }

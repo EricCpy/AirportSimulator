@@ -1,8 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pathnode
+public class Pathnode : IMinHeapItem<Pathnode>
 {
     private Grid<Pathnode> grid;
     public int x, y;
@@ -11,6 +12,13 @@ public class Pathnode
     public int fCost;
     public Pathnode previous;
     public bool isReachable;
+    private int minHeapIndex;
+    public int MinHeapIndex
+    {
+        get { return minHeapIndex; }
+        set { minHeapIndex = value; }
+    }
+
     public Pathnode(Grid<Pathnode> grid, int x, int y)
     {
         this.grid = grid;
@@ -24,7 +32,25 @@ public class Pathnode
         return x + "," + y;
     }
 
-    public void CalculateFCost() {
+    public void CalculateFCost()
+    {
         fCost = gCost + hCost;
+    }
+
+    public int CompareTo(Pathnode other)
+    {
+        int compare = this.fCost.CompareTo(other.fCost);
+        if (compare == 0)
+        {
+            compare = hCost.CompareTo(other.hCost);
+        }
+        return -compare;
+    }
+
+    public bool Equals(Pathnode other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return x == other.x && y == other.y;
     }
 }
