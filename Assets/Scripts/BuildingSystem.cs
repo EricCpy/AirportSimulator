@@ -4,31 +4,92 @@ using UnityEngine;
 
 public class BuildingSystem : MonoBehaviour
 {
-    [SerializeField] private Transform building;
-    private Grid<Pathnode> grid;
+    public static BuildingSystem Instance { get; private set; }
+    private Grid<GridObject> grid;
     [SerializeField] private int gridWidth = 10;
     [SerializeField] private int gridHeight = 10;
     [SerializeField] private float cellSize = 10f;
+    private GridAsset gridAsset;
+    [SerializeField] private List<GridAsset> assetList = null;
+    private GridAsset.AssetRotation assetRotation;
+
+    public void SetObjectType(InGameUI.ButtonType type) {
+        switch(type) {
+            default:
+                gridAsset = null;
+                break;
+            case InGameUI.ButtonType.Watchtower:
+                gridAsset = assetList[0];
+                break;
+            case InGameUI.ButtonType.Road:
+                gridAsset = assetList[1];
+                break;
+            case InGameUI.ButtonType.Hangar:
+                gridAsset = assetList[2];
+                break;
+            case InGameUI.ButtonType.Planestop:
+                gridAsset = assetList[3];
+                break;
+        }
+             
+    }
     private void Awake()
     {
-        grid = new Grid<Pathnode>(gridWidth, gridHeight, 10f, Vector3.zero, (g, x, y) => new Pathnode(g,x,y), true);
+        Instance = this;
+        grid = new Grid<GridObject>(gridWidth, gridHeight, 10f, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
     }
 
-    private void Update() {
-        if(Input.GetMouseButtonDown(0)) {
+    private void Update()
+    {
+        if (gridAsset == null) return;
+        if (Input.GetMouseButtonDown(0))
+        {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Instantiate(building, worldPosition, Quaternion.identity);
+            Vector2Int xy = grid.GetXY(worldPosition);
+            List<Vector2Int> gridPositionList = gridAsset.GetPositions(xy, assetRotation);
+            if (IsClear(gridPositionList, xy))
+            {
+                Vector2Int rotationOffset = gridAsset.GetRotationOffset(assetRotation);
+                //rotationOffeset ändern maybe
+                Vector3 placedAssetPositon = grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
+                print(assetRotation);
+                PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRotation, gridAsset);
+
+                placedAsset.transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(assetRotation));
+                ReserveGrid(gridPositionList, placedAsset);
+
+            }
+            else
+            {
+                Debug.Log("Can not Build here!");
+                //TODO: ersetzen durch Schriftzug
+            }
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
         }
     }
 
-    public class GridObject {
-        private Grid<GridObject> grid;
-        private int x;
-        private int y;
-        public GridObject(Grid<GridObject> grid, int x, int y){
-            this.grid = grid;
-            this.x = x;
-            this.y = y;
+    private bool IsClear(List<Vector2Int> gridPositionList, Vector2Int xy)
+    {
+        foreach (Vector2Int pos in gridPositionList)
+        {
+            if (!grid.GetValue(pos.x, pos.y).CanBuild())
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void ReserveGrid(List<Vector2Int> gridPositionList, PlacedAsset placedAsset)
+    {
+        foreach (Vector2Int gridPosition in gridPositionList)
+        {
+            grid.GetValue(gridPosition.x, gridPosition.y).SetPlacedObject(placedAsset);
         }
     }
 }

@@ -1542,10 +1542,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f8c5ea051f52a3429e8a2df63cf53e3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  building: {fileID: 8453661582786788727, guid: 5c53829b851257c47b88aa90a39d1b97, type: 3}
   gridWidth: 10
   gridHeight: 10
   cellSize: 10
+  assetList:
+  - {fileID: 11400000, guid: 359307f7e89e775438465e9b2f902dd4, type: 2}
 --- !u!1 &1144667427
 GameObject:
   m_ObjectHideFlags: 0

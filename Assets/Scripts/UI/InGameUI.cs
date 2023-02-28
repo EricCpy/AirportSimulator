@@ -58,7 +58,6 @@ public class InGameUI : MonoBehaviour
         ButtonType bType = buttonTypes[id];
         if (bType == ButtonType.Hand)
         {
-            //setze var zum clearen, wenn man auf feld drückt
             cameraController.moveWithMouse = true;
         }
         else if (bType == ButtonType.Trashcan)
@@ -72,6 +71,7 @@ public class InGameUI : MonoBehaviour
         else
         {
             //setze Building var auf objekt
+            BuildingSystem.Instance.SetObjectType(bType);
         }
     }
 
@@ -79,6 +79,7 @@ public class InGameUI : MonoBehaviour
     {
         currentSelected.GetComponent<Image>().color = standardColor;
         cameraController.moveWithMouse = false;
+        BuildingSystem.Instance.SetObjectType(ButtonType.None);
     }
 
     private void ActivateButton()

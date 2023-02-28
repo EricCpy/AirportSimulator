@@ -10,7 +10,14 @@ public class Grid<T>
     private T[,] grid;
     private Vector3 originPosition;
 
-    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<T>,int,int, T> createObject, bool debug = false)
+    private event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
+    private class OnGridObjectChangedEventArgs : EventArgs
+    {
+        public int x;
+        public int y;
+    }
+
+    public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<T>, int, int, T> createObject, bool debug = false)
     {
         this.width = width;
         this.height = height;
@@ -22,7 +29,7 @@ public class Grid<T>
         {
             for (int y = 0; y < grid.GetLength(1); y++)
             {
-                grid[x,y] = createObject(this,x,y);
+                grid[x, y] = createObject(this, x, y);
             }
         }
 
@@ -33,9 +40,9 @@ public class Grid<T>
                 for (int y = 0; y < grid.GetLength(1); y++)
                 {
                     GameObject obj = new GameObject("GENERATED_TXT", typeof(TextMesh));
-                    obj.transform.localPosition = GetWorldPosition(x,y) + new Vector3(cellSize,cellSize) * 0.5f;
+                    obj.transform.localPosition = GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f;
                     TextMesh txt = obj.GetComponent<TextMesh>();
-                    txt.text = grid[x,y].ToString();
+                    txt.text = grid[x, y].ToString();
                     txt.anchor = TextAnchor.MiddleCenter;
                     txt.fontSize = 40;
                     txt.GetComponent<MeshRenderer>().sortingOrder = 10;
@@ -46,10 +53,15 @@ public class Grid<T>
 
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.gray, 100f);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.gray, 100f);
+
+            /*OnGridObjectChanged += (object sender, OnGridObjectChangedEventArgs eventArgs) =>
+        {
+            debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y]?.ToString();
+        };*/
         }
     }
 
-    private Vector3 GetWorldPosition(int x, int y)
+    public Vector3 GetWorldPosition(int x, int y)
     {
         return new Vector3(x, y) * cellSize + originPosition;
     }
@@ -63,6 +75,7 @@ public class Grid<T>
     {
         if (x >= grid.GetLength(0) || y >= grid.GetLength(1) || x < 0 || y < 0) return;
         grid[x, y] = value;
+        TriggerGridObjectChanged(x, y);
     }
 
     public void SetValue(Vector3 worldPosition, T value)
@@ -93,7 +106,19 @@ public class Grid<T>
         return height;
     }
 
-    public int MaxSize() {
+    public int MaxSize()
+    {
         return height * width;
     }
+
+    public float GetCellSize()
+    {
+        return cellSize;
+    }
+
+    public void TriggerGridObjectChanged(int x, int y)
+    {
+        OnGridObjectChanged?.Invoke(this, new OnGridObjectChangedEventArgs { x = x, y = y });
+    }
+
 }
