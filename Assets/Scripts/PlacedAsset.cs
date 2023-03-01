@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//platziertes Asset
 public class PlacedAsset : MonoBehaviour
 {
     public static PlacedAsset Init(Vector3 worldPos, Vector2Int origin, GridAsset.AssetRotation rot, GridAsset gridAsset)

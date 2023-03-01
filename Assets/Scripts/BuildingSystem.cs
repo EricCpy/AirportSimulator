@@ -12,9 +12,16 @@ public class BuildingSystem : MonoBehaviour
     private GridAsset gridAsset;
     [SerializeField] private List<GridAsset> assetList = null;
     private GridAsset.AssetRotation assetRotation;
+    public bool deletionMode { get; set; } = false;
+    public void RotateAsset()
+    {
+        assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
+    }
 
-    public void SetObjectType(InGameUI.ButtonType type) {
-        switch(type) {
+    public void SetObjectType(InGameUI.ButtonType type)
+    {
+        switch (type)
+        {
             default:
                 gridAsset = null;
                 break;
@@ -30,8 +37,11 @@ public class BuildingSystem : MonoBehaviour
             case InGameUI.ButtonType.Planestop:
                 gridAsset = assetList[3];
                 break;
+            case InGameUI.ButtonType.Terminal:
+                gridAsset = assetList[4];
+                break;
         }
-             
+
     }
     private void Awake()
     {
@@ -46,6 +56,19 @@ public class BuildingSystem : MonoBehaviour
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int xy = grid.GetXY(worldPosition);
+            if (deletionMode)
+            {
+                PlacedAsset placedObject = grid.GetValue(worldPosition).GetPlacedObject();
+                if (placedObject != null)
+                {
+                    // Destroy Object in Grid
+                    placedObject.DestroyAsset();
+                    DeleteObject(gridAsset.GetPositions(xy, assetRotation));
+
+                }
+                return;
+            }
+
             List<Vector2Int> gridPositionList = gridAsset.GetPositions(xy, assetRotation);
             if (IsClear(gridPositionList, xy))
             {
@@ -66,11 +89,6 @@ public class BuildingSystem : MonoBehaviour
             }
 
         }
-
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
-        }
     }
 
     private bool IsClear(List<Vector2Int> gridPositionList, Vector2Int xy)
@@ -90,6 +108,14 @@ public class BuildingSystem : MonoBehaviour
         foreach (Vector2Int gridPosition in gridPositionList)
         {
             grid.GetValue(gridPosition.x, gridPosition.y).SetPlacedObject(placedAsset);
+        }
+    }
+
+    private void DeleteObject(List<Vector2Int> gridPositionList)
+    {
+        foreach (Vector2Int gridPosition in gridPositionList)
+        {
+            grid.GetValue(gridPosition.x, gridPosition.y).ClearPlacedObject();
         }
     }
 }

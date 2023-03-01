@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Allgemeine Eigenschaften des Objekts
 [CreateAssetMenu()]
 public class GridAsset : ScriptableObject
 {

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+//Objekte des Grids
 public class GridObject
 {
     private Grid<GridObject> grid;

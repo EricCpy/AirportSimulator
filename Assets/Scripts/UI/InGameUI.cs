@@ -14,7 +14,8 @@ public class InGameUI : MonoBehaviour
         Planestop,
         Hangar,
         Road,
-        Watchtower
+        Watchtower,
+        Terminal
     }
     private ButtonType[] buttonTypes = new ButtonType[] { ButtonType.None,
                                                           ButtonType.Hand,
@@ -22,12 +23,14 @@ public class InGameUI : MonoBehaviour
                                                           ButtonType.Planestop,
                                                           ButtonType.Hangar,
                                                           ButtonType.Road,
-                                                          ButtonType.Watchtower };
+                                                          ButtonType.Watchtower,
+                                                          ButtonType.Terminal };
     [SerializeField] private int[] timeScaleSteps = new int[] { 1, 2, 5, 10, 20 };
     private int currentTimeScale = 0;
     [SerializeField] private Button currentSelected;
     private CameraController cameraController;
     [SerializeField] private Color standardColor;
+    [SerializeField] TMP_Text rotationText;
     private void Start()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -85,5 +88,19 @@ public class InGameUI : MonoBehaviour
     private void ActivateButton()
     {
         currentSelected.GetComponent<Image>().color = new Color(0, 0, 0, standardColor.a); //mache ausgewählten Button schwarz
+    }
+
+    public void Rotate()
+    {
+        rotationText.transform.Rotate(new Vector3(0, 0, -90));
+        BuildingSystem.Instance.RotateAsset();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Rotate();
+        }
     }
 }
