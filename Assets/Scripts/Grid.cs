@@ -121,4 +121,10 @@ public class Grid<T>
         OnGridObjectChanged?.Invoke(this, new OnGridObjectChangedEventArgs { x = x, y = y });
     }
 
+    public bool InBorder(Vector2Int xy) {
+        int x = xy.x;
+        int y = xy.y;
+        if (x >= grid.GetLength(0) || y >= grid.GetLength(1) || x < 0 || y < 0) return false;
+        return true;
+    }
 }

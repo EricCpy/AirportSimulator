@@ -963,6 +963,7 @@ MonoBehaviour:
   timeScaleSteps: 0100000002000000050000000a00000014000000
   currentSelected: {fileID: 1907227869}
   standardColor: {r: 1, g: 1, b: 1, a: 0.39215687}
+  rotationText: {fileID: 187998559}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -1185,11 +1186,11 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 495347262}
         m_TargetAssemblyTypeName: InGameUI, Assembly-CSharp
-        m_MethodName: RotateClick
-        m_Mode: 2
+        m_MethodName: Rotate
+        m_Mode: 1
         m_Arguments:
-          m_ObjectArgument: {fileID: 187998559}
-          m_ObjectArgumentAssemblyTypeName: TMPro.TMP_Text, Unity.TextMeshPro
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -1270,7 +1271,7 @@ MonoBehaviour:
   m_Intensity: 1
   m_LightVolumeIntensity: 1
   m_LightVolumeIntensityEnabled: 0
-  m_ApplyToSortingLayers: 00000000
+  m_ApplyToSortingLayers: 151af48f00000000c70491b6
   m_LightCookieSprite: {fileID: 0}
   m_DeprecatedPointLightCookieSprite: {fileID: 0}
   m_LightOrder: 0
@@ -2327,8 +2328,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -1879827947
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
   m_Color: {r: 0.12976147, g: 0.33962262, b: 0.14984685, a: 1}

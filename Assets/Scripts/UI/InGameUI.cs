@@ -65,7 +65,7 @@ public class InGameUI : MonoBehaviour
         }
         else if (bType == ButtonType.Trashcan)
         {
-            //setze var zum clearen, wenn man auf feld drückt
+            BuildingSystem.Instance.deletionMode = true;
         }
         else if (bType == ButtonType.None)
         {
@@ -73,6 +73,7 @@ public class InGameUI : MonoBehaviour
         }
         else
         {
+            Debug.Log(bType);
             //setze Building var auf objekt
             BuildingSystem.Instance.SetObjectType(bType);
         }
@@ -82,6 +83,7 @@ public class InGameUI : MonoBehaviour
     {
         currentSelected.GetComponent<Image>().color = standardColor;
         cameraController.moveWithMouse = false;
+        BuildingSystem.Instance.deletionMode = false;
         BuildingSystem.Instance.SetObjectType(ButtonType.None);
     }
 

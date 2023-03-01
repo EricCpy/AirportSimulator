@@ -22,9 +22,6 @@ public class BuildingSystem : MonoBehaviour
     {
         switch (type)
         {
-            default:
-                gridAsset = null;
-                break;
             case InGameUI.ButtonType.Watchtower:
                 gridAsset = assetList[0];
                 break;
@@ -40,6 +37,9 @@ public class BuildingSystem : MonoBehaviour
             case InGameUI.ButtonType.Terminal:
                 gridAsset = assetList[4];
                 break;
+            default:
+                gridAsset = null;
+                break;
         }
 
     }
@@ -51,19 +51,21 @@ public class BuildingSystem : MonoBehaviour
 
     private void Update()
     {
-        if (gridAsset == null) return;
+        if (gridAsset == null && !deletionMode) return;
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2Int xy = grid.GetXY(worldPosition);
+            if(!grid.InBorder(xy)) return;
             if (deletionMode)
             {
                 PlacedAsset placedObject = grid.GetValue(worldPosition).GetPlacedObject();
+                Debug.Log("aaa");
                 if (placedObject != null)
                 {
                     // Destroy Object in Grid
                     placedObject.DestroyAsset();
-                    DeleteObject(gridAsset.GetPositions(xy, assetRotation));
+                    DeleteObject(placedObject.GetPositions());
 
                 }
                 return;
@@ -75,7 +77,6 @@ public class BuildingSystem : MonoBehaviour
                 Vector2Int rotationOffset = gridAsset.GetRotationOffset(assetRotation);
                 //rotationOffeset ändern maybe
                 Vector3 placedAssetPositon = grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
-                print(assetRotation);
                 PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRotation, gridAsset);
 
                 placedAsset.transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(assetRotation));
