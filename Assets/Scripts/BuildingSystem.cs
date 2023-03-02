@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BuildingSystem : MonoBehaviour
+public class BuildingSystem : MonoBehaviour, IData
 {
     public static BuildingSystem Instance { get; private set; }
     private Grid<GridObject> grid;
@@ -16,6 +16,15 @@ public class BuildingSystem : MonoBehaviour
     public void RotateAsset()
     {
         assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
+    }
+
+    public void LoadData(Data data) {
+        grid = data.grid;
+    }
+
+    public void SaveData(ref Data data) {
+        data.grid = grid;
+        data.hello = "hello";
     }
 
     public void SetObjectType(InGameUI.ButtonType type)
@@ -45,6 +54,9 @@ public class BuildingSystem : MonoBehaviour
     }
     private void Awake()
     {
+        if(Instance != null) {
+            throw new UnityException("Buildingsystem has already an Instance");
+        }
         Instance = this;
         grid = new Grid<GridObject>(gridWidth, gridHeight, 10f, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
     }
