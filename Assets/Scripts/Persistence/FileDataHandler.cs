@@ -24,7 +24,6 @@ public class FileDataHandler
         Data loadData = null;
         if (File.Exists(path))
         {
-            Debug.Log("existent");
             try
             {
                 string loadingData = "";
@@ -46,8 +45,6 @@ public class FileDataHandler
             {
                 Debug.Log(e);
             }
-        } else {
-            Debug.Log("not existend");
         }
         return loadData;
     }
