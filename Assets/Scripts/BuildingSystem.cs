@@ -6,8 +6,6 @@ public class BuildingSystem : MonoBehaviour, IData
 {
     public static BuildingSystem Instance { get; private set; }
     private Grid<GridObject> grid;
-    [SerializeField] private int gridWidth = 10;
-    [SerializeField] private int gridHeight = 10;
     [SerializeField] private float cellSize = 10f;
     private GridAsset gridAsset;
     [SerializeField] private List<GridAsset> assetList = null;
@@ -21,12 +19,13 @@ public class BuildingSystem : MonoBehaviour, IData
 
     public void LoadData(Data data)
     {
+        grid = new Grid<GridObject>(data.width, data.height, cellSize, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
         //Gridassets
         foreach (var loadedAsset in data.gridObjects)
         {
             GridAsset asset;
             assetDic.TryGetValue(loadedAsset.assetName, out asset);
-            if(asset != null) PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
+            if (asset != null) PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
         }
     }
 
@@ -67,7 +66,6 @@ public class BuildingSystem : MonoBehaviour, IData
             throw new UnityException("Buildingsystem has already an Instance");
         }
         Instance = this;
-        grid = new Grid<GridObject>(gridWidth, gridHeight, 10f, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
         //needed for loading
         foreach (var obj in assetList)
         {

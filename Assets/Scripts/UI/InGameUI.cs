@@ -73,7 +73,6 @@ public class InGameUI : MonoBehaviour
         }
         else
         {
-            Debug.Log(bType);
             //setze Building var auf objekt
             BuildingSystem.Instance.SetObjectType(bType);
         }

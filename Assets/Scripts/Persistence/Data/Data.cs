@@ -9,8 +9,8 @@ public class Data
     public List<AssetSaveObject> gridObjects;
     public Data(int width, int height)
     {
-        height = 0;
-        width = 0;
+        this.height = height;
+        this.width = width;
         gridObjects = new List<AssetSaveObject>();
     }
 

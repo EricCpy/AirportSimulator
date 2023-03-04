@@ -59,14 +59,17 @@ public class DataManager : MonoBehaviour
     }
 
     public void LoadGame()
-    {
+    {   
         Data tmpData = dataHandler.Load(selectedGameId);
-        if (tmpData == null)
+        if (tmpData == null && data == null)
         {
-            if (initDataFromScene) CreateGame(10, 10);
-            else return;
+            if (initDataFromScene)
+            {
+                CreateGame(10, 10);
+            } else return;
         }
-        data = tmpData;
+
+        if(tmpData !=  null) data = tmpData;
         foreach (IData dataObject in dataObjects)
         {
             dataObject.LoadData(data);
@@ -76,7 +79,7 @@ public class DataManager : MonoBehaviour
 
     public void SaveGame()
     {
-        if (data == null) return; 
+        if (data == null) return;
         //finde nochmal alle Objekte, weil neue erzeugt werden können
         dataObjects = FindAllDataObjects();
         foreach (IData dataObject in dataObjects)
