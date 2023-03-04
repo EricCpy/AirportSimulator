@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class Data
 {
-    //public Grid<GridObject> grid;
-    public string hello;
+    public int height, width;
 
     public List<AssetSaveObject> gridObjects;
     public Data()
     {
-        hello = "hello";
+        height = 0;
+        width = 0;
         gridObjects = new List<AssetSaveObject>();
-        //grid = new Grid<GridObject>(10, 10, 10f, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
     }
 
-    public void Clear() {
+    public void Clear()
+    {
         gridObjects = new List<AssetSaveObject>();
     }
 }
