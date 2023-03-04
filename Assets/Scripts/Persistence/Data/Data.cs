@@ -7,7 +7,7 @@ public class Data
     public int height, width;
 
     public List<AssetSaveObject> gridObjects;
-    public Data()
+    public Data(int width, int height)
     {
         height = 0;
         width = 0;

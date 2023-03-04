@@ -24,6 +24,7 @@ public class FileDataHandler
         Data loadData = null;
         if (File.Exists(path))
         {
+            Debug.Log("existent");
             try
             {
                 string loadingData = "";
@@ -45,6 +46,8 @@ public class FileDataHandler
             {
                 Debug.Log(e);
             }
+        } else {
+            Debug.Log("not existend");
         }
         return loadData;
     }
@@ -77,7 +80,6 @@ public class FileDataHandler
         }
     }
 
-
     private string XOREncrypt(string data)
     {
         StringBuilder sb = new StringBuilder();
@@ -86,5 +88,23 @@ public class FileDataHandler
             sb.Append((char)(data[i] ^ encryptionSecret[i % encryptionSecret.Length]));
         }
         return sb.ToString();
+    }
+
+    public HashSet<string> GetAllLoadDirectories()
+    {
+        HashSet<string> set = new HashSet<string>();
+        IEnumerable<DirectoryInfo> dirInfo = new DirectoryInfo(dataPath).EnumerateDirectories();
+
+        foreach (DirectoryInfo dir in dirInfo)
+        {
+            string id = dir.Name;
+            string path = Path.Combine(dataPath, id, dataFileName);
+            if (File.Exists(path))
+            {
+                set.Add(dir.Name);
+            }
+        }
+
+        return set;
     }
 }

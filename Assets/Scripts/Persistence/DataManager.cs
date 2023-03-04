@@ -25,6 +25,7 @@ public class DataManager : MonoBehaviour
         Instance = this;
         DontDestroyOnLoad(gameObject);
         this.dataHandler = new FileDataHandler(Application.persistentDataPath, fileName, useEncryption);
+        selectedGameId = PlayerPrefs.GetString("LastSaveSlotID", "test");
     }
 
     private void OnEnable()
@@ -47,12 +48,14 @@ public class DataManager : MonoBehaviour
 
     public void OnSceneUnloaded(Scene scene)
     {
-        SaveGame();
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.buildIndex != 0) SaveGame();
     }
 
-    public void CreateGame()
+    public void CreateGame(int width, int height)
     {
-        data = new Data();
+        data = new Data(width, height);
+        PlayerPrefs.SetString("LastSaveSlotID", selectedGameId);
     }
 
     public void LoadGame()
@@ -60,7 +63,7 @@ public class DataManager : MonoBehaviour
         data = dataHandler.Load(selectedGameId);
         if (data == null)
         {
-            if (initDataFromScene) CreateGame();
+            if (initDataFromScene) CreateGame(10, 10);
             else return;
         }
 
@@ -85,7 +88,8 @@ public class DataManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        SaveGame();
+        Scene currentScene = SceneManager.GetActiveScene();
+        if (currentScene.buildIndex != 0) SaveGame();
     }
 
     private List<IData> FindAllDataObjects()
@@ -97,5 +101,15 @@ public class DataManager : MonoBehaviour
     public bool HasData()
     {
         return data != null;
+    }
+
+    public HashSet<string> GetAllSaves()
+    {
+        return dataHandler.GetAllLoadDirectories();
+    }
+
+    public void SetSelectedGameId(string id)
+    {
+        selectedGameId = id;
     }
 }
