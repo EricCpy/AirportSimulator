@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //platziertes Asset
-public class PlacedAsset : MonoBehaviour
+public class PlacedAsset : MonoBehaviour, IData
 {
     public static PlacedAsset Init(Vector3 worldPos, Vector2Int origin, GridAsset.AssetRotation rot, GridAsset gridAsset)
     {
@@ -32,5 +32,15 @@ public class PlacedAsset : MonoBehaviour
     public void DestroyAsset()
     {
         Destroy(gameObject);
+    }
+
+    public void LoadData(Data data)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SaveData(Data data)
+    {
+        data.gridObjects.Add(new AssetSaveObject(origin, rot, gridAsset.assetName));
     }
 }

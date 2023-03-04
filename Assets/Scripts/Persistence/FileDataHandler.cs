@@ -31,7 +31,6 @@ public class FileDataHandler : MonoBehaviour
                         loadingData = reader.ReadToEnd();
                     }
                 }
-
                 loadData = JsonUtility.FromJson<Data>(loadingData);
             }
             catch (Exception e)

@@ -35,11 +35,14 @@ public class DataManager : MonoBehaviour
         foreach(IData dataObject in dataObjects) {
             dataObject.LoadData(data);
         }
+        data.Clear();
     }
 
     public void SaveGame() {
+        //finde nochmal alle Objekte, weil neue erzeugt werden können
+        dataObjects = FindAllDataObjects();
         foreach(IData dataObject in dataObjects) {
-            dataObject.SaveData(ref data);
+            dataObject.SaveData(data);
         }
         dataHandler.Save(data);
     }

@@ -30,7 +30,7 @@ public class GridAsset : ScriptableObject
     public Transform prefab;
     [SerializeField] private int width = 1;
     [SerializeField] private int height = 1;
-    [SerializeField] private string assetName;
+    public string assetName;
 
     public Vector2Int GetRotationOffset(AssetRotation rot)
     {
