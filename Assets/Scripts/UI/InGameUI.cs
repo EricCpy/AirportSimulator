@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class InGameUI : MonoBehaviour
@@ -31,6 +32,9 @@ public class InGameUI : MonoBehaviour
     private CameraController cameraController;
     [SerializeField] private Color standardColor;
     [SerializeField] TMP_Text rotationText;
+    [SerializeField] private GameObject optionsMenu;
+    [SerializeField] private Button defaultButton;
+    [SerializeField] private Button optionsMenuButton;
     private void Start()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -69,7 +73,7 @@ public class InGameUI : MonoBehaviour
         }
         else if (bType == ButtonType.None)
         {
-            //öffne Settingsmenü
+            OptionsMenuReload();
         }
         else
         {
@@ -80,6 +84,7 @@ public class InGameUI : MonoBehaviour
 
     private void DeactivateAllButtons()
     {
+        optionsMenu.SetActive(false);
         currentSelected.GetComponent<Image>().color = standardColor;
         cameraController.moveWithMouse = false;
         BuildingSystem.Instance.deletionMode = false;
@@ -99,9 +104,41 @@ public class InGameUI : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ChangeButtonType(0);
+        }
+
         if (Input.GetKeyDown(KeyCode.R))
         {
             Rotate();
+        }
+    }
+
+    public void SaveAndExit()
+    {
+        DataManager.Instance.SaveGame();
+        SceneManager.LoadSceneAsync(0);
+    }
+
+    public void DeleteAirport()
+    {
+
+        SceneManager.LoadSceneAsync(0);
+    }
+
+    public void OptionsMenuReload()
+    {
+        if (optionsMenu.activeSelf)
+        {
+            SelectButton(defaultButton);
+            ChangeButtonType(1);
+            optionsMenu.SetActive(false);
+        }
+        else
+        {
+            SelectButton(optionsMenuButton);
+            optionsMenu.SetActive(true);
         }
     }
 }

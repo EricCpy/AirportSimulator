@@ -48,8 +48,10 @@ public class DataManager : MonoBehaviour
 
     public void OnSceneUnloaded(Scene scene)
     {
-        Scene currentScene = SceneManager.GetActiveScene();
-        if (currentScene.buildIndex != 0) SaveGame();
+        Debug.Log("Scene Unloaded");
+        //Falls noch mehr Szenen hinzugefügt werden:
+        //Scene currentScene = SceneManager.GetActiveScene();
+        //if (currentScene.buildIndex != 0) SaveGame();
     }
 
     public void CreateGame(int width, int height)
@@ -79,9 +81,12 @@ public class DataManager : MonoBehaviour
 
     public void SaveGame()
     {
+        Debug.Log("Save");
         if (data == null) return;
+        Debug.Log("data war nicht null");
         //finde nochmal alle Objekte, weil neue erzeugt werden können
         dataObjects = FindAllDataObjects();
+        Debug.Log(dataObjects.Count);
         foreach (IData dataObject in dataObjects)
         {
             dataObject.SaveData(data);

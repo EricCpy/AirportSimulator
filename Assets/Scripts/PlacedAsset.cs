@@ -41,6 +41,7 @@ public class PlacedAsset : MonoBehaviour, IData
 
     public void SaveData(Data data)
     {
+        Debug.Log("save asset");
         data.gridObjects.Add(new AssetSaveObject(origin, rot, gridAsset.assetName));
     }
 }
