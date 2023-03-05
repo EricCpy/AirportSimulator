@@ -123,7 +123,7 @@ public class InGameUI : MonoBehaviour
 
     public void DeleteAirport()
     {
-
+        DataManager.Instance.DeleteGame(DataManager.Instance.GetSelectedGameId());
         SceneManager.LoadSceneAsync(0);
     }
 

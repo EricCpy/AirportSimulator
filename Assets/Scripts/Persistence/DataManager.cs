@@ -61,17 +61,18 @@ public class DataManager : MonoBehaviour
     }
 
     public void LoadGame()
-    {   
+    {
         Data tmpData = dataHandler.Load(selectedGameId);
         if (tmpData == null && data == null)
         {
             if (initDataFromScene)
             {
                 CreateGame(10, 10);
-            } else return;
+            }
+            else return;
         }
 
-        if(tmpData !=  null) data = tmpData;
+        if (tmpData != null) data = tmpData;
         foreach (IData dataObject in dataObjects)
         {
             dataObject.LoadData(data);
@@ -92,6 +93,12 @@ public class DataManager : MonoBehaviour
             dataObject.SaveData(data);
         }
         dataHandler.Save(data, selectedGameId);
+    }
+
+    public void DeleteGame(string id)
+    {
+        dataHandler.Delete(id);
+        data = null;
     }
 
     private void OnApplicationQuit()
@@ -119,5 +126,10 @@ public class DataManager : MonoBehaviour
     public void SetSelectedGameId(string id)
     {
         selectedGameId = id;
+    }
+
+    public string GetSelectedGameId()
+    {
+        return selectedGameId;
     }
 }

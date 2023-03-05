@@ -77,6 +77,23 @@ public class FileDataHandler
         }
     }
 
+    public void Delete(string id)
+    {
+        string path = Path.Combine(dataPath, id, dataFileName);
+        try
+        {
+            if (File.Exists(path))
+            {
+                Directory.Delete(Path.GetDirectoryName(path), true);
+            }
+
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e);
+        }
+    }
+
     private string XOREncrypt(string data)
     {
         StringBuilder sb = new StringBuilder();

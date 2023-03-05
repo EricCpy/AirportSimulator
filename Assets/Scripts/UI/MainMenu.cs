@@ -25,20 +25,18 @@ public class MainMenu : MonoBehaviour
         if (!DataManager.Instance.HasData())
         {
             continueButton.interactable = false;
-            loadButton.interactable = false;
         }
-        else
-        {
-            InitalizeSaveSlots();
-        }
+        if (!InitalizeSaveSlots()) loadButton.interactable = false;
     }
 
     public void CreateGame()
     {
         try
         {
-            int creationHeight = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(height.text)), 10), 1000);
-            int creationWidth = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(width.text)), 10), 1000);
+            int creationHeight = 10;
+            int creationWidth = 10;
+            if (!height.text.Equals("")) creationHeight = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(height.text)), 10), 1000);
+            if (!width.text.Equals("")) creationWidth = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(width.text)), 10), 1000);
             DataManager.Instance.SetSelectedGameId(airportName.text);
             DataManager.Instance.CreateGame(creationWidth, creationHeight);
             SceneManager.LoadSceneAsync(1);
@@ -60,10 +58,11 @@ public class MainMenu : MonoBehaviour
     }
 
 
-    public void InitalizeSaveSlots()
+    public bool InitalizeSaveSlots()
     {
         HashSet<string> saveSlots = DataManager.Instance.GetAllSaves();
         saveSlotMenu.GetComponent<SaveSlotMenu>().InitalizeAllSaveSlots(saveSlots);
+        return saveSlots.Count > 0;
     }
 
     public void DisableAllButtons()
