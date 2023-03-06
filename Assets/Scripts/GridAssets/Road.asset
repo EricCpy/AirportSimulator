@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3afa04382f663f4391946f2ab2e9c6e, type: 3}
   m_Name: Road
   m_EditorClassIdentifier: 
-  prefab: {fileID: 1684560953086774546, guid: 57aeaa788d7dd82439afd0876ba43c82, type: 3}
+  prefab: {fileID: 7932510390861968254, guid: 9aa5938cfa67fbb42a30783159208ae7, type: 3}
   width: 1
   height: 1
   assetName: Road

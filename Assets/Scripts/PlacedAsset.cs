@@ -14,7 +14,7 @@ public class PlacedAsset : MonoBehaviour, IData
     }
 
     private GridAsset gridAsset;
-    private Vector2Int origin;
+    public Vector2Int origin {get; private set;}
     private GridAsset.AssetRotation rot;
 
     private void Create(GridAsset gridAsset, Vector2Int origin, GridAsset.AssetRotation rot)
@@ -36,12 +36,22 @@ public class PlacedAsset : MonoBehaviour, IData
 
     public void LoadData(Data data)
     {
-        throw new System.NotImplementedException();
+        //no implementation bc building is done in BuildingSystem
     }
 
     public void SaveData(Data data)
     {
         Debug.Log("save asset");
         data.gridObjects.Add(new AssetSaveObject(origin, rot, gridAsset.assetName));
+    }
+
+    public void SetRotation(GridAsset.AssetRotation rot) {
+        this.rot = rot;
+        transform.rotation = Quaternion.Euler(0, 0, gridAsset.GetRotationAngle(rot));
+        transform.position = BuildingSystem.Instance.calculateAssetWorldPositon(origin, gridAsset.GetRotationOffset(rot));
+    }
+
+    public float GetRotation() {
+        return gridAsset.GetRotationAngle(rot);
     }
 }

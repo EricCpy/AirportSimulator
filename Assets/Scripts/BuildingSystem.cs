@@ -12,6 +12,7 @@ public class BuildingSystem : MonoBehaviour, IData
     private Dictionary<string, GridAsset> assetDic = new Dictionary<string, GridAsset>();
     private GridAsset.AssetRotation assetRotation;
     public bool deletionMode { get; set; } = false;
+    private int[,] dirs4 = new[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public void RotateAsset()
     {
         assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
@@ -97,6 +98,17 @@ public class BuildingSystem : MonoBehaviour, IData
             PlaceAsset(xy, assetRotation, gridAsset);
 
         }
+
+        if (Input.GetMouseButtonDown(1))
+        {
+            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2Int xy = grid.GetXY(worldPosition);
+            if (!grid.InBorder(xy)) return;
+            PlacedAsset placedObject = grid.GetValue(worldPosition).GetPlacedObject();
+            print("aaa");
+            print(GetNeighbourAssets(placedObject).Count);
+        }
+
     }
 
     private void PlaceAsset(Vector2Int xy, GridAsset.AssetRotation assetRot, GridAsset asset)
@@ -106,7 +118,7 @@ public class BuildingSystem : MonoBehaviour, IData
         {
             Vector2Int rotationOffset = asset.GetRotationOffset(assetRot);
             //rotationOffeset ändern maybe
-            Vector3 placedAssetPositon = grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
+            Vector3 placedAssetPositon = calculateAssetWorldPositon(xy, rotationOffset);
             PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRot, asset);
 
             placedAsset.transform.rotation = Quaternion.Euler(0, 0, -asset.GetRotationAngle(assetRot));
@@ -146,5 +158,34 @@ public class BuildingSystem : MonoBehaviour, IData
         {
             grid.GetValue(gridPosition.x, gridPosition.y).ClearPlacedObject();
         }
+    }
+
+    public List<PlacedAsset> GetNeighbourAssets(PlacedAsset asset)
+    {
+        if (asset == null) return null;
+        List<Vector2Int> positions = asset.GetPositions();
+        HashSet<PlacedAsset> neighbours = new HashSet<PlacedAsset>();
+
+        foreach (Vector2Int pos in positions)
+        {
+            for (int i = 0; i < dirs4.GetLength(0); i++)
+            {
+                int x = pos.x + dirs4[i, 0];
+                int y = pos.y + dirs4[i, 1];
+                if (!grid.InBorder(new Vector2Int(x, y))) continue;
+                PlacedAsset neighbour = grid.GetValue(x, y).GetPlacedObject();
+                if (neighbour != null) Debug.Log(neighbour);
+                if (neighbour != null && asset != neighbour)
+                {
+                    neighbours.Add(neighbour);
+                }
+            }
+        }
+        return new List<PlacedAsset>(neighbours);
+    }
+
+    public Vector3 calculateAssetWorldPositon(Vector2Int xy, Vector2Int rotationOffset)
+    {
+        return grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
     }
 }
