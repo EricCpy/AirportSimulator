@@ -9,7 +9,7 @@ public class RoadAsset : MonoBehaviour
     private void Start()
     {
         asset = GetComponent<PlacedAsset>();
-        transform.rotation = Quaternion.identity;
+        //transform.rotation = Quaternion.identity;
         AdaptToNeighbours(true);
     }
 
@@ -25,10 +25,11 @@ public class RoadAsset : MonoBehaviour
             if (road != null)
             {
                 if (placed) road.AdaptToNeighbours(false);
-                Vector2Int pos = neighbour.origin;
-                if (pos.y == 1) top = true;
-                else if (pos.y == -1) bottom = true;
-                else if (pos.x == 1 && pos.y == 0) right = true;
+                Vector2Int pos = asset.origin - neighbour.origin;
+                if (placed) Debug.Log(pos);
+                if (pos.y == -1) top = true;
+                else if (pos.y == 1) bottom = true;
+                else if (pos.x == -1) right = true;
                 else left = true;
                 count++;
             }
@@ -42,36 +43,43 @@ public class RoadAsset : MonoBehaviour
         else if (count == 3)
         {
             road3.SetActive(true);
-            if (!bottom) road3.transform.localRotation = Quaternion.Euler(0, 0, 0);
-            else if (!top) road3.transform.localRotation = Quaternion.Euler(0, 0, 180);
-            else if (!left) road3.transform.localRotation = Quaternion.Euler(0, 0, 270);
-            else if (!right) road3.transform.localRotation = Quaternion.Euler(0, 0, 90);
+            if (!bottom) asset.SetRotation(GridAsset.AssetRotation.Down);
+            else if (!top) asset.SetRotation(GridAsset.AssetRotation.Up);
+            else if (!left) asset.SetRotation(GridAsset.AssetRotation.Left);
+            else if (!right) asset.SetRotation(GridAsset.AssetRotation.Right);
         }
         else if (count == 2)
         {
             if (left && right)
             {
                 road1.SetActive(true);
-                road1.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                asset.SetRotation(GridAsset.AssetRotation.Left);
             }
             else if (bottom && top)
             {
                 road1.SetActive(true);
+                asset.SetRotation(GridAsset.AssetRotation.Up);
             }
             else
             {
                 road2.SetActive(true);
-                if (left && top)
+
+                if (left && bottom)
                 {
-                    road2.transform.localRotation = Quaternion.Euler(0, 0, 90);
+                    asset.SetRotation(GridAsset.AssetRotation.Down);
                 }
-                else if (right && top)
+                else if (left && top)
                 {
-                    road2.transform.localRotation = Quaternion.Euler(0, 0, 270);
+                    asset.SetRotation(GridAsset.AssetRotation.Left);
                 }
                 else if (right && bottom)
                 {
-                    road2.transform.localRotation = Quaternion.Euler(0, 0, 180);
+                    asset.SetRotation(GridAsset.AssetRotation.Right);
+                }
+                else
+                {
+                    //right && top == up
+                    asset.SetRotation(GridAsset.AssetRotation.Up);
                 }
             }
         }
@@ -82,6 +90,10 @@ public class RoadAsset : MonoBehaviour
             {
                 asset.SetRotation(GridAsset.AssetRotation.Left);
             }
+            else
+            {
+                asset.SetRotation(GridAsset.AssetRotation.Up);
+            }
         }
     }
 
@@ -91,5 +103,18 @@ public class RoadAsset : MonoBehaviour
         road3.SetActive(false);
         road2.SetActive(false);
         road1.SetActive(false);
+    }
+
+    private void OnDestroy()
+    {
+        List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
+        foreach (var neighbour in neighbours)
+        {
+            RoadAsset road = neighbour.GetComponent<RoadAsset>();
+            if (road != null)
+            {
+                road.AdaptToNeighbours(false);
+            }
+        }
     }
 }

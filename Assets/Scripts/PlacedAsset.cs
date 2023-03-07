@@ -7,7 +7,7 @@ public class PlacedAsset : MonoBehaviour, IData
 {
     public static PlacedAsset Init(Vector3 worldPos, Vector2Int origin, GridAsset.AssetRotation rot, GridAsset gridAsset)
     {
-        Transform assetTransform = Instantiate(gridAsset.prefab, worldPos, Quaternion.Euler(0, gridAsset.GetRotationAngle(rot), 0));
+        Transform assetTransform = Instantiate(gridAsset.prefab, worldPos, Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot)));
         PlacedAsset asset = assetTransform.GetComponent<PlacedAsset>();
         asset.Create(gridAsset, origin, rot);
         return asset;
@@ -15,7 +15,7 @@ public class PlacedAsset : MonoBehaviour, IData
 
     private GridAsset gridAsset;
     public Vector2Int origin {get; private set;}
-    private GridAsset.AssetRotation rot;
+    public GridAsset.AssetRotation rot;
 
     private void Create(GridAsset gridAsset, Vector2Int origin, GridAsset.AssetRotation rot)
     {
@@ -47,11 +47,17 @@ public class PlacedAsset : MonoBehaviour, IData
 
     public void SetRotation(GridAsset.AssetRotation rot) {
         this.rot = rot;
-        transform.rotation = Quaternion.Euler(0, 0, gridAsset.GetRotationAngle(rot));
         transform.position = BuildingSystem.Instance.calculateAssetWorldPositon(origin, gridAsset.GetRotationOffset(rot));
+        transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
     }
 
     public float GetRotation() {
         return gridAsset.GetRotationAngle(rot);
+    }
+
+    public void SetNextRotation() {
+        this.rot = GridAsset.GetNextAssetRotation(rot);
+        transform.position = BuildingSystem.Instance.calculateAssetWorldPositon(origin, gridAsset.GetRotationOffset(rot));
+        transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
     }
 }

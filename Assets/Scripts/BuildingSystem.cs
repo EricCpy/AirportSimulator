@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BuildingSystem : MonoBehaviour, IData
 {
@@ -76,7 +77,7 @@ public class BuildingSystem : MonoBehaviour, IData
 
     private void Update()
     {
-        if (gridAsset == null && !deletionMode) return;
+        if ((gridAsset == null && !deletionMode) || EventSystem.current.IsPointerOverGameObject()) return;
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -98,17 +99,6 @@ public class BuildingSystem : MonoBehaviour, IData
             PlaceAsset(xy, assetRotation, gridAsset);
 
         }
-
-        if (Input.GetMouseButtonDown(1))
-        {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int xy = grid.GetXY(worldPosition);
-            if (!grid.InBorder(xy)) return;
-            PlacedAsset placedObject = grid.GetValue(worldPosition).GetPlacedObject();
-            print("aaa");
-            print(GetNeighbourAssets(placedObject).Count);
-        }
-
     }
 
     private void PlaceAsset(Vector2Int xy, GridAsset.AssetRotation assetRot, GridAsset asset)
@@ -117,11 +107,9 @@ public class BuildingSystem : MonoBehaviour, IData
         if (IsClear(gridPositionList, xy))
         {
             Vector2Int rotationOffset = asset.GetRotationOffset(assetRot);
-            //rotationOffeset ändern maybe
             Vector3 placedAssetPositon = calculateAssetWorldPositon(xy, rotationOffset);
             PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRot, asset);
 
-            placedAsset.transform.rotation = Quaternion.Euler(0, 0, -asset.GetRotationAngle(assetRot));
             ReserveGrid(gridPositionList, placedAsset);
 
         }
