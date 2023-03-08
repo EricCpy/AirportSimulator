@@ -8,13 +8,14 @@ public class GridObject
     private Grid<GridObject> grid;
     private int x, y;
     public PlacedAsset asset;
-
+    public Pathnode node;
     public GridObject(Grid<GridObject> grid, int x, int y)
     {
         this.grid = grid;
         this.x = x;
         this.y = y;
-        asset = null;
+        this.node = new Pathnode(grid, x, y);
+        this.asset = null;
     }
 
     public override string ToString()

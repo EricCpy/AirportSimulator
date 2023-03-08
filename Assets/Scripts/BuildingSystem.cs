@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 public class BuildingSystem : MonoBehaviour, IData
 {
     public static BuildingSystem Instance { get; private set; }
-    private Grid<GridObject> grid;
+    public Grid<GridObject> grid;
     [SerializeField] private float cellSize = 10f;
     private GridAsset gridAsset;
     [SerializeField] private List<GridAsset> assetList = null;

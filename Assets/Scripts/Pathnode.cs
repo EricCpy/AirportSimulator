@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Pathnode : IMinHeapItem<Pathnode>
 {
-    private Grid<Pathnode> grid;
+    private Grid<GridObject> grid;
     public int x, y;
     public int gCost;
     public int hCost;
@@ -19,7 +19,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
         set { minHeapIndex = value; }
     }
 
-    public Pathnode(Grid<Pathnode> grid, int x, int y)
+    public Pathnode(Grid<GridObject> grid, int x, int y)
     {
         this.grid = grid;
         this.x = x;
