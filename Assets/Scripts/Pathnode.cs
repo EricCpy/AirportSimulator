@@ -13,6 +13,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
     public Pathnode previous;
     public bool isReachable;
     private int minHeapIndex;
+    private List<Pathnode> neighbours;
     public int MinHeapIndex
     {
         get { return minHeapIndex; }
@@ -24,6 +25,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
         this.grid = grid;
         this.x = x;
         this.y = y;
+        neighbours = new List<Pathnode>();
         isReachable = true;
     }
 
@@ -52,5 +54,20 @@ public class Pathnode : IMinHeapItem<Pathnode>
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
         return x == other.x && y == other.y;
+    }
+
+    public void AddNeighbour(Pathnode neighbour)
+    {
+        neighbours.Add(neighbour);
+    }
+
+    public void DeleteNeighbour(Pathnode neighbour)
+    {
+        neighbours.Remove(neighbour);
+    }
+
+    public List<Pathnode> GetNeighbours()
+    {
+        return neighbours;
     }
 }

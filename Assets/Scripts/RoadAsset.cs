@@ -24,9 +24,9 @@ public class RoadAsset : MonoBehaviour
             RoadAsset road = neighbour.GetComponent<RoadAsset>();
             if (road != null)
             {
+                BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
                 if (placed) road.AdaptToNeighbours(false);
                 Vector2Int pos = asset.origin - neighbour.origin;
-                if (placed) Debug.Log(pos);
                 if (pos.y == -1) top = true;
                 else if (pos.y == 1) bottom = true;
                 else if (pos.x == -1) right = true;
@@ -113,6 +113,7 @@ public class RoadAsset : MonoBehaviour
             RoadAsset road = neighbour.GetComponent<RoadAsset>();
             if (road != null)
             {
+                BuildingSystem.Instance.DeleteNeighbourFromGridObject(asset.origin, neighbour.origin);
                 road.AdaptToNeighbours(false);
             }
         }

@@ -98,11 +98,6 @@ public class Pathfinder
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
                 if (closedList.Contains(neighbour)) continue;
-                if (!neighbour.isReachable)
-                {
-                    closedList.Add(neighbour);
-                    continue;
-                }
                 int nextGCost = current.gCost + CalculateDistance(current, neighbour);
                 if (nextGCost < neighbour.gCost)
                 {
@@ -276,15 +271,7 @@ public class Pathfinder
 
     private List<Pathnode> GetNeighbours(Pathnode node)
     {
-        List<Pathnode> neighbours = new List<Pathnode>();
-        //left
-        if (node.x - 1 >= 0) neighbours.Add(GetNode(node.x - 1, node.y));
-        //right
-        if (node.x + 1 < grid.GetWidth()) neighbours.Add(GetNode(node.x + 1, node.y));
-        //up
-        if (node.y + 1 < grid.GetHeight()) neighbours.Add(GetNode(node.x, node.y + 1));
-        //down
-        if (node.y - 1 >= 0) neighbours.Add(GetNode(node.x, node.y - 1));
+        List<Pathnode> neighbours = node.GetNeighbours();
         return neighbours;
     }
 

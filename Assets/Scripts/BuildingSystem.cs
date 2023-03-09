@@ -176,4 +176,18 @@ public class BuildingSystem : MonoBehaviour, IData
     {
         return grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
     }
+
+    public void AddNeighbourToGridObject(Vector2Int xy1, Vector2Int xy2) {
+        GridObject object1 = grid.GetValue(xy1.x, xy1.y);
+        GridObject object2 = grid.GetValue(xy2.x, xy2.y);
+        object1.AddNeighbour(object2);
+        object2.AddNeighbour(object1);
+    }
+
+    public void DeleteNeighbourFromGridObject(Vector2Int xy1, Vector2Int xy2) {
+        GridObject object1 = grid.GetValue(xy1.x, xy1.y);
+        GridObject object2 = grid.GetValue(xy2.x, xy2.y);
+        object1.DeleteNeighbour(object2);
+        object2.DeleteNeighbour(object1);
+    }
 }
