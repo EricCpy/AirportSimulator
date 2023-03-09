@@ -43,7 +43,6 @@ public class MinHeap<T> where T : IMinHeapItem<T>
         items[0] = items[itemCount];
         items[0].MinHeapIndex = 0;
         T curr = items[0];
-
         while (true)
         {
             int leftChild = GetLeftChildIndex(curr);

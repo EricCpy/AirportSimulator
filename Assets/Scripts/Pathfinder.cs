@@ -11,20 +11,19 @@ public class Pathfinder
         Bfs,
         Dijkstra,
         AStar,
-        IDAStar,
         DStar,
         Greedy,
     }
 
     private const int MOVE_STRAIGHT_COST = 1;
     private Grid<GridObject> grid;
-    private MinHeap<Pathnode> openList;
     private HashSet<Pathnode> closedList;
     public SearchMode searchMode = SearchMode.AStar;
 
     public Pathfinder(Grid<GridObject> grid)
     {
         this.grid = grid;
+        closedList = new HashSet<Pathnode>();
     }
 
     public Grid<GridObject> GetGrid()
@@ -41,9 +40,9 @@ public class Pathfinder
     {
         Pathnode startNode = GetNode(startX, startY);
         Pathnode endNode = GetNode(endX, endY);
-        Debug.Log(startNode);
-        Debug.Log(endNode);
-        List<Pathnode> ans = new List<Pathnode>();
+        //es gibt noch andere Algorithmen wie ida* oder iddfs, diese vereinigen die unteren algorithmen und verbessern diese,
+        //aber dafür wird ein upper bound benötigt, den man setzen muss, da der Algorithmus sonst ineffizient ist
+        bool ans = false;
         switch (searchMode)
         {
             case SearchMode.AStar:
@@ -62,14 +61,15 @@ public class Pathfinder
                 ans = GreedySearch(startNode, endNode);
                 break;
         }
-        return ans;
+        closedList.Clear();
+        List<Pathnode> list = new List<Pathnode>();
+        if (ans) list = CalculatePath(endNode);
+        return list;
     }
 
-    private List<Pathnode> AStarSearch(Pathnode startNode, Pathnode endNode)
+    private bool AStarSearch(Pathnode startNode, Pathnode endNode)
     {
-        openList = new MinHeap<Pathnode>(grid.MaxSize());
-        closedList = new HashSet<Pathnode>();
-
+        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         for (int x = 0; x < grid.GetWidth(); x++)
         {
             for (int y = 0; y < grid.GetHeight(); y++)
@@ -92,7 +92,7 @@ public class Pathfinder
             Pathnode current = openList.RemoveMin();
             if (current == endNode)
             {
-                return CalculatePath(endNode);
+                return true;
             }
             closedList.Add(current);
             foreach (Pathnode neighbour in GetNeighbours(current))
@@ -122,14 +122,33 @@ public class Pathfinder
             }
         }
 
-        return null;
+        return false;
     }
 
-    private List<Pathnode> DfsSearch(Pathnode startNode, Pathnode endNode)
+    private bool DfsSearch(Pathnode startNode, Pathnode endNode)
     {
-        closedList = new HashSet<Pathnode>();
-        if (Dfs(startNode, endNode, closedList, 0, int.MaxValue) != -1) return CalculatePath(endNode);
-        return null;
+        if (Dfs(startNode, endNode, closedList, 0, int.MaxValue) != -1) return true;
+        return false;
+    }
+
+    //normale dfs kann kürzesten path nicht finden, sondern würde irgendeinen finden
+    private bool DfsNormal(Pathnode current, Pathnode end)
+    {
+        if (current == end)
+        {
+            return true;
+        }
+        closedList.Add(current);
+        foreach (Pathnode neighbour in GetNeighbours(current))
+        {
+            if (closedList.Contains(current)) continue;
+            if (DfsSearch(neighbour, end))
+            {
+                neighbour.previous = current;
+                return true;
+            };
+        }
+        return false;
     }
 
     //dfs könnte mit memorization ausgebaut werden, wenn man vom ende startet
@@ -149,7 +168,7 @@ public class Pathfinder
         Pathnode bestNeighbour = null;
         foreach (Pathnode neighbour in GetNeighbours(current))
         {
-            if (closedList.Contains(current)) continue;
+            if (closedList.Contains(neighbour)) continue;
             int length = Dfs(neighbour, end, visited, pathLength + 1, minLength);
             if (length != -1 && minLength > length)
             {
@@ -166,10 +185,9 @@ public class Pathfinder
         return -1;
     }
 
-    private List<Pathnode> BfsSearch(Pathnode startNode, Pathnode endNode)
+    private bool BfsSearch(Pathnode startNode, Pathnode endNode)
     {
         Queue<Pathnode> queue = new Queue<Pathnode>();
-        closedList = new HashSet<Pathnode>();
         queue.Enqueue(startNode);
         closedList.Add(startNode);
         while (queue.Count > 0)
@@ -182,29 +200,28 @@ public class Pathfinder
                 {
                     if (closedList.Contains(neighbour)) continue;
                     neighbour.previous = current;
-                    if (neighbour == endNode) return CalculatePath(endNode);
+                    if (neighbour == endNode) return true;
                     queue.Enqueue(neighbour);
                     closedList.Add(neighbour);
                 }
             }
         }
-        return null;
+        return false;
     }
 
-    private List<Pathnode> DijkstraSearch(Pathnode startNode, Pathnode endNode)
+    private bool DijkstraSearch(Pathnode startNode, Pathnode endNode)
     {
         HashSet<Pathnode> distances = new HashSet<Pathnode>();
         startNode.fCost = 0;
         distances.Add(startNode);
-        openList = new MinHeap<Pathnode>(grid.MaxSize());
+        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         openList.Add(startNode);
-        closedList = new HashSet<Pathnode>();
         while (openList.Count > 0)
         {
             Pathnode current = openList.RemoveMin();
             if (current == endNode)
             {
-                return CalculatePath(endNode);
+                return true;
             }
             closedList.Add(current);
             foreach (Pathnode neighbour in GetNeighbours(current))
@@ -227,33 +244,34 @@ public class Pathfinder
                 }
             }
         }
-        return null;
+        return false;
     }
 
-    private List<Pathnode> GreedySearch(Pathnode startNode, Pathnode endNode)
+    private bool GreedySearch(Pathnode startNode, Pathnode endNode)
     {
         startNode.fCost = CalculateDistance(startNode, endNode);
-        openList = new MinHeap<Pathnode>(grid.MaxSize());
+        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         openList.Add(startNode);
         closedList = new HashSet<Pathnode>();
         while (openList.Count > 0)
         {
             Pathnode current = openList.RemoveMin();
+            Debug.Log(current);
             if (current == endNode)
             {
-                return CalculatePath(endNode);
+                return true;
             }
             closedList.Add(current);
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
-                if (closedList.Contains(neighbour)) continue;
+                if (closedList.Contains(neighbour) || openList.Contains(neighbour)) continue;
                 neighbour.previous = current;
                 neighbour.fCost = CalculateDistance(neighbour, endNode);
                 openList.Add(neighbour);
-
             }
         }
-        return null;
+
+        return false;
     }
 
     private List<Pathnode> GetNeighbours(Pathnode node)
