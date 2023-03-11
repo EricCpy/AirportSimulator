@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
 //Objekte des Grids
 public class GridObject
@@ -10,6 +8,7 @@ public class GridObject
     public PlacedAsset asset;
     public Pathnode node;
     private List<GridObject> neighbours;
+
     public GridObject(Grid<GridObject> grid, int x, int y)
     {
         this.grid = grid;
@@ -28,13 +27,11 @@ public class GridObject
     public void SetPlacedObject(PlacedAsset asset)
     {
         this.asset = asset;
-        grid.TriggerGridObjectChanged(x, y);
     }
 
     public void ClearPlacedObject()
     {
         asset = null;
-        grid.TriggerGridObjectChanged(x, y);
     }
 
     public PlacedAsset GetPlacedObject()

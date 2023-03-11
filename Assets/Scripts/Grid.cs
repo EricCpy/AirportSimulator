@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Grid<T>
@@ -9,14 +7,6 @@ public class Grid<T>
     private float cellSize;
     private T[,] grid;
     private Vector3 originPosition;
-
-    private event EventHandler<OnGridObjectChangedEventArgs> OnGridObjectChanged;
-    private class OnGridObjectChangedEventArgs : EventArgs
-    {
-        public int x;
-        public int y;
-    }
-
     public Grid(int width, int height, float cellSize, Vector3 originPosition, Func<Grid<T>, int, int, T> createObject, bool debug = false)
     {
         this.width = width;
@@ -53,11 +43,6 @@ public class Grid<T>
 
             Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.gray, 100f);
             Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.gray, 100f);
-
-            /*OnGridObjectChanged += (object sender, OnGridObjectChangedEventArgs eventArgs) =>
-        {
-            debugTextArray[eventArgs.x, eventArgs.y].text = gridArray[eventArgs.x, eventArgs.y]?.ToString();
-        };*/
         }
     }
 
@@ -75,7 +60,6 @@ public class Grid<T>
     {
         if (x >= grid.GetLength(0) || y >= grid.GetLength(1) || x < 0 || y < 0) return;
         grid[x, y] = value;
-        TriggerGridObjectChanged(x, y);
     }
 
     public void SetValue(Vector3 worldPosition, T value)
@@ -114,11 +98,6 @@ public class Grid<T>
     public float GetCellSize()
     {
         return cellSize;
-    }
-
-    public void TriggerGridObjectChanged(int x, int y)
-    {
-        OnGridObjectChanged?.Invoke(this, new OnGridObjectChangedEventArgs { x = x, y = y });
     }
 
     public bool InBorder(Vector2Int xy) {

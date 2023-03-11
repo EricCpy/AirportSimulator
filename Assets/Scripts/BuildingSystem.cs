@@ -27,7 +27,10 @@ public class BuildingSystem : MonoBehaviour, IData
         {
             GridAsset asset;
             assetDic.TryGetValue(loadedAsset.assetName, out asset);
-            if (asset != null) PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
+            if (asset != null)
+            {
+                PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
+            }
         }
     }
 
@@ -101,6 +104,7 @@ public class BuildingSystem : MonoBehaviour, IData
         }
     }
 
+    public int count = 0;
     private void PlaceAsset(Vector2Int xy, GridAsset.AssetRotation assetRot, GridAsset asset)
     {
         List<Vector2Int> gridPositionList = asset.GetPositions(xy, assetRot);
@@ -111,7 +115,7 @@ public class BuildingSystem : MonoBehaviour, IData
             PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRot, asset);
 
             ReserveGrid(gridPositionList, placedAsset);
-
+            placedAsset.TriggerPlacedAsset();
         }
         else
         {
@@ -152,8 +156,11 @@ public class BuildingSystem : MonoBehaviour, IData
     {
         if (asset == null) return null;
         List<Vector2Int> positions = asset.GetPositions();
+        
         HashSet<PlacedAsset> neighbours = new HashSet<PlacedAsset>();
-
+        if(asset.origin == new Vector2Int(5,6)) {
+            Debug.Log(grid.GetValue(5, 5).GetPlacedObject());
+        } 
         foreach (Vector2Int pos in positions)
         {
             for (int i = 0; i < dirs4.GetLength(0); i++)
@@ -162,7 +169,7 @@ public class BuildingSystem : MonoBehaviour, IData
                 int y = pos.y + dirs4[i, 1];
                 if (!grid.InBorder(new Vector2Int(x, y))) continue;
                 PlacedAsset neighbour = grid.GetValue(x, y).GetPlacedObject();
-                if (neighbour != null) Debug.Log(neighbour);
+                if(neighbour != null && asset.origin == new Vector2Int(5,6)) Debug.Log("GetNachbarn: " + neighbour.origin);
                 if (neighbour != null && asset != neighbour)
                 {
                     neighbours.Add(neighbour);
@@ -177,14 +184,17 @@ public class BuildingSystem : MonoBehaviour, IData
         return grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
     }
 
-    public void AddNeighbourToGridObject(Vector2Int xy1, Vector2Int xy2) {
+    public void AddNeighbourToGridObject(Vector2Int xy1, Vector2Int xy2)
+    {
         GridObject object1 = grid.GetValue(xy1.x, xy1.y);
         GridObject object2 = grid.GetValue(xy2.x, xy2.y);
         object1.AddNeighbour(object2);
         object2.AddNeighbour(object1);
+        Debug.Log("added");
     }
 
-    public void DeleteNeighbourFromGridObject(Vector2Int xy1, Vector2Int xy2) {
+    public void DeleteNeighbourFromGridObject(Vector2Int xy1, Vector2Int xy2)
+    {
         GridObject object1 = grid.GetValue(xy1.x, xy1.y);
         GridObject object2 = grid.GetValue(xy2.x, xy2.y);
         object1.DeleteNeighbour(object2);

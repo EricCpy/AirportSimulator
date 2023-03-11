@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,8 +15,9 @@ public class PlacedAsset : MonoBehaviour, IData
     }
 
     private GridAsset gridAsset;
-    public Vector2Int origin {get; private set;}
+    public Vector2Int origin { get; private set; }
     public GridAsset.AssetRotation rot;
+    public event EventHandler OnPlacedAsset;
 
     private void Create(GridAsset gridAsset, Vector2Int origin, GridAsset.AssetRotation rot)
     {
@@ -45,19 +47,28 @@ public class PlacedAsset : MonoBehaviour, IData
         data.gridObjects.Add(new AssetSaveObject(origin, rot, gridAsset.assetName));
     }
 
-    public void SetRotation(GridAsset.AssetRotation rot) {
+    public void SetRotation(GridAsset.AssetRotation rot)
+    {
         this.rot = rot;
         transform.position = BuildingSystem.Instance.calculateAssetWorldPositon(origin, gridAsset.GetRotationOffset(rot));
         transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
     }
 
-    public float GetRotation() {
+    public float GetRotation()
+    {
         return gridAsset.GetRotationAngle(rot);
     }
 
-    public void SetNextRotation() {
+    public void SetNextRotation()
+    {
         this.rot = GridAsset.GetNextAssetRotation(rot);
         transform.position = BuildingSystem.Instance.calculateAssetWorldPositon(origin, gridAsset.GetRotationOffset(rot));
         transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
+    }
+
+    
+    public void TriggerPlacedAsset() {
+        Debug.Log("placedadeadsd");
+        OnPlacedAsset?.Invoke(this, EventArgs.Empty);
     }
 }
