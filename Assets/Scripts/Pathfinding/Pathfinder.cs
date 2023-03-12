@@ -13,12 +13,13 @@ public class Pathfinder
         AStar,
         DStar,
         Greedy,
+        Ids //not yet implemented
     }
 
     private const int MOVE_STRAIGHT_COST = 1;
     private Grid<GridObject> grid;
     private HashSet<Pathnode> closedList;
-    public SearchMode searchMode = SearchMode.AStar;
+    public SearchMode searchMode = SearchMode.Greedy;
 
     public Pathfinder(Grid<GridObject> grid)
     {
@@ -252,6 +253,7 @@ public class Pathfinder
         {
             Pathnode current = openList.RemoveMin();
             Debug.Log(current);
+            Debug.Log(current.fCost);
             if (current == endNode)
             {
                 return true;
@@ -290,12 +292,13 @@ public class Pathfinder
         return path;
     }
 
+    //Manhattan Distance
     private int CalculateDistance(Pathnode a, Pathnode b)
     {
         int xDistance = Mathf.Abs(a.x - b.x);
         int yDistance = Mathf.Abs(a.y - b.y);
-        int remaining = Mathf.Abs(xDistance - yDistance);
-        return MOVE_STRAIGHT_COST * remaining;
+        int distance = xDistance + yDistance;
+        return distance;
     }
 
     private Pathnode GetMinFCostNode(List<Pathnode> pathNodes)

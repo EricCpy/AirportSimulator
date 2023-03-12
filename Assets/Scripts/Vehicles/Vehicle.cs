@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Vehicle : MonoBehaviour
+public class Vehicle : ScriptableObject
 {
-    // Start is called before the first frame update
-    void Start()
+    public enum VehicleType
     {
-        
+        Car,
+        Airplane
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public float speed = 10f;
+    public Transform prefab;
+    public string vehicleName;
+    public VehicleType type;
 }

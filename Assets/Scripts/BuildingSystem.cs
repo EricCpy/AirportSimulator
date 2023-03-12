@@ -14,6 +14,20 @@ public class BuildingSystem : MonoBehaviour, IData
     private GridAsset.AssetRotation assetRotation;
     public bool deletionMode { get; set; } = false;
     private int[,] dirs4 = new[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
+
+    private void Awake()
+    {
+        if (Instance != null)
+        {
+            throw new UnityException("Buildingsystem has already an Instance");
+        }
+        Instance = this;
+        //needed for loading
+        foreach (var obj in assetList)
+        {
+            assetDic.Add(obj.assetName, obj);
+        }
+    }
     public void RotateAsset()
     {
         assetRotation = GridAsset.GetNextAssetRotation(assetRotation);
@@ -61,19 +75,6 @@ public class BuildingSystem : MonoBehaviour, IData
             default:
                 gridAsset = null;
                 break;
-        }
-    }
-    private void Awake()
-    {
-        if (Instance != null)
-        {
-            throw new UnityException("Buildingsystem has already an Instance");
-        }
-        Instance = this;
-        //needed for loading
-        foreach (var obj in assetList)
-        {
-            assetDic.Add(obj.assetName, obj);
         }
     }
 
@@ -154,11 +155,12 @@ public class BuildingSystem : MonoBehaviour, IData
     {
         if (asset == null) return null;
         List<Vector2Int> positions = asset.GetPositions();
-        
+
         HashSet<PlacedAsset> neighbours = new HashSet<PlacedAsset>();
-        if(asset.origin == new Vector2Int(5,6)) {
+        if (asset.origin == new Vector2Int(5, 6))
+        {
             Debug.Log(grid.GetValue(5, 5).GetPlacedObject());
-        } 
+        }
         foreach (Vector2Int pos in positions)
         {
             for (int i = 0; i < dirs4.GetLength(0); i++)
@@ -167,7 +169,7 @@ public class BuildingSystem : MonoBehaviour, IData
                 int y = pos.y + dirs4[i, 1];
                 if (!grid.InBorder(new Vector2Int(x, y))) continue;
                 PlacedAsset neighbour = grid.GetValue(x, y).GetPlacedObject();
-                if(neighbour != null && asset.origin == new Vector2Int(5,6)) Debug.Log("GetNachbarn: " + neighbour.origin);
+                if (neighbour != null && asset.origin == new Vector2Int(5, 6)) Debug.Log("GetNachbarn: " + neighbour.origin);
                 if (neighbour != null && asset != neighbour)
                 {
                     neighbours.Add(neighbour);
