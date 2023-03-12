@@ -14,24 +14,12 @@ public class RoadAsset : MonoBehaviour
     }
 
     private void OnAssetPlaced(object sender, EventArgs e) {
-        Debug.Log("placed");
         AdaptToNeighbours(true);
     }
 
     public void AdaptToNeighbours(bool placed)
     {
-        if (placed)
-        {
-            Debug.Log(BuildingSystem.Instance.count);
-            BuildingSystem.Instance.count++;
-            Debug.Log(asset.origin);
-        }
-        else
-        {
-            Debug.Log("Updating " + asset.origin);
-        }
         List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
-        if(asset.origin == new Vector2Int(5,6)) Debug.Log("Länge Nachbarn " + neighbours.Count);
         bool left = false, right = false, top = false, bottom = false;
         int count = 0;
         foreach (var neighbour in neighbours)
@@ -39,8 +27,6 @@ public class RoadAsset : MonoBehaviour
             RoadAsset road = neighbour.GetComponent<RoadAsset>();
             if (road != null)
             {
-                if (placed) Debug.Log("Neighbour: " + neighbour.origin);
-
                 if (placed)
                 {
                     BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
@@ -55,7 +41,7 @@ public class RoadAsset : MonoBehaviour
                 count++;
             }
         }
-        if(asset.origin == new Vector2Int(5,6)) Debug.Log("5,6 Nachbarn: " + count);
+
         SetRoadsInactive();
         if (count == 4)
         {

@@ -62,7 +62,6 @@ public class BuildingSystem : MonoBehaviour, IData
                 gridAsset = null;
                 break;
         }
-
     }
     private void Awake()
     {
@@ -104,7 +103,6 @@ public class BuildingSystem : MonoBehaviour, IData
         }
     }
 
-    public int count = 0;
     private void PlaceAsset(Vector2Int xy, GridAsset.AssetRotation assetRot, GridAsset asset)
     {
         List<Vector2Int> gridPositionList = asset.GetPositions(xy, assetRot);
@@ -190,7 +188,6 @@ public class BuildingSystem : MonoBehaviour, IData
         GridObject object2 = grid.GetValue(xy2.x, xy2.y);
         object1.AddNeighbour(object2);
         object2.AddNeighbour(object1);
-        Debug.Log("added");
     }
 
     public void DeleteNeighbourFromGridObject(Vector2Int xy1, Vector2Int xy2)

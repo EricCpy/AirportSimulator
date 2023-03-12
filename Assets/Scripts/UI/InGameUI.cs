@@ -106,10 +106,11 @@ public class InGameUI : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            if(GameManager.Instance.uiOpen && !optionsMenu.activeSelf) return;
             ChangeButtonType(0);
         }
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && !GameManager.Instance.uiOpen)
         {
             Rotate();
         }
@@ -134,11 +135,13 @@ public class InGameUI : MonoBehaviour
             SelectButton(defaultButton);
             ChangeButtonType(1);
             optionsMenu.SetActive(false);
+            GameManager.Instance.uiOpen = false;
         }
         else
         {
             SelectButton(optionsMenuButton);
             optionsMenu.SetActive(true);
+            GameManager.Instance.uiOpen = true;
         }
     }
 }
