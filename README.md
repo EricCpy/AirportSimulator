@@ -8,6 +8,6 @@
 
 ### Anleitung
 - Git-Projekt clonen (Git LFS notwendig) oder als .zip-datei herunterladen
-- Projekt im Enity Editor auswählen
+- Projekt im Unity Editor auswählen
 - Korrekte Unity Version (2021.3.17f1) auswählen und starten
 

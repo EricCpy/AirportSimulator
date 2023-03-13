@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8976363696741224466
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8976363696741224460}
+  - component: {fileID: 8976363696741224461}
+  m_Layer: 0
+  m_Name: VehicleManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8976363696741224460
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976363696741224466}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1028.7753, y: 474.1496, z: 0.5134808}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8976363696741224461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8976363696741224466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0dfc716fa07e00f43907a2e4af7c6429, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultAirplanes:
+  - {fileID: 11400000, guid: 24c5a3b4f0958514a9588d50304fd083, type: 2}
+  - {fileID: 11400000, guid: cf971b5e7bcfa7748840e07f49a04b9f, type: 2}
+  - {fileID: 11400000, guid: c985cbf2c038fd04d9f5bd2ed12eeebb, type: 2}
+  bus: {fileID: 11400000, guid: 96ca8a16305dfda44a843789b510124f, type: 2}
+  taxi: {fileID: 11400000, guid: 6f46772b7151b8b42a2c4a58a4ed241c, type: 2}
