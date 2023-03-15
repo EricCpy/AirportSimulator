@@ -27,7 +27,7 @@ public class Vehicle : ScriptableObject
         this.vehicleName = vehicleName;
         this.type = type;
         this.color = color;
-        prefab.GetComponent<SpriteRenderer>().color = color;
+        prefab.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     public Vehicle(VehicleSaveObject vehicleSaveObject, Transform prefab)
@@ -35,13 +35,13 @@ public class Vehicle : ScriptableObject
         this.prefab = prefab;
         this.vehicleName = vehicleSaveObject.vehicleName;
         this.type = vehicleSaveObject.vehicleType;
-        ColorUtility.TryParseHtmlString(vehicleSaveObject.color, out this.color);
+        ColorUtility.TryParseHtmlString("#" + vehicleSaveObject.color, out this.color);
         prefab.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     public VehicleSaveObject ToVehicleSaveObject()
     {
-        VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName,  ColorUtility.ToHtmlStringRGB(color));
+        VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName, ColorUtility.ToHtmlStringRGB(color));
         return vso;
     }
 }

@@ -29,7 +29,8 @@ public class VehicleUI : MonoBehaviour
             int capacity = 10;
             if (!speedInput.text.Equals("")) speed = Mathf.Min(Mathf.Max(Mathf.Abs(float.Parse(speedInput.text)), 10), 300);
             if (!capacityInput.text.Equals("")) capacity = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(capacityInput.text)), 50), 200);
-            VehicleManager.Instance.CreateNewAirplane(speed, capacity, vehicleNameInput.text, vehicleColor);
+            Vehicle vehicle = VehicleManager.Instance.CreateNewAirplane(speed, capacity, vehicleNameInput.text, vehicleColor);
+            airplaneSlotMenu.CreateAirplaneSlot(vehicle);
         }
         catch (Exception e)
         {

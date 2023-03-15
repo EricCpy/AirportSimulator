@@ -17,12 +17,19 @@ public class AirplaneSlotMenu : MonoBehaviour
         }
     }
 
+    public void CreateAirplaneSlot(Vehicle airplane)
+    {
+        GameObject slot = Instantiate(airplaneSlot);
+        slot.transform.SetParent(buttonBox);
+        slot.GetComponent<AirplaneSlot>().InitalizeAirplaneSlot(airplane, this);
+    }
     public void RemoveAirplanes()
     {
         if (remove.Count > 0)
         {
             VehicleManager.Instance.RemoveAirplanes(remove.Keys);
-            foreach(var slot in remove.Values) {
+            foreach (var slot in remove.Values)
+            {
                 Destroy(slot.gameObject);
             }
             remove.Clear();

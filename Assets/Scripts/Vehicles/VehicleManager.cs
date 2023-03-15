@@ -45,9 +45,10 @@ public class VehicleManager : MonoBehaviour, IData
         }
     }
 
-    public void CreateNewAirplane(float speed, int capacity, string vehicleName, Color color) {
+    public Vehicle CreateNewAirplane(float speed, int capacity, string vehicleName, Color color) {
         Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color);
         airplanes.Add(newAirplane.vehicleName, newAirplane);
+        return newAirplane;
     }
 
     public ICollection<Vehicle> GetAllAirplanes() {
