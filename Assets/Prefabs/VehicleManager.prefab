@@ -50,3 +50,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c985cbf2c038fd04d9f5bd2ed12eeebb, type: 2}
   bus: {fileID: 11400000, guid: 96ca8a16305dfda44a843789b510124f, type: 2}
   taxi: {fileID: 11400000, guid: 6f46772b7151b8b42a2c4a58a4ed241c, type: 2}
+  airplane: {fileID: 207836498443358065, guid: a2ba2fb3259231b4dbae87ce9b83c6c0, type: 3}

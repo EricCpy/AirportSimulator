@@ -14,12 +14,11 @@ public class VehicleManager : MonoBehaviour, IData
     {
         if (Instance != null)
         {
-            throw new UnityException("Buildingsystem has already an Instance");
+            throw new UnityException("VehicleManager has already an Instance");
         }
         Instance = this;
-
-
     }
+
     public void LoadData(Data data)
     {
         if (data.vehicleObjects.Count == 0)
@@ -43,6 +42,21 @@ public class VehicleManager : MonoBehaviour, IData
         foreach (var airplane in airplanes.Values)
         {
             data.vehicleObjects.Add(airplane.ToVehicleSaveObject());
+        }
+    }
+
+    public void CreateNewAirplane(float speed, int capacity, string vehicleName, Color color) {
+        Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color);
+        airplanes.Add(newAirplane.vehicleName, newAirplane);
+    }
+
+    public ICollection<Vehicle> GetAllAirplanes() {
+        return airplanes.Values;
+    }
+
+    public void RemoveAirplanes(ICollection<Vehicle> airplaneList) {
+        foreach(var airplane in airplaneList) {
+            airplanes.Remove(airplane.vehicleName);
         }
     }
 }

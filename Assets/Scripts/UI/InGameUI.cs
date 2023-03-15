@@ -7,6 +7,7 @@ using UnityEngine.UI;
 
 public class InGameUI : MonoBehaviour
 {
+
     public enum ButtonType
     {
         None,
@@ -35,6 +36,16 @@ public class InGameUI : MonoBehaviour
     [SerializeField] private GameObject optionsMenu;
     [SerializeField] private Button defaultButton;
     [SerializeField] private Button optionsMenuButton;
+    [SerializeField] private GameObject airportMenu;
+    public static InGameUI Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance != null)
+        {
+            throw new UnityException("InGameUI has already an Instance");
+        }
+        Instance = this;
+    }
     private void Start()
     {
         cameraController = Camera.main.GetComponent<CameraController>();
@@ -48,7 +59,6 @@ public class InGameUI : MonoBehaviour
         {
             currentTimeScale = 0;
         }
-        print(button.name);
         Time.timeScale = timeScaleSteps[currentTimeScale];
         button.GetComponentInChildren<TMP_Text>().text = timeScaleSteps[currentTimeScale] + "x";
     }
@@ -143,5 +153,10 @@ public class InGameUI : MonoBehaviour
             optionsMenu.SetActive(true);
             GameManager.Instance.uiOpen = true;
         }
+    }
+
+    public void OpenAirportManagerUI() {
+        airportMenu.SetActive(true);
+        GameManager.Instance.uiOpen = true;
     }
 }
