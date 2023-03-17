@@ -44,4 +44,5 @@ public class Vehicle : ScriptableObject
         VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName, ColorUtility.ToHtmlStringRGB(color));
         return vso;
     }
+
 }

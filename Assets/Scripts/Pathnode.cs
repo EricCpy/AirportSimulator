@@ -14,6 +14,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
     public bool isReachable;
     private int minHeapIndex;
     private List<Pathnode> neighbours;
+    public Vector2 origin {get; private set;}
     public int MinHeapIndex
     {
         get { return minHeapIndex; }
@@ -25,8 +26,9 @@ public class Pathnode : IMinHeapItem<Pathnode>
         this.grid = grid;
         this.x = x;
         this.y = y;
-        neighbours = new List<Pathnode>();
-        isReachable = true;
+        this.origin = grid.GetWorldPosition(x, y);
+        this.neighbours = new List<Pathnode>();
+        this.isReachable = true;
     }
 
     public override string ToString()

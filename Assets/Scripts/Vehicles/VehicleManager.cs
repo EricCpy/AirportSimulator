@@ -6,8 +6,8 @@ public class VehicleManager : MonoBehaviour, IData
 {
     Dictionary<string, Vehicle> airplanes = new Dictionary<string, Vehicle>();
     public List<Vehicle> defaultAirplanes = new() { };
-    [SerializeField] private Vehicle bus;
-    [SerializeField] private Vehicle taxi;
+    public Vehicle bus;
+    public Vehicle taxi;
     [SerializeField] private Transform airplane;
     public static VehicleManager Instance { get; private set; }
     private void Awake()
