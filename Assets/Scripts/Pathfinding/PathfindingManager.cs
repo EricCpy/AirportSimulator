@@ -37,7 +37,6 @@ public class PathfindingManager : MonoBehaviour
             Debug.Log(xy);
             List<Pathnode> path = CalculatePath(0, 0, xy.x, xy.y);
             ActiveVehicle.Init(VehicleManager.Instance.taxi, path);
-            print(path.Count);
             if (path != null)
             {
                 for (int i = 0; i < path.Count - 1; i++)

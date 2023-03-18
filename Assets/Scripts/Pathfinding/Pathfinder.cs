@@ -252,8 +252,6 @@ public class Pathfinder
         while (openList.Count > 0)
         {
             Pathnode current = openList.RemoveMin();
-            Debug.Log(current);
-            Debug.Log(current.fCost);
             if (current == endNode)
             {
                 return true;

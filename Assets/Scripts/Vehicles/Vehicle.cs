@@ -11,6 +11,14 @@ public class Vehicle : ScriptableObject
         Airplane
     }
 
+    public enum VehicleRotation
+    {
+        Left,
+        Right,
+        Up,
+        Down
+    }
+
     public float speed = 10f;
     //capacity in passenger seats
     public int capacity = 10;
@@ -43,6 +51,18 @@ public class Vehicle : ScriptableObject
     {
         VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName, ColorUtility.ToHtmlStringRGB(color));
         return vso;
+    }
+
+    public Quaternion GetRotation(VehicleRotation rot)
+    {
+        switch (rot)
+        {
+            default:
+            case VehicleRotation.Down: return Quaternion.Euler(0,0,90);
+            case VehicleRotation.Left: return Quaternion.identity;
+            case VehicleRotation.Up: return Quaternion.Euler(0,0,270);
+            case VehicleRotation.Right: return Quaternion.Euler(180,0,180);
+        }
     }
 
 }
