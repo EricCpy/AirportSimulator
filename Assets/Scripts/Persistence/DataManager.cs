@@ -56,7 +56,7 @@ public class DataManager : MonoBehaviour
 
     public void CreateGame(int width, int height)
     {
-        data = new Data(width, height);
+        data = new Data(width, height, System.DateTime.Now);
         PlayerPrefs.SetString("LastSaveSlotID", selectedGameId);
     }
 
