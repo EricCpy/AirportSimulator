@@ -80,7 +80,7 @@ public class BuildingSystem : MonoBehaviour, IData
 
     private void Update()
     {
-        if ((gridAsset == null && !deletionMode) || EventSystem.current.IsPointerOverGameObject()) return;
+        if ((gridAsset == null && !deletionMode) || EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
         if (Input.GetMouseButtonDown(0))
         {
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class CameraController : MonoBehaviour
 {
@@ -14,6 +15,7 @@ public class CameraController : MonoBehaviour
     }
     void Update()
     {
+        if(GameManager.Instance.uiOpen) return;
         if(Input.GetKey(KeyCode.UpArrow)) {
             transform.position += transform.up * movementSpeed * Time.deltaTime;
         } else if(Input.GetKey(KeyCode.DownArrow)) {
@@ -23,8 +25,8 @@ public class CameraController : MonoBehaviour
         } else if(Input.GetKey(KeyCode.RightArrow)) {
             transform.position += transform.right * movementSpeed * Time.deltaTime;
         }
-        ;
-        if(moveWithMouse == true) {
+
+        if(moveWithMouse) {
             if(Input.GetMouseButtonDown(0)) {
                 dragOrigin = _camera.ScreenToWorldPoint(Input.mousePosition);
             }
