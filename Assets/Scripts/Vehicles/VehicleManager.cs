@@ -55,6 +55,10 @@ public class VehicleManager : MonoBehaviour, IData
         return airplanes.Values;
     }
 
+    public ICollection<string> GetAllAirplaneNames() {
+        return airplanes.Keys;
+    }
+
     public void RemoveAirplanes(ICollection<Vehicle> airplaneList) {
         foreach(var airplane in airplaneList) {
             airplanes.Remove(airplane.vehicleName);

@@ -43,12 +43,11 @@ public class ScheduelManager : MonoBehaviour, IData
         while (true)
         {
             airportTime = airportTime.AddSeconds(1);
-            Debug.Log(airportTime);
             yield return delay;
         }
     }
 
-    public ScheduelObject CreateNewScheduelEntry(DateTime time, Vehicle.VehicleType vehicleType, ScheduelObject.FlightType flightType)
+    public ScheduelObject CreateNewScheduelEntry(DateTime time, string vehicleType, ScheduelObject.FlightType flightType)
     {
         while (scheduel.ContainsKey(time))
         {
@@ -65,5 +64,9 @@ public class ScheduelManager : MonoBehaviour, IData
         {
             scheduel.Remove(obj.time);
         }
+    }
+
+    public ICollection<ScheduelObject> GetAllScheduelEntries() {
+        return scheduel.Values;
     }
 }

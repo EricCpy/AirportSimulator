@@ -6,9 +6,9 @@ using UnityEngine;
 public class ScheduelSaveObject
 {
     public string time;
-    public Vehicle.VehicleType vehicleType;
+    public string vehicleType;
     public ScheduelObject.FlightType flightType;
-    public ScheduelSaveObject(string time, Vehicle.VehicleType vehicleType, ScheduelObject.FlightType flightType)
+    public ScheduelSaveObject(string time, string vehicleType, ScheduelObject.FlightType flightType)
     {
         this.time = time;
         this.vehicleType = vehicleType;

@@ -12,10 +12,10 @@ public class ScheduelObject
     }
 
     public DateTime time;
-    public Vehicle.VehicleType vehicleType;
+    public string vehicleType;
     public FlightType flightType;
 
-    public ScheduelObject(DateTime time, Vehicle.VehicleType vehicleType, FlightType flightType)
+    public ScheduelObject(DateTime time, string vehicleType, FlightType flightType)
     {
         this.time = time;
         this.vehicleType = vehicleType;
