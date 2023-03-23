@@ -14,7 +14,7 @@ public class BuildingSystem : MonoBehaviour, IData
     private GridAsset.AssetRotation assetRotation;
     public bool deletionMode { get; set; } = false;
     private int[,] dirs4 = new[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
-
+    public bool assetsLoaded {get; private set;}
     private void Awake()
     {
         if (Instance != null)
@@ -46,6 +46,8 @@ public class BuildingSystem : MonoBehaviour, IData
                 PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
             }
         }
+        assetsLoaded = true;
+        //Calculate best paths
     }
 
     public void SaveData(Data data)

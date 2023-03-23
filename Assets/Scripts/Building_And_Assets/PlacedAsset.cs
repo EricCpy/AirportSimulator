@@ -66,9 +66,11 @@ public class PlacedAsset : MonoBehaviour, IData
         transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
     }
 
-    
     public void TriggerPlacedAsset() {
-        Debug.Log("placedadeadsd");
         OnPlacedAsset?.Invoke(this, EventArgs.Empty);
+    }
+
+    public GridAsset GetGridAsset() {
+        return gridAsset;
     }
 }

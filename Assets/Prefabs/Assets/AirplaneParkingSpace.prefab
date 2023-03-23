@@ -94,8 +94,9 @@ GameObject:
   m_Component:
   - component: {fileID: 8852870122733544860}
   - component: {fileID: 7780627627434368076}
+  - component: {fileID: 107932572066906996}
   m_Layer: 0
-  m_Name: Flugzeugabstellplatz
+  m_Name: AirplaneParkingSpace
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -127,5 +128,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b2db1b875afd2bc41a6e512fd0d6b668, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rot: 0
+--- !u!114 &107932572066906996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8852870122733544035}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0be6b125f3b563458199f193aa1f2db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
