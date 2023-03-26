@@ -46,12 +46,13 @@ public class BuildingSystem : MonoBehaviour, IData
                 PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
             }
         }
-        //Calculate best paths
+
+        AirportManager.Instance.RecalculatePaths();
     }
 
     public void SaveData(Data data)
     {
-        //maybe safe some data later here
+        //maybe save some data later here
     }
 
     public void SetObjectType(InGameUI.ButtonType type)

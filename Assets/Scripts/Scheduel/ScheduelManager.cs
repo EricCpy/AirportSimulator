@@ -28,12 +28,15 @@ public class ScheduelManager : MonoBehaviour, IData
         foreach (var obj in data.scheduelObjects)
         {
             DateTime time = DateTime.Parse(obj.time);
-            if(obj.flightType == ScheduelObject.FlightType.Takeoff) {
+            if (obj.flightType == ScheduelObject.FlightType.Takeoff)
+            {
                 takeOffScheduel.Add(time, new ScheduelObject(time, obj.vehicleType, obj.flightType));
-            } else {
+            }
+            else
+            {
                 landingScheduel.Add(time, new ScheduelObject(time, obj.vehicleType, obj.flightType));
             }
-            
+
         }
     }
 
@@ -76,16 +79,20 @@ public class ScheduelManager : MonoBehaviour, IData
     {
         foreach (var obj in scheduelObjects)
         {
-            if(obj.flightType == ScheduelObject.FlightType.Takeoff) {
+            if (obj.flightType == ScheduelObject.FlightType.Takeoff)
+            {
                 takeOffScheduel.Remove(obj.time);
-            } else {
+            }
+            else
+            {
                 landingScheduel.Remove(obj.time);
             }
-            
+
         }
     }
 
-    public ICollection<ScheduelObject> GetAllScheduelEntries() {
+    public ICollection<ScheduelObject> GetAllScheduelEntries()
+    {
         return takeOffScheduel.Values.Concat(landingScheduel.Values).ToList();
     }
 
@@ -94,11 +101,17 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSecondsRealtime(time);
         while (true)
         {
-            //TODO checke
-            //checke ob erste airplane in 30min los muss, dann checke ob es preparebar ist
-                //wenn preparebar, dann mache nichts
-                //wenn nicht, dann adde 10min auf den schedueleintrag 
-            //if()
+            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30))
+            {
+                if (!AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType))
+                {
+                    var kvpair = takeOffScheduel.First();
+                    takeOffScheduel.Remove(kvpair.Key);
+                    ScheduelObject val = kvpair.Value;
+                    val.time.AddMinutes(10);
+                    CreateNewScheduelEntry(val.time, val.vehicleType, val.flightType);
+                }
+            }
             yield return delay;
         }
     }
