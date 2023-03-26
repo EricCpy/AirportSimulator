@@ -4,14 +4,15 @@ using UnityEngine;
 
 public class Terminal : MonoBehaviour
 {
-    GridAsset gridAsset;
+    PlacedAsset gridAsset;
     private void Start()
     {
-        gridAsset = GetComponent<PlacedAsset>().GetGridAsset();
+        gridAsset = GetComponent<PlacedAsset>();
         AirportManager.Instance.terminals.Add(gridAsset, new List<GridAsset>());
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         AirportManager.Instance.terminals.Remove(gridAsset);
     }
 }

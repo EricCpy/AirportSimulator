@@ -75,7 +75,11 @@ public class DataManager : MonoBehaviour
         if (tmpData != null) data = tmpData;
         foreach (IData dataObject in dataObjects)
         {
-            dataObject.LoadData(data);
+            try {
+                dataObject.LoadData(data);
+            } catch(System.Exception e) {
+                Debug.Log(e);
+            }
         }
         data.Clear();
     }

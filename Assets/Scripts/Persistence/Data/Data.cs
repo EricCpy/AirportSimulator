@@ -9,6 +9,7 @@ public class Data
     public List<AssetSaveObject> gridObjects;
     public List<VehicleSaveObject> vehicleObjects;
     public List<ScheduelSaveObject> scheduelObjects;
+    public List<StorageSaveObject> airplaneCapacities;
     public string time;
     public Data(int width, int height, DateTime time)
     {
@@ -18,6 +19,7 @@ public class Data
         this.gridObjects = new List<AssetSaveObject>();
         this.vehicleObjects = new List<VehicleSaveObject>();
         this.scheduelObjects = new List<ScheduelSaveObject>();
+        this.airplaneCapacities = new List<StorageSaveObject>();
     }
 
     public void Clear()
@@ -25,5 +27,6 @@ public class Data
         gridObjects = new List<AssetSaveObject>();
         vehicleObjects = new List<VehicleSaveObject>();
         scheduelObjects = new List<ScheduelSaveObject>();
+        airplaneCapacities = new List<StorageSaveObject>();
     }
 }

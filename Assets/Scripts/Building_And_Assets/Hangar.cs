@@ -4,18 +4,21 @@ using UnityEngine;
 
 public class Hangar : MonoBehaviour
 {
-    GridAsset gridAsset;
+    PlacedAsset gridAsset;
     private void Start()
     {
-        gridAsset = GetComponent<PlacedAsset>().GetGridAsset();
+        gridAsset = GetComponent<PlacedAsset>();
         AirportManager.Instance.hangars.Add(gridAsset, new List<GridAsset>());
-        if(BuildingSystem.Instance.assetsLoaded) {
-            //TODO
-            //openUI zum Auswählen der Flugzeugtypen
+        Debug.Log(BuildingSystem.Instance.assetsLoaded);
+        if (BuildingSystem.Instance.assetsLoaded)
+        {
+            Debug.Log("fff");
+            InGameUI.Instance.OpenHangarCreationUI();
         }
     }
 
-    private void OnDestroy() {
+    private void OnDestroy()
+    {
         AirportManager.Instance.hangars.Remove(gridAsset);
     }
 }

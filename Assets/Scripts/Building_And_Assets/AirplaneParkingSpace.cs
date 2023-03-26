@@ -4,10 +4,10 @@ using UnityEngine;
 
 public class AirplaneParkingSpace : MonoBehaviour
 {
-    GridAsset gridAsset;
+    PlacedAsset gridAsset;
     private void Start()
     {
-        gridAsset = GetComponent<PlacedAsset>().GetGridAsset();
+        gridAsset = GetComponent<PlacedAsset>();
         AirportManager.Instance.airplaneSpace.Add(gridAsset, false);
     }
 

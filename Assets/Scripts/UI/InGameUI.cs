@@ -37,6 +37,11 @@ public class InGameUI : MonoBehaviour
     [SerializeField] private Button defaultButton;
     [SerializeField] private Button optionsMenuButton;
     [SerializeField] private GameObject airportMenu;
+
+    [Header("Hangar")]
+    [SerializeField] private GameObject hangarMenu;
+    [SerializeField] private GameObject hangarCreationMenu;
+    [SerializeField] private GameObject hangarGeneralMenu;
     public static InGameUI Instance { get; private set; }
 
     private void Awake() {
@@ -157,6 +162,20 @@ public class InGameUI : MonoBehaviour
 
     public void OpenAirportManagerUI() {
         airportMenu.SetActive(true);
+        GameManager.Instance.uiOpen = true;
+    }
+
+    public void OpenHangarCreationUI() {
+        hangarMenu.SetActive(true);
+        hangarGeneralMenu.SetActive(false);
+        hangarCreationMenu.SetActive(true);
+        GameManager.Instance.uiOpen = true;
+    }
+
+    public void OpenHangarGeneralUI() {
+        hangarMenu.SetActive(true);
+        hangarCreationMenu.SetActive(false);
+        hangarGeneralMenu.SetActive(true);
         GameManager.Instance.uiOpen = true;
     }
 }

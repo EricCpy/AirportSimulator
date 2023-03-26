@@ -64,4 +64,9 @@ public class PathfindingUI : MonoBehaviour
     {
         StopAllCoroutines();
     }
+
+    public void RecalculatePaths()
+    {
+        AirportManager.Instance.RecalculatePaths();
+    }
 }
