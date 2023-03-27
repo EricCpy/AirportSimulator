@@ -8,10 +8,10 @@ public class AirplaneParkingSpace : MonoBehaviour
     private void Start()
     {
         gridAsset = GetComponent<PlacedAsset>();
-        AirportManager.Instance.airplaneSpace.Add(gridAsset, false);
+        AirportManager.Instance.airplaneSpaces.Add(gridAsset, false);
     }
 
     private void OnDestroy() {
-        AirportManager.Instance.airplaneSpace.Remove(gridAsset);
+        AirportManager.Instance.airplaneSpaces.Remove(gridAsset);
     }
 }

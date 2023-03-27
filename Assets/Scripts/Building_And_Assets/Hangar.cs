@@ -8,11 +8,10 @@ public class Hangar : MonoBehaviour
     private void Start()
     {
         gridAsset = GetComponent<PlacedAsset>();
-        AirportManager.Instance.hangars.Add(gridAsset, new List<GridAsset>());
+        AirportManager.Instance.hangars.Add(gridAsset, new Dictionary<PlacedAsset, List<Pathnode>>());
         Debug.Log(BuildingSystem.Instance.assetsLoaded);
         if (BuildingSystem.Instance.assetsLoaded)
         {
-            Debug.Log("fff");
             InGameUI.Instance.OpenHangarCreationUI();
         }
     }

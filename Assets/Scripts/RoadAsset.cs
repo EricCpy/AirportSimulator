@@ -29,7 +29,7 @@ public class RoadAsset : MonoBehaviour
             {
                 if (placed)
                 {
-                    BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
+                    BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin, true);
                     
                     road.AdaptToNeighbours(false);
                 }
