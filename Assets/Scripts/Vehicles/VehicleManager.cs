@@ -64,4 +64,10 @@ public class VehicleManager : MonoBehaviour, IData
             airplanes.Remove(airplane.vehicleName);
         }
     }
+
+    public Vehicle GetAirplane(string airplaneType) {
+        Vehicle vehicle = null;
+        airplanes.TryGetValue(airplaneType, out vehicle);
+        return vehicle;
+    }
 }

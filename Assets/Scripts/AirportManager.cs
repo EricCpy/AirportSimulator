@@ -7,10 +7,12 @@ public class AirportManager : MonoBehaviour, IData
 {
     //Dict aller Flugzeuge und wie viele von Ihnen sich gerade auf dem Flughafen befinden
     public Dictionary<string, int> airplaneCapacities = new Dictionary<string, int>();
+    public List<PlacedAsset> hangars = new List<PlacedAsset>();
+    public List<PlacedAsset> terminals = new List<PlacedAsset>();
     //Dict aller Terminals, welche auf den besten Abstellplatz zeigen
-    public Dictionary<PlacedAsset, Dictionary<PlacedAsset, List<Pathnode>>> terminals = new Dictionary<PlacedAsset, Dictionary<PlacedAsset, List<Pathnode>>>();
+    private Dictionary<PlacedAsset, List<Pathnode>> spaceTerminalPaths = new Dictionary<PlacedAsset, List<Pathnode>>();
     //Dict aller Hangars, welche auf den besten Abstellplatz zeigen
-    public Dictionary<PlacedAsset, Dictionary<PlacedAsset, List<Pathnode>>> hangars = new Dictionary<PlacedAsset, Dictionary<PlacedAsset, List<Pathnode>>>();
+    public Dictionary<PlacedAsset, List<Pathnode>> spaceHangarPaths = new Dictionary<PlacedAsset, List<Pathnode>>();
     //Dict aller Abstellplätze, welche frei oder besetzt sind
     public Dictionary<PlacedAsset, bool> airplaneSpaces = new Dictionary<PlacedAsset, bool>();
     public static AirportManager Instance { get; private set; }
@@ -33,48 +35,85 @@ public class AirportManager : MonoBehaviour, IData
         }
     }
 
+    public void AddAirplaneSpace(PlacedAsset asset)
+    {
+        airplaneSpaces[asset] = false;
+        spaceTerminalPaths[asset] = new List<Pathnode>();
+        spaceHangarPaths[asset] = new List<Pathnode>();
+    }
+
     public bool PrepareAirplaneForTakeoff(string airplaneType)
     {
         if (airplaneCapacities.GetValueOrDefault(airplaneType, 0) == 0) return false;
 
         //TODO
         //sende Flugzeug zum abstellPlatz
-        //StarteCoroutine um Taxis etc zum Landeplatz zu senden
-        return true;
+        //busse / airplane typ kapazität
+
+        Vehicle airplane = VehicleManager.Instance.GetAirplane(airplaneType);
+        if (airplane == null)
+        {
+            return true;
+        }
+        //gucke eventuell noch, ob das Terminal an Flugzeugabstellplatz angrenzt
+        PlacedAsset parkingSpace = GetFreeSpace();
+        if(parkingSpace == null) return false;
+        //ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace]);
+        int capacity = airplane.capacity;
+        int shuttles = capacity / VehicleManager.Instance.bus.capacity;
+        int taxis = (int)Math.Ceiling((capacity % VehicleManager.Instance.bus.capacity) / (double)VehicleManager.Instance.taxi.capacity);
+       // if ()
+
+            //wenn flugzeugabstellplatz nicht an terminal grenzt, dann starte:
+            //Starte Funktion, um Busse und Taxis etc zum Landeplatz zu senden
+            //alle 20sec wird ein neuer Bus oder ein neues Taxi losgesendet
+            //taxi / bus bekommt vorher ausgerechneten besten path gegeben
+            //checke im auto, ob es ziel erreicht hat, das auto hat eine rückfahrt flag
+            //wenn alle taxis und busse angekommen sind, dann setze den Flug auf ready
+            //sonst setze kapazität auf max
+            return true;
+    }
+
+    public PlacedAsset GetFreeSpace()
+    {
+        foreach (var kv in airplaneSpaces)
+        {
+            if(kv.Value) return kv.Key;
+        }
+        return null;
     }
 
     public void RecalculatePaths()
     {
-        AddRoadNeighbours(hangars.Keys);
-        AddRoadNeighbours(terminals.Keys);
+        AddRoadNeighbours(hangars);
+        AddRoadNeighbours(terminals);
 
         foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
         {
             //ermittle besten Path von allen Hangars zum AirplaneSpace
-            (PlacedAsset, List<Pathnode>) bestHangar = GetBestPathToAirplaneSpace(hangars.Keys, airplaneSpace);
-            if(bestHangar.Item1 != null) hangars[bestHangar.Item1].Add(airplaneSpace, bestHangar.Item2);
+            List<Pathnode> bestHangar = GetBestPathToAirplaneSpace(hangars, airplaneSpace);
+            spaceHangarPaths[airplaneSpace] = bestHangar;
 
-            (PlacedAsset, List<Pathnode>) bestTerminal = GetBestPathToAirplaneSpace(terminals.Keys, airplaneSpace);
-            if(bestTerminal.Item1 != null) terminals[bestTerminal.Item1].Add(airplaneSpace, bestTerminal.Item2);
+            List<Pathnode> bestTerminal = GetBestPathToAirplaneSpace(terminals, airplaneSpace);
+            spaceTerminalPaths[airplaneSpace] = bestTerminal;
         }
     }
 
-    private (PlacedAsset, List<Pathnode>) GetBestPathToAirplaneSpace(ICollection<PlacedAsset> objects, PlacedAsset airplaneSpace)
+    private List<Pathnode> GetBestPathToAirplaneSpace(ICollection<PlacedAsset> objects, PlacedAsset airplaneSpace)
     {
         //ermittle besten Path von allen Hangars zum AirplaneSpace
-        PlacedAsset best = null;
         List<Pathnode> bestList = new List<Pathnode>();
         Vector2Int end = airplaneSpace.origin;
         foreach (PlacedAsset obj in objects)
         {
             Vector2Int start = obj.origin;
             List<Pathnode> path = PathfindingManager.Instance.CalculatePath(start.x, start.y, end.x, end.y);
-            if(path.Count < bestList.Count) {
-                best = obj;
+            if (path.Count < bestList.Count)
+            {
                 bestList = path;
             }
         }
-        return (best, bestList); 
+        return bestList;
     }
 
     private void AddRoadNeighbours(ICollection<PlacedAsset> objects)

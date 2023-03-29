@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ActiveVehicle : MonoBehaviour
 {
-    public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path)
+    public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
         if (path == null || path.Count < 2) return null;
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
@@ -57,6 +57,7 @@ public class ActiveVehicle : MonoBehaviour
         {
             if (idx + 1 == path.Count)
             {
+                //wenn es Flugzeug ist und es zu
                 Destroy(gameObject);
                 return;
                 //TODO:

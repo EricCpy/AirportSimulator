@@ -8,7 +8,7 @@ public class Terminal : MonoBehaviour
     private void Start()
     {
         gridAsset = GetComponent<PlacedAsset>();
-        AirportManager.Instance.terminals.Add(gridAsset, new Dictionary<PlacedAsset, List<Pathnode>>());
+        AirportManager.Instance.terminals.Add(gridAsset);
     }
 
     private void OnDestroy()

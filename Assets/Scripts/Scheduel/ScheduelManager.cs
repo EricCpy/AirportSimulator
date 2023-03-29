@@ -19,7 +19,7 @@ public class ScheduelManager : MonoBehaviour, IData
         }
         Instance = this;
         StartCoroutine(UpdateAirportTime());
-        StartCoroutine(CheckFlights(checkingSeconds));
+        StartCoroutine(PrepareFlights(checkingSeconds));
     }
 
     public void LoadData(Data data)
@@ -96,7 +96,7 @@ public class ScheduelManager : MonoBehaviour, IData
         return takeOffScheduel.Values.Concat(landingScheduel.Values).ToList();
     }
 
-    private IEnumerator CheckFlights(int time)
+    private IEnumerator PrepareFlights(int time)
     {
         var delay = new WaitForSecondsRealtime(time);
         while (true)
@@ -110,9 +110,23 @@ public class ScheduelManager : MonoBehaviour, IData
                     ScheduelObject val = kvpair.Value;
                     val.time.AddMinutes(10);
                     CreateNewScheduelEntry(val.time, val.vehicleType, val.flightType);
+                } else {
+                    //adde den flug zur bereit liste
                 }
             }
             yield return delay;
         }
     }
+
+    private IEnumerator StartFlights(int time)
+    {
+        var delay = new WaitForSecondsRealtime(time);
+        while (true)
+        {
+            //nimm erstes elem der bereit liste 
+            //wenn ein flug älter ist oder genauso alt wie die zeit gerade und die flags stimmen, dann sende ihn los, sonst lasse nochmal 10min warten
+            yield return delay;
+        }
+    }
+
 }
