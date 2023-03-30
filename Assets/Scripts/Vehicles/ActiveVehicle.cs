@@ -9,23 +9,26 @@ public class ActiveVehicle : MonoBehaviour
         if (path == null || path.Count < 2) return null;
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
         ActiveVehicle aVehicle = vehicleTransform.GetComponent<ActiveVehicle>();
-        aVehicle.Create(vehicle, path);
+        aVehicle.Create(vehicle, path, airplane);
         return aVehicle;
     }
 
 
     private Vehicle vehicle;
     public List<Vector3> path;
+    public List<Pathnode> originalPath;
     private Vector3 dir;
     private bool positive = false;
     private int idx = 0;
     private float left = 0f, right = 0f;
     private float CellSize { get => BuildingSystem.Instance.grid.GetCellSize(); }
-
-    private void Create(Vehicle vehicle, List<Pathnode> path)
+    private bool airplane;
+    private void Create(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
+        this.airplane = airplane;
         this.vehicle = vehicle;
         this.path = PathnodesToVector3List(path);
+        this.originalPath = path;
         this.dir = (path[1].origin - path[0].origin).normalized;
         this.idx = 1;
         //left und right berechnen
@@ -36,14 +39,12 @@ public class ActiveVehicle : MonoBehaviour
 
     private void Update()
     {
-        if (idx < max)
+        if (idx < path.Count)
         {
             Move();
         }
 
     }
-
-    public int max = 2;
     private void Move()
     {
         transform.position += dir * Time.deltaTime * vehicle.speed * 0.1f;
@@ -58,7 +59,8 @@ public class ActiveVehicle : MonoBehaviour
             if (idx + 1 == path.Count)
             {
                 //wenn es Flugzeug ist und es zu
-                Destroy(gameObject);
+                if(airplane) AirportManager.Instance.SendVehiclesToAirplane(activeVehicle, vehicle, path[path.Count-1]);
+                //Destroy(gameObject);
                 return;
                 //TODO:
                 //respawne object nach 15min IngameZeit wieder und lasse es zurückfahren

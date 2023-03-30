@@ -10,6 +10,7 @@ public class ScheduelManager : MonoBehaviour, IData
     public static ScheduelManager Instance { get; private set; }
     private SortedList<DateTime, ScheduelObject> takeOffScheduel = new SortedList<DateTime, ScheduelObject>();
     private SortedList<DateTime, ScheduelObject> landingScheduel = new SortedList<DateTime, ScheduelObject>();
+    private SortedList<DateTime, ActiveVehicle> activeAirplanes = new SortedList<DateTime, ActiveVehicle>(); 
     [SerializeField] private int checkingSeconds = 10;
     private void Awake()
     {
@@ -20,6 +21,7 @@ public class ScheduelManager : MonoBehaviour, IData
         Instance = this;
         StartCoroutine(UpdateAirportTime());
         StartCoroutine(PrepareFlights(checkingSeconds));
+        StartCoroutine(StartFlights(checkingSeconds));
     }
 
     public void LoadData(Data data)
@@ -55,7 +57,7 @@ public class ScheduelManager : MonoBehaviour, IData
 
     private IEnumerator UpdateAirportTime()
     {
-        var delay = new WaitForSecondsRealtime(1);
+        var delay = new WaitForSeconds(1);
         while (true)
         {
             airportTime = airportTime.AddSeconds(1);
@@ -98,20 +100,22 @@ public class ScheduelManager : MonoBehaviour, IData
 
     private IEnumerator PrepareFlights(int time)
     {
-        var delay = new WaitForSecondsRealtime(time);
+        var delay = new WaitForSeconds(time);
         while (true)
         {
-            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30))
-            {
-                if (!AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType))
+            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) && 
+                AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType))
+            {   
+                ActiveVehicle plane = AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType);
+                var kvpair = takeOffScheduel.First();
+                takeOffScheduel.Remove(kvpair.Key);
+                if (plane == null)
                 {
-                    var kvpair = takeOffScheduel.First();
-                    takeOffScheduel.Remove(kvpair.Key);
                     ScheduelObject val = kvpair.Value;
                     val.time.AddMinutes(10);
                     CreateNewScheduelEntry(val.time, val.vehicleType, val.flightType);
                 } else {
-                    //adde den flug zur bereit liste
+                    activeAirplanes.Add(kvpair.Key, plane);
                 }
             }
             yield return delay;
@@ -120,11 +124,20 @@ public class ScheduelManager : MonoBehaviour, IData
 
     private IEnumerator StartFlights(int time)
     {
-        var delay = new WaitForSecondsRealtime(time);
+        var delay = new WaitForSeconds(time);
         while (true)
         {
-            //nimm erstes elem der bereit liste 
-            //wenn ein flug älter ist oder genauso alt wie die zeit gerade und die flags stimmen, dann sende ihn los, sonst lasse nochmal 10min warten
+            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime) {
+                var kvpair = activeAirplanes.First();
+                activeAirplanes.Remove(kvpair.Key);
+                if(AirportManager.Instance.AirplaneReady(activeAirplanes.First().Value)) {
+                    //calculate jetzigen weg zum runway und setze das als neuen Path des Flugzeugs new path
+                    //set despawn flag in vehicle
+                } else {
+                    DateTime dateTime = kvpair.Key.AddMinutes(10);
+                    activeAirplanes.Add(dateTime, kvpair.Value);
+                }
+            }
             yield return delay;
         }
     }

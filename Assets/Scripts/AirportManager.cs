@@ -15,7 +15,10 @@ public class AirportManager : MonoBehaviour, IData
     public Dictionary<PlacedAsset, List<Pathnode>> spaceHangarPaths = new Dictionary<PlacedAsset, List<Pathnode>>();
     //Dict aller Abstellplätze, welche frei oder besetzt sind
     public Dictionary<PlacedAsset, bool> airplaneSpaces = new Dictionary<PlacedAsset, bool>();
+    public HashSet<ActiveVehicle> readyToStartAirplanes = new HashSet<ActiveVehicle>();
     public static AirportManager Instance { get; private set; }
+
+    [SerializeField] private float sendingInterval = 15f;
     private void Awake()
     {
         if (Instance != null)
@@ -42,43 +45,79 @@ public class AirportManager : MonoBehaviour, IData
         spaceHangarPaths[asset] = new List<Pathnode>();
     }
 
-    public bool PrepareAirplaneForTakeoff(string airplaneType)
+    public ActiveVehicle PrepareAirplaneForTakeoff(string airplaneType)
     {
-        if (airplaneCapacities.GetValueOrDefault(airplaneType, 0) == 0) return false;
-
-        //TODO
-        //sende Flugzeug zum abstellPlatz
-        //busse / airplane typ kapazität
-
+        if (airplaneCapacities.GetValueOrDefault(airplaneType, 0) == 0) return null;
         Vehicle airplane = VehicleManager.Instance.GetAirplane(airplaneType);
         if (airplane == null)
         {
-            return true;
+            return null;
         }
-        //gucke eventuell noch, ob das Terminal an Flugzeugabstellplatz angrenzt
         PlacedAsset parkingSpace = GetFreeSpace();
-        if(parkingSpace == null) return false;
-        //ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace]);
-        int capacity = airplane.capacity;
+        if (parkingSpace == null) return null;
+        return ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace], true);
+    }
+
+    public void SendVehiclesToAirplane(ActiveVehicle activeVehicle, Vehicle vehicle, Vector3 position)
+    {
+        BuildingSystem
+        if (IsTerminalSpace())
+        {
+
+            return;
+        }
+        int capacity = vehicle.capacity;
         int shuttles = capacity / VehicleManager.Instance.bus.capacity;
         int taxis = (int)Math.Ceiling((capacity % VehicleManager.Instance.bus.capacity) / (double)VehicleManager.Instance.taxi.capacity);
-       // if ()
+        StartCoroutine(SendPassangerTransportVehicles(shuttles, taxis, activeVehicle));
+    }
 
-            //wenn flugzeugabstellplatz nicht an terminal grenzt, dann starte:
-            //Starte Funktion, um Busse und Taxis etc zum Landeplatz zu senden
-            //alle 20sec wird ein neuer Bus oder ein neues Taxi losgesendet
-            //taxi / bus bekommt vorher ausgerechneten besten path gegeben
-            //checke im auto, ob es ziel erreicht hat, das auto hat eine rückfahrt flag
-            //wenn alle taxis und busse angekommen sind, dann setze den Flug auf ready
-            //sonst setze kapazität auf max
+    private IEnumerator SendPassangerTransportVehicles(int shuttles, int taxis, List<Pathnode> bestPath, ActiveVehicle activeVehicle)
+    {
+        while (shuttles > 0 || taxis > 0)
+        {
+            if (shuttles > 0)
+            {
+                shuttles--;
+                ActiveVehicle.Init(VehicleManager.Instance.bus, bestPath, false);
+            }
+            else if (taxis > 0)
+            {
+                taxis--;
+                ActiveVehicle.Init(VehicleManager.Instance.taxi, bestPath, false);
+            }
+            yield return sendingInterval;
+        }
+        readyToStartAirplanes.Add(activeVehicle);
+        //checke im auto, ob es ziel erreicht hat, das auto hat eine rückfahrt flag
+    }
+
+    private bool IsTerminalSpace()
+    {
+        //get nachbarn
+        //
+    }
+
+    public bool AirplaneExists(string airplaneType)
+    {
+        if (airplaneCapacities.GetValueOrDefault(airplaneType, 0) == 0) return false;
+        return true;
+    }
+
+    public bool AirplaneReady(ActiveVehicle vehicle)
+    {
+        if(readyToStartAirplanes.Contains(vehicle)) {
+            readyToStartAirplanes.Remove(vehicle);
             return true;
+        }
+        return false;
     }
 
     public PlacedAsset GetFreeSpace()
     {
         foreach (var kv in airplaneSpaces)
         {
-            if(kv.Value) return kv.Key;
+            if (kv.Value) return kv.Key;
         }
         return null;
     }
