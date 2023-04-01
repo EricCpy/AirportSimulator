@@ -41,6 +41,8 @@ public class Pathfinder
     {
         Pathnode startNode = GetNode(startX, startY);
         Pathnode endNode = GetNode(endX, endY);
+        startNode.previous = null;
+        endNode.previous = null;
         //es gibt noch andere Algorithmen wie ida* oder iddfs, diese vereinigen die unteren algorithmen und verbessern diese,
         //aber dafür wird ein upper bound benötigt, den man setzen muss, da der Algorithmus sonst ineffizient ist
         bool ans = false;
@@ -70,6 +72,7 @@ public class Pathfinder
 
     private bool AStarSearch(Pathnode startNode, Pathnode endNode)
     {
+        //TODO verbesseren
         MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         for (int x = 0; x < grid.GetWidth(); x++)
         {
@@ -248,7 +251,6 @@ public class Pathfinder
         startNode.fCost = CalculateDistance(startNode, endNode);
         MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         openList.Add(startNode);
-        closedList = new HashSet<Pathnode>();
         while (openList.Count > 0)
         {
             Pathnode current = openList.RemoveMin();
@@ -280,11 +282,10 @@ public class Pathfinder
         List<Pathnode> path = new List<Pathnode>();
         path.Add(endNode);
         Pathnode current = endNode;
-
         while (current.previous != null)
         {
             path.Add(current.previous);
-            current = current.previous;
+            current = current.previous;            
         }
         path.Reverse();
         return path;

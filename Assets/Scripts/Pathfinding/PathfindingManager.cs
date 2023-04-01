@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,6 +13,7 @@ public class PathfindingManager : MonoBehaviour
     private float runTime = 0f;
     public static PathfindingManager Instance { get; private set; }
     public bool test;
+    public event Action OnInitialized;
     private void Awake()
     {
         if (Instance != null)
@@ -24,6 +26,7 @@ public class PathfindingManager : MonoBehaviour
     void Start()
     {
         pathfinder = new Pathfinder(BuildingSystem.Instance.grid);
+        OnInitialized?.Invoke();
     }
 
     // Update is called once per frame
@@ -57,7 +60,6 @@ public class PathfindingManager : MonoBehaviour
             length += path.Count;
             searches++;
             runTime += stopwatch.ElapsedMilliseconds / 1000;
-            Debug.Log(stopwatch.ElapsedMilliseconds);
         }
         return path;
     }

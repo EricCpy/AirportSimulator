@@ -106,15 +106,18 @@ public class ScheduelManager : MonoBehaviour, IData
             if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) && 
                 AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType))
             {   
+                Debug.Log(takeOffScheduel.First().Key);
                 ActiveVehicle plane = AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType);
                 var kvpair = takeOffScheduel.First();
                 takeOffScheduel.Remove(kvpair.Key);
                 if (plane == null)
                 {
                     ScheduelObject val = kvpair.Value;
-                    val.time.AddMinutes(10);
-                    CreateNewScheduelEntry(val.time, val.vehicleType, val.flightType);
+                    DateTime newTime = val.time.AddMinutes(10);
+                    CreateNewScheduelEntry(newTime, val.vehicleType, val.flightType);
+                    Debug.Log("fehlgeschlagen");
                 } else {
+                    Debug.Log("es hat funktioniert");
                     activeAirplanes.Add(kvpair.Key, plane);
                 }
             }
@@ -130,7 +133,7 @@ public class ScheduelManager : MonoBehaviour, IData
             if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime) {
                 var kvpair = activeAirplanes.First();
                 activeAirplanes.Remove(kvpair.Key);
-                if(AirportManager.Instance.AirplaneReady(activeAirplanes.First().Value)) {
+                if(AirportManager.Instance.AirplaneReady(kvpair.Value)) {
                     var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
                     kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace));
                     kvpair.Value.SetRunway(true);

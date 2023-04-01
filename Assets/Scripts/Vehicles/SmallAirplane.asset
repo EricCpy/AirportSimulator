@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: SmallAirplane
   m_EditorClassIdentifier: 
   speed: 35
-  capacity: 0
+  capacity: 54
   prefab: {fileID: 5301246495109383982, guid: ec5ef4299f17b744c9f2407cc5945981, type: 3}
   vehicleName: Airbus A
   type: 1

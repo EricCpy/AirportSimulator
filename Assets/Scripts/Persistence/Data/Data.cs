@@ -11,7 +11,8 @@ public class Data
     public List<ScheduelSaveObject> scheduelObjects;
     public List<StorageSaveObject> airplaneCapacities;
     public string time;
-    public Vector2Int runwayStart, runwayEnd;
+    public Vector2Int runwayStart;
+    public Vector2Int runwayEnd;
     public Data(int width, int height, DateTime time)
     {
         this.height = height;

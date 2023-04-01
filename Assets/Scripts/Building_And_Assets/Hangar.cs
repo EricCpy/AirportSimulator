@@ -5,11 +5,10 @@ using UnityEngine;
 public class Hangar : MonoBehaviour
 {
     PlacedAsset gridAsset;
-    private void Start()
+    private void Awake()
     {
         gridAsset = GetComponent<PlacedAsset>();
         AirportManager.Instance.hangars.Add(gridAsset);
-        Debug.Log(BuildingSystem.Instance.assetsLoaded);
         if (BuildingSystem.Instance.assetsLoaded)
         {
             InGameUI.Instance.OpenHangarCreationUI();

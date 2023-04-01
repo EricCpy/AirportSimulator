@@ -31,6 +31,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
         this.gridPosition = new Vector2Int(x,y);
         this.neighbours = new List<Pathnode>();
         this.isReachable = true;
+        this.previous = null;
     }
 
     public override string ToString()

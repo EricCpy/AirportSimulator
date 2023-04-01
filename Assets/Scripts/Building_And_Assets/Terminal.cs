@@ -5,7 +5,7 @@ using UnityEngine;
 public class Terminal : MonoBehaviour
 {
     PlacedAsset gridAsset;
-    private void Start()
+    private void Awake()
     {
         gridAsset = GetComponent<PlacedAsset>();
         AirportManager.Instance.terminals.Add(gridAsset);

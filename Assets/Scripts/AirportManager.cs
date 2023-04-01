@@ -20,7 +20,7 @@ public class AirportManager : MonoBehaviour, IData
     private Dictionary<ActiveVehicle, PlacedAsset> spaceOfActiveAirplane = new Dictionary<ActiveVehicle, PlacedAsset> ();
     public HashSet<ActiveVehicle> readyToStartAirplanes = new HashSet<ActiveVehicle>();
     public static AirportManager Instance { get; private set; }
-    private Vector2Int runwayStart, runwayEnd;
+    private Vector2Int runwayStart = new Vector2Int(-1, -1), runwayEnd = new Vector2Int(-1, -1);
     public List<Pathnode> runway {get; private set;}
     [SerializeField] private float sendingInterval = 15f;
     [SerializeField] private Color runwayColor = new Color(1, 0.75f, 0, 1);
@@ -31,12 +31,19 @@ public class AirportManager : MonoBehaviour, IData
             throw new UnityException("Buildingsystem has already an Instance");
         }
         Instance = this;
+        PathfindingManager.Instance.OnInitialized += InitPaths;
+    }
 
+    private void InitPaths()
+    {
+        AirportManager.Instance.SetRunwayStart(runwayStart);
+        AirportManager.Instance.SetRunwayEnd(runwayEnd);
+        AirportManager.Instance.RecalculatePaths();
+        //foreach(var hangar in hangars) Debug.Log(BuildingSystem.Instance.grid.GetValue(hangar.origin.x, hangar.origin.y).neighbours.Count);
     }
 
     public void AddAirplanes(List<string> airplanes)
     {
-        Debug.Log(airplanes);
         foreach (var airplane in airplanes)
         {
             airplaneCapacities[airplane] = airplaneCapacities.GetValueOrDefault(airplane, 0) + 1;
@@ -54,20 +61,19 @@ public class AirportManager : MonoBehaviour, IData
     {
         if (airplaneCapacities.GetValueOrDefault(airplaneType, 0) == 0) return null;
         Vehicle airplane = VehicleManager.Instance.GetAirplane(airplaneType);
-        if (airplane == null)
-        {
-            return null;
-        }
+        if (airplane == null) return null;
+        airplaneCapacities[airplaneType]--;
         PlacedAsset parkingSpace = GetFreeSpace();
         if (parkingSpace == null) return null;
-        var activeVehicle = ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace], true);
+        ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace], true);
+        Debug.Log(activeVehicle);
         spaceOfActiveAirplane[activeVehicle] = parkingSpace;
         return activeVehicle;
     }
 
     public void SendVehiclesToAirplane(ActiveVehicle activeVehicle, Vehicle vehicle, Vector3 position)
     {
-        PlacedAsset airplaneSpace = BuildingSystem.Instance.grid.GetValue(position).asset;
+        PlacedAsset airplaneSpace = BuildingSystem.Instance.grid.GetValue(position).GetPlacedObject();
         if (IsTerminalSpace(airplaneSpace))
         {
             readyToStartAirplanes.Add(activeVehicle);
@@ -81,6 +87,7 @@ public class AirportManager : MonoBehaviour, IData
 
     private IEnumerator SendPassangerTransportVehicles(int shuttles, int taxis, List<Pathnode> bestPath, ActiveVehicle activeVehicle)
     {
+        var delay = new WaitForSeconds(sendingInterval);
         while (shuttles > 0 || taxis > 0)
         {
             if (shuttles > 0)
@@ -93,7 +100,7 @@ public class AirportManager : MonoBehaviour, IData
                 taxis--;
                 ActiveVehicle.Init(VehicleManager.Instance.taxi, bestPath, false);
             }
-            yield return sendingInterval;
+            yield return delay;
         }
         readyToStartAirplanes.Add(activeVehicle);
     }
@@ -127,7 +134,7 @@ public class AirportManager : MonoBehaviour, IData
     {
         foreach (var kv in airplaneSpaces)
         {
-            if (kv.Value) return kv.Key;
+            if (!kv.Value) return kv.Key;
         }
         return null;
     }
@@ -136,15 +143,17 @@ public class AirportManager : MonoBehaviour, IData
     {
         AddRoadNeighbours(hangars);
         AddRoadNeighbours(terminals);
+        AddRoadNeighbours(airplaneSpaces.Keys);
 
         foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
         {
             //ermittle besten Path von allen Hangars zum AirplaneSpace
-            List<Pathnode> bestHangar = GetBestPathToAirplaneSpace(hangars, airplaneSpace);
-            spaceHangarPaths[airplaneSpace] = bestHangar;
+            List<Pathnode> bestHangarPath = GetBestPathToAirplaneSpace(hangars, airplaneSpace);
+            Debug.Log(bestHangarPath.Count);
+            if(bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
 
-            List<Pathnode> bestTerminal = GetBestPathToAirplaneSpace(terminals, airplaneSpace);
-            spaceTerminalPaths[airplaneSpace] = bestTerminal;
+            List<Pathnode> bestTerminalPath = GetBestPathToAirplaneSpace(terminals, airplaneSpace);
+            if(bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
 
             if(runway != null) {
                 List<Pathnode> bestRunwayPath = PathfindingManager.Instance.CalculatePath(airplaneSpace.origin.x, airplaneSpace.origin.y, runwayStart.x, runwayStart.y);
@@ -163,7 +172,7 @@ public class AirportManager : MonoBehaviour, IData
         {
             Vector2Int start = obj.origin;
             List<Pathnode> path = PathfindingManager.Instance.CalculatePath(start.x, start.y, end.x, end.y);
-            if (path.Count < bestList.Count)
+            if (path.Count > 0 && (bestList.Count == 0 || path.Count < bestList.Count))
             {
                 bestList = path;
             }
@@ -182,7 +191,7 @@ public class AirportManager : MonoBehaviour, IData
             {
                 if (asset.GetComponent<RoadAsset>() != null)
                 {
-                    BuildingSystem.Instance.AddNeighbourToGridObject(obj.origin, asset.origin, false);
+                    BuildingSystem.Instance.AddNeighbourToGridObject(obj.origin, asset.origin);
                 }
             }
         }
@@ -200,21 +209,24 @@ public class AirportManager : MonoBehaviour, IData
     private void DetermineRunway()
     {
         Vector2Int bound = new Vector2Int(-1, -1);
+        Debug.Log(runwayStart);
+        Debug.Log(runwayEnd);
         if (runwayStart == bound || runwayEnd == bound) return;
         List<Pathnode> runway = PathfindingManager.Instance.CalculatePath(runwayStart.x, runwayStart.y, runwayEnd.x, runwayEnd.y);
-        if (runway == null) return;
-        if (this.runway != null)
+        if (runway == null && runway.Count > 0) return;
+        if (this.runway != null && this.runway.Count > 0)
         {
-            foreach (Pathnode node in runway)
+            foreach (Pathnode node in this.runway)
             {
-                var sr = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).asset.GetComponentInChildren<SpriteRenderer>();
+                var sr = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject().GetComponentInChildren<SpriteRenderer>();
                 if (sr != null) sr.color = Color.white;
             }
         }
+
         this.runway = runway;
         foreach (Pathnode node in runway)
         {
-            var sr = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).asset.GetComponentInChildren<SpriteRenderer>();
+            var sr = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject().GetComponentInChildren<SpriteRenderer>();
             if (sr != null) sr.color = runwayColor;
         }
     }
@@ -237,6 +249,8 @@ public class AirportManager : MonoBehaviour, IData
         {
             airplaneCapacities.Add(airplaneCapactiy.vehicleName, airplaneCapactiy.storage);
         }
+        runwayStart = data.runwayStart;
+        runwayEnd = data.runwayEnd;
     }
 
     public void SaveData(Data data)
@@ -247,5 +261,7 @@ public class AirportManager : MonoBehaviour, IData
         }
         data.runwayEnd = runwayEnd;
         data.runwayStart = runwayStart;
+        Debug.Log(data.runwayEnd);
+        Debug.Log(data.runwayStart);
     }
 }

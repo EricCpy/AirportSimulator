@@ -14,7 +14,11 @@ public class RoadAsset : MonoBehaviour
     }
 
     private void OnAssetPlaced(object sender, EventArgs e) {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+        Color oldColor = Color.white;
+        if(sr != null) oldColor = sr.color;
         AdaptToNeighbours(true);
+        if(sr != null) GetComponentInChildren<SpriteRenderer>().color = oldColor;
     }
 
     public void AdaptToNeighbours(bool placed)
@@ -29,7 +33,7 @@ public class RoadAsset : MonoBehaviour
             {
                 if (placed)
                 {
-                    BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin, true);
+                    BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
                     
                     road.AdaptToNeighbours(false);
                 }

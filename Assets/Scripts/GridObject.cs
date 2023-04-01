@@ -5,7 +5,7 @@ public class GridObject
 {
     private Grid<GridObject> grid;
     private int x, y;
-    public PlacedAsset asset;
+    private PlacedAsset asset;
     public Pathnode node;
     private List<GridObject> neighbours;
 

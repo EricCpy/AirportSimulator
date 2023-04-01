@@ -7,6 +7,7 @@ public class ActiveVehicle : MonoBehaviour
     public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
         if (path == null || path.Count < 2) return null;
+        Debug.Log("airplaneee");
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
         ActiveVehicle aVehicle = vehicleTransform.GetComponent<ActiveVehicle>();
         aVehicle.Create(vehicle, path, airplane);
@@ -64,6 +65,9 @@ public class ActiveVehicle : MonoBehaviour
 
     private void NextField()
     {
+
+        //Bedingung ist falsch
+        Debug.Log("positive " + positive + "x " + path[idx].x  + "y " +path[idx].y);
         if ((positive && transform.position.x >= path[idx].x && transform.position.y >= path[idx].y) ||
             (!positive && transform.position.x <= path[idx].x && transform.position.y <= path[idx].y))
         {
@@ -92,7 +96,9 @@ public class ActiveVehicle : MonoBehaviour
             if (dir.x > 0 || dir.y > 0) positive = true;
             else positive = false;
             Rotate();
-            float surplus = Vector3.Distance(transform.position, new Vector3(path[idx].x, path[idx].y, 0f));
+            Vector3 nextPosition = new Vector3(path[idx].x, path[idx].y, 0f);
+            transform.position = nextPosition;
+            float surplus = Vector3.Distance(transform.position, nextPosition);
             idx++;
             AddSurplus(surplus);
         }
@@ -107,9 +113,7 @@ public class ActiveVehicle : MonoBehaviour
 
     private void AddSurplus(float surplus)
     {
-        Debug.Log(surplus);
         transform.position += dir * surplus;
-
         NextField();
     }
 
