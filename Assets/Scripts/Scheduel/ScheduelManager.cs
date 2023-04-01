@@ -131,8 +131,9 @@ public class ScheduelManager : MonoBehaviour, IData
                 var kvpair = activeAirplanes.First();
                 activeAirplanes.Remove(kvpair.Key);
                 if(AirportManager.Instance.AirplaneReady(activeAirplanes.First().Value)) {
-                    //calculate jetzigen weg zum runway und setze das als neuen Path des Flugzeugs new path
-                    //set despawn flag in vehicle
+                    var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
+                    kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace));
+                    kvpair.Value.SetRunway(true);
                 } else {
                     DateTime dateTime = kvpair.Key.AddMinutes(10);
                     activeAirplanes.Add(dateTime, kvpair.Value);

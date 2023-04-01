@@ -23,13 +23,24 @@ public class ActiveVehicle : MonoBehaviour
     private float left = 0f, right = 0f;
     private float CellSize { get => BuildingSystem.Instance.grid.GetCellSize(); }
     private bool airplane;
+    private bool lastDrive, runway;
     private void Create(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
         this.airplane = airplane;
-        this.vehicle = vehicle;
-        this.path = PathnodesToVector3List(path);
+        this.vehicle = vehicle; 
+        InitPath(path);
+    }
+
+    public void SetRunway(bool runway) {
+        this.runway = runway; 
+    }
+
+    public void InitPath(List<Pathnode> path) 
+    {
+        if(path == null) Destroy(gameObject);
         this.originalPath = path;
-        this.dir = (path[1].origin - path[0].origin).normalized;
+        this.path = PathnodesToVector3List(originalPath);
+        this.dir = (originalPath[1].origin - originalPath[0].origin).normalized;
         this.idx = 1;
         //left und right berechnen
         if (dir.x > 0 || dir.y > 0) positive = true;
@@ -58,12 +69,24 @@ public class ActiveVehicle : MonoBehaviour
         {
             if (idx + 1 == path.Count)
             {
-                //wenn es Flugzeug ist und es zu
-                if(airplane) AirportManager.Instance.SendVehiclesToAirplane(activeVehicle, vehicle, path[path.Count-1]);
-                //Destroy(gameObject);
+                if(lastDrive) {
+                    Destroy(gameObject);
+                    return;
+                }
+                idx++;
+                if(airplane) {
+                    if(!runway) AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count-1]);
+                    else {
+                        InitPath(AirportManager.Instance.runway);
+                        lastDrive = true;
+                    }
+                } 
+                else {
+                    lastDrive = true;
+                    GetComponentInChildren<SpriteRenderer>().enabled = false;
+                    Invoke("DriveBackToStart", 300f);
+                }
                 return;
-                //TODO:
-                //respawne object nach 15min IngameZeit wieder und lasse es zurückfahren
             }
             dir = (path[idx + 1] - path[idx]).normalized;
             if (dir.x > 0 || dir.y > 0) positive = true;
@@ -73,6 +96,13 @@ public class ActiveVehicle : MonoBehaviour
             idx++;
             AddSurplus(surplus);
         }
+    }
+
+    private void DriveBackToStart() {
+        GetComponentInChildren<SpriteRenderer>().enabled = true;
+        //lasse es danach zurückfahren
+        originalPath.Reverse();
+        InitPath(originalPath);
     }
 
     private void AddSurplus(float surplus)

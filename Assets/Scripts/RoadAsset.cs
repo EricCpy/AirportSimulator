@@ -112,6 +112,18 @@ public class RoadAsset : MonoBehaviour
         road1.SetActive(false);
     }
 
+    private void Update() {
+        if(Input.GetKeyDown(KeyCode.A)) {
+            //anfang runway
+            AirportManager.Instance.SetRunwayStart(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
+        }
+
+        if(Input.GetKeyDown(KeyCode.E)) {
+            //ende runway
+            AirportManager.Instance.SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
+        }
+    }
+
     private void OnDestroy()
     {
         List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);

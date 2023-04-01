@@ -53,7 +53,9 @@ public class Grid<T>
 
     public Vector2Int GetXY(Vector3 worldPosition)
     {
-        return new Vector2Int(Mathf.FloorToInt((worldPosition.x - originPosition.x) / cellSize), Mathf.FloorToInt((worldPosition.y - originPosition.y) / cellSize));
+        Vector2Int xy =new Vector2Int(Mathf.FloorToInt((worldPosition.x - originPosition.x) / cellSize), Mathf.FloorToInt((worldPosition.y - originPosition.y) / cellSize));
+        if(InBorder(xy)) return xy;
+        return new Vector2Int(-1, -1);
     }
 
     public void SetValue(int x, int y, T value)

@@ -32,8 +32,7 @@ public class PathfindingManager : MonoBehaviour
         if (!debug) return;
         if (Input.GetMouseButtonDown(0) && test)
         {
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int xy = pathfinder.GetGrid().GetXY(worldPosition);
+            Vector2Int xy = BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition);
             Debug.Log(xy);
             List<Pathnode> path = CalculatePath(0, 0, xy.x, xy.y);
             ActiveVehicle.Init(VehicleManager.Instance.taxi, path, false);

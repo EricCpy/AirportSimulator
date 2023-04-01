@@ -46,7 +46,8 @@ public class BuildingSystem : MonoBehaviour, IData
                 PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
             }
         }
-
+        AirportManager.Instance.SetRunwayStart(data.runwayStart);
+        AirportManager.Instance.SetRunwayEnd(data.runwayEnd);
         AirportManager.Instance.RecalculatePaths();
     }
 
@@ -80,19 +81,30 @@ public class BuildingSystem : MonoBehaviour, IData
         }
     }
 
+    public Vector2Int MousePositionToGridPosition(Vector3 mousePosition)
+    {
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        Vector2Int xy = grid.GetXY(worldPosition);
+        return xy;
+    }
+
+    public PlacedAsset GetObjectFromMousePostion(Vector3 mousePosition)
+    {
+        Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
+        return grid.GetValue(worldPosition).GetPlacedObject();
+    }
+
     private void Update()
     {
         if ((gridAsset == null && !deletionMode) || EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
         if (Input.GetMouseButtonDown(0))
         {
-            Debug.Log("Click");
             assetsLoaded = true;
-            Vector3 worldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            Vector2Int xy = grid.GetXY(worldPosition);
+            Vector2Int xy = MousePositionToGridPosition(Input.mousePosition);
             if (!grid.InBorder(xy)) return;
             if (deletionMode)
             {
-                PlacedAsset placedObject = grid.GetValue(worldPosition).GetPlacedObject();
+                PlacedAsset placedObject = GetObjectFromMousePostion(Input.mousePosition);
                 if (placedObject != null)
                 {
                     // Destroy Object in Grid
@@ -188,7 +200,7 @@ public class BuildingSystem : MonoBehaviour, IData
         GridObject object1 = grid.GetValue(xy1.x, xy1.y);
         GridObject object2 = grid.GetValue(xy2.x, xy2.y);
         object1.AddNeighbour(object2);
-        if(both) object2.AddNeighbour(object1);
+        if (both) object2.AddNeighbour(object1);
     }
 
     public void DeleteNeighbourFromGridObject(Vector2Int xy1, Vector2Int xy2)

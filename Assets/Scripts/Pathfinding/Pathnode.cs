@@ -15,6 +15,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
     private int minHeapIndex;
     private List<Pathnode> neighbours;
     public Vector2 origin {get; private set;}
+    public Vector2Int gridPosition {get; private set;}
     public int MinHeapIndex
     {
         get { return minHeapIndex; }
@@ -27,6 +28,7 @@ public class Pathnode : IMinHeapItem<Pathnode>
         this.x = x;
         this.y = y;
         this.origin = grid.GetWorldPosition(x, y);
+        this.gridPosition = new Vector2Int(x,y);
         this.neighbours = new List<Pathnode>();
         this.isReachable = true;
     }

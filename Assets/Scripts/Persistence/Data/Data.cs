@@ -11,6 +11,7 @@ public class Data
     public List<ScheduelSaveObject> scheduelObjects;
     public List<StorageSaveObject> airplaneCapacities;
     public string time;
+    public Vector2Int runwayStart, runwayEnd;
     public Data(int width, int height, DateTime time)
     {
         this.height = height;
@@ -20,6 +21,8 @@ public class Data
         this.vehicleObjects = new List<VehicleSaveObject>();
         this.scheduelObjects = new List<ScheduelSaveObject>();
         this.airplaneCapacities = new List<StorageSaveObject>();
+        this.runwayStart = new Vector2Int(-1, -1);
+        this.runwayEnd = new Vector2Int(-1, -1);
     }
 
     public void Clear()
