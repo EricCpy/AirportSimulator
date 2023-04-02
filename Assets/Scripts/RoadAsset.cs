@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class RoadAsset : MonoBehaviour
 {
@@ -117,6 +118,7 @@ public class RoadAsset : MonoBehaviour
     }
 
     private void Update() {
+        if(EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
         if(Input.GetKeyDown(KeyCode.A)) {
             //anfang runway
             AirportManager.Instance.SetRunwayStart(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));

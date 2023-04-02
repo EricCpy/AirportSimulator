@@ -27,8 +27,8 @@ public class VehicleUI : MonoBehaviour
         {
             float speed = 10;
             int capacity = 10;
-            if (!speedInput.text.Equals("")) speed = Mathf.Min(Mathf.Max(Mathf.Abs(float.Parse(speedInput.text)), 10), 300);
-            if (!capacityInput.text.Equals("")) capacity = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(capacityInput.text)), 50), 200);
+            if (!speedInput.text.Equals("")) speed = Mathf.Min(Mathf.Max(Mathf.Abs(float.Parse(speedInput.text)), 10), 50);
+            if (!capacityInput.text.Equals("")) capacity = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(capacityInput.text)), 20), 300);
             Vehicle vehicle = VehicleManager.Instance.CreateNewAirplane(speed, capacity, vehicleNameInput.text, vehicleColor);
             airplaneSlotMenu.CreateAirplaneSlot(vehicle);
         }

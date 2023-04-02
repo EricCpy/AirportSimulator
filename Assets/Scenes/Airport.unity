@@ -3663,6 +3663,7 @@ MonoBehaviour:
   hangars: []
   terminals: []
   sendingInterval: 15
+  runwayColor: {r: 1, g: 0.75, b: 0, a: 1}
 --- !u!1 &1794026565
 GameObject:
   m_ObjectHideFlags: 0

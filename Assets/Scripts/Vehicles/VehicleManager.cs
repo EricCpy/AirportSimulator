@@ -41,12 +41,13 @@ public class VehicleManager : MonoBehaviour, IData
     {
         foreach (var airplane in airplanes.Values)
         {
+            Debug.Log(airplane.ToVehicleSaveObject().capacity);
             data.vehicleObjects.Add(airplane.ToVehicleSaveObject());
         }
     }
 
     public Vehicle CreateNewAirplane(float speed, int capacity, string vehicleName, Color color) {
-        Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color);
+        Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color, 5, speed/5);
         airplanes.Add(newAirplane.vehicleName, newAirplane);
         return newAirplane;
     }

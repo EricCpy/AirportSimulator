@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5391682feb3fb7445ac310da99140384, type: 3}
   m_Name: Car
   m_EditorClassIdentifier: 
-  speed: 100
+  speed: 45
+  sensorLength: 7
+  accelerationSpeed: 15
   capacity: 4
   prefab: {fileID: 6507405825582634677, guid: b8e62d68862387a48b9ceef3267255d4, type: 3}
   vehicleName: Taxi

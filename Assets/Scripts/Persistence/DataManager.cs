@@ -86,12 +86,9 @@ public class DataManager : MonoBehaviour
 
     public void SaveGame()
     {
-        Debug.Log("Save");
         if (data == null) return;
-        Debug.Log("data war nicht null");
         //finde nochmal alle Objekte, weil neue erzeugt werden können
         dataObjects = FindAllDataObjects();
-        Debug.Log(dataObjects.Count);
         foreach (IData dataObject in dataObjects)
         {
             dataObject.SaveData(data);

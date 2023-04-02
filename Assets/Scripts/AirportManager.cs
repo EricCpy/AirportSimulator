@@ -81,7 +81,10 @@ public class AirportManager : MonoBehaviour, IData
         }
         int capacity = vehicle.capacity;
         int shuttles = capacity / VehicleManager.Instance.bus.capacity;
-        int taxis = (int)Math.Ceiling((capacity % VehicleManager.Instance.bus.capacity) / (double)VehicleManager.Instance.taxi.capacity);
+        int rest = (capacity % VehicleManager.Instance.bus.capacity);
+        int taxis = 0;
+        if(rest >= VehicleManager.Instance.bus.capacity / 2) shuttles++;
+        else taxis = (int)Math.Ceiling(rest / (double)VehicleManager.Instance.taxi.capacity);
         StartCoroutine(SendPassangerTransportVehicles(shuttles, taxis, spaceTerminalPaths[airplaneSpace], activeVehicle));
     }
 
@@ -92,11 +95,13 @@ public class AirportManager : MonoBehaviour, IData
         {
             if (shuttles > 0)
             {
+                Debug.Log("shuttles");
                 shuttles--;
                 ActiveVehicle.Init(VehicleManager.Instance.bus, bestPath, false);
             }
             else if (taxis > 0)
             {
+                Debug.Log("taxis");
                 taxis--;
                 ActiveVehicle.Init(VehicleManager.Instance.taxi, bestPath, false);
             }
@@ -149,7 +154,6 @@ public class AirportManager : MonoBehaviour, IData
         {
             //ermittle besten Path von allen Hangars zum AirplaneSpace
             List<Pathnode> bestHangarPath = GetBestPathToAirplaneSpace(hangars, airplaneSpace);
-            Debug.Log(bestHangarPath.Count);
             if(bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
 
             List<Pathnode> bestTerminalPath = GetBestPathToAirplaneSpace(terminals, airplaneSpace);
@@ -209,8 +213,6 @@ public class AirportManager : MonoBehaviour, IData
     private void DetermineRunway()
     {
         Vector2Int bound = new Vector2Int(-1, -1);
-        Debug.Log(runwayStart);
-        Debug.Log(runwayEnd);
         if (runwayStart == bound || runwayEnd == bound) return;
         List<Pathnode> runway = PathfindingManager.Instance.CalculatePath(runwayStart.x, runwayStart.y, runwayEnd.x, runwayEnd.y);
         if (runway == null && runway.Count > 0) return;

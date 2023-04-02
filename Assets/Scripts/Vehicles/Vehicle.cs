@@ -20,14 +20,15 @@ public class Vehicle : ScriptableObject
     }
 
     public float speed = 10f;
+    public float sensorLength = 10f;
+    public float accelerationSpeed = 5f;
     //capacity in passenger seats
     public int capacity = 10;
     public Transform prefab;
     public string vehicleName;
     public VehicleType type;
     public Color color;
-
-    public Vehicle(float speed, int capacity, Transform prefab, string vehicleName, VehicleType type, Color color)
+    public Vehicle(float speed, int capacity, Transform prefab, string vehicleName, VehicleType type, Color color, float sensorLength, float accelerationSpeed)
     {
         this.speed = speed;
         this.capacity = capacity;
@@ -35,12 +36,18 @@ public class Vehicle : ScriptableObject
         this.vehicleName = vehicleName;
         this.type = type;
         this.color = color;
+        this.sensorLength = sensorLength;
+        this.accelerationSpeed = accelerationSpeed;
         prefab.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     public Vehicle(VehicleSaveObject vehicleSaveObject, Transform prefab)
     {
         this.prefab = prefab;
+        this.speed = vehicleSaveObject.speed;
+        this.capacity = vehicleSaveObject.capacity;
+        this.sensorLength = vehicleSaveObject.sensorLength;
+        this.accelerationSpeed = vehicleSaveObject.accelerationSpeed;
         this.vehicleName = vehicleSaveObject.vehicleName;
         this.type = vehicleSaveObject.vehicleType;
         ColorUtility.TryParseHtmlString("#" + vehicleSaveObject.color, out this.color);
@@ -49,7 +56,7 @@ public class Vehicle : ScriptableObject
 
     public VehicleSaveObject ToVehicleSaveObject()
     {
-        VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName, ColorUtility.ToHtmlStringRGB(color));
+        VehicleSaveObject vso = new VehicleSaveObject(speed,capacity,type,vehicleName, ColorUtility.ToHtmlStringRGB(color), sensorLength, accelerationSpeed);
         return vso;
     }
 

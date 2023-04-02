@@ -10,7 +10,7 @@ public class ScheduelManager : MonoBehaviour, IData
     public static ScheduelManager Instance { get; private set; }
     private SortedList<DateTime, ScheduelObject> takeOffScheduel = new SortedList<DateTime, ScheduelObject>();
     private SortedList<DateTime, ScheduelObject> landingScheduel = new SortedList<DateTime, ScheduelObject>();
-    private SortedList<DateTime, ActiveVehicle> activeAirplanes = new SortedList<DateTime, ActiveVehicle>(); 
+    private SortedList<DateTime, ActiveVehicle> activeAirplanes = new SortedList<DateTime, ActiveVehicle>();
     [SerializeField] private int checkingSeconds = 10;
     private void Awake()
     {
@@ -103,10 +103,9 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) && 
+            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) &&
                 AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType))
-            {   
-                Debug.Log(takeOffScheduel.First().Key);
+            {
                 ActiveVehicle plane = AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType);
                 var kvpair = takeOffScheduel.First();
                 takeOffScheduel.Remove(kvpair.Key);
@@ -115,9 +114,9 @@ public class ScheduelManager : MonoBehaviour, IData
                     ScheduelObject val = kvpair.Value;
                     DateTime newTime = val.time.AddMinutes(10);
                     CreateNewScheduelEntry(newTime, val.vehicleType, val.flightType);
-                    Debug.Log("fehlgeschlagen");
-                } else {
-                    Debug.Log("es hat funktioniert");
+                }
+                else
+                {
                     activeAirplanes.Add(kvpair.Key, plane);
                 }
             }
@@ -130,14 +129,18 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime) {
+            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime)
+            {
                 var kvpair = activeAirplanes.First();
                 activeAirplanes.Remove(kvpair.Key);
-                if(AirportManager.Instance.AirplaneReady(kvpair.Value)) {
+                if (AirportManager.Instance.AirplaneReady(kvpair.Value))
+                {
                     var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
                     kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace));
                     kvpair.Value.SetRunway(true);
-                } else {
+                }
+                else
+                {
                     DateTime dateTime = kvpair.Key.AddMinutes(10);
                     activeAirplanes.Add(dateTime, kvpair.Value);
                 }

@@ -10,12 +10,16 @@ public class VehicleSaveObject
     public float speed;
     public int capacity;
     public string color;
-    public VehicleSaveObject(float speed, int capacity, Vehicle.VehicleType vehicleType, string vehicleName, string color)
+    public float sensorLength;
+    public float accelerationSpeed;
+    public VehicleSaveObject(float speed, int capacity, Vehicle.VehicleType vehicleType, string vehicleName, string color, float sensorLength, float accelerationSpeed)
     {
         this.speed = speed;
         this.capacity = capacity;
         this.vehicleType = vehicleType;
         this.vehicleName = vehicleName;
         this.color = color;
+        this.sensorLength = sensorLength;
+        this.accelerationSpeed = accelerationSpeed;
     }
 }

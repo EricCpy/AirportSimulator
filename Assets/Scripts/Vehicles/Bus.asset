@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5391682feb3fb7445ac310da99140384, type: 3}
   m_Name: Bus
   m_EditorClassIdentifier: 
-  speed: 50
+  speed: 40
+  sensorLength: 7
+  accelerationSpeed: 10
   capacity: 50
   prefab: {fileID: 3003976560002721874, guid: 35f30facf95e88147ad03bf9cc08834d, type: 3}
   vehicleName: Bus

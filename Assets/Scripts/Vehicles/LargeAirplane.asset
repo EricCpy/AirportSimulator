@@ -12,7 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5391682feb3fb7445ac310da99140384, type: 3}
   m_Name: LargeAirplane
   m_EditorClassIdentifier: 
-  speed: 20
+  speed: 10
+  sensorLength: 4
+  accelerationSpeed: 3
   capacity: 115
   prefab: {fileID: 207836498443358065, guid: a2ba2fb3259231b4dbae87ce9b83c6c0, type: 3}
   vehicleName: Airbus C

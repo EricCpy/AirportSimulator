@@ -7,10 +7,9 @@ public class ActiveVehicle : MonoBehaviour
     public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
         if (path == null || path.Count < 2) return null;
-        Debug.Log("airplaneee");
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
         ActiveVehicle aVehicle = vehicleTransform.GetComponent<ActiveVehicle>();
-        aVehicle.Create(vehicle, path, airplane);
+        aVehicle.Create(vehicle, new List<Pathnode>(path), airplane);
         return aVehicle;
     }
 
@@ -25,69 +24,122 @@ public class ActiveVehicle : MonoBehaviour
     private float CellSize { get => BuildingSystem.Instance.grid.GetCellSize(); }
     private bool airplane;
     private bool lastDrive, runway;
+    private bool closeDistance;
+    private LayerMask mask;
+    private float currentSpeed = 0f;
+    private Vector2 otherObjectLastPosition;
+    [SerializeField] private AnimationCurve accelerationCurve;
+    private SpriteRenderer spriteRenderer;
     private void Create(Vehicle vehicle, List<Pathnode> path, bool airplane)
     {
         this.airplane = airplane;
-        this.vehicle = vehicle; 
+        this.vehicle = vehicle;
+        mask = ~LayerMask.NameToLayer("Default");
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         InitPath(path);
     }
 
-    public void SetRunway(bool runway) {
-        this.runway = runway; 
+    public void SetRunway(bool runway)
+    {
+        this.runway = runway;
     }
 
-    public void InitPath(List<Pathnode> path) 
+    public void InitPath(List<Pathnode> path)
     {
-        if(path == null) Destroy(gameObject);
+        if (path == null) Destroy(gameObject);
         this.originalPath = path;
         this.path = PathnodesToVector3List(originalPath);
         this.dir = (originalPath[1].origin - originalPath[0].origin).normalized;
         this.idx = 1;
         //left und right berechnen
         if (dir.x > 0 || dir.y > 0) positive = true;
+        else positive = false;
         Rotate();
         transform.position = this.path[0] + dir * transform.localScale.magnitude / 2;
+        currentSpeed = 0;
     }
-
     private void Update()
     {
         if (idx < path.Count)
         {
             Move();
         }
+    }
+
+    private void FixedUpdate()
+    {
+        if (idx >= path.Count) return;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, vehicle.sensorLength, mask);
+        Debug.DrawRay(transform.position, dir * vehicle.sensorLength, Color.yellow);
+
+        if (hit.collider != null)
+        {
+            if (closeDistance)
+            {
+                float otherVehicleSpeed = Vector2.Distance(otherObjectLastPosition, hit.transform.position) / Time.deltaTime / 0.1f;
+                if (currentSpeed > otherVehicleSpeed)
+                {
+                    //bremse ab auf 1 m/s weniger als das vordere Vehicle
+                    currentSpeed -= 30f * Time.deltaTime;
+                    currentSpeed = Mathf.Max(currentSpeed, Mathf.Max(otherVehicleSpeed - 1, 0));
+                    //wenn das vorder Vehicle noch
+                    float sqDist = Vector3.Distance(hit.point, transform.position);
+                    if(currentSpeed < 1f && sqDist > 1f + spriteRenderer.bounds.size.x / 2) {
+                        currentSpeed = 2f;
+                    } 
+                }
+                else
+                {
+                    //beschleunige
+                    currentSpeed += accelerationCurve.Evaluate(currentSpeed / vehicle.speed) * vehicle.accelerationSpeed * Time.deltaTime;
+                    currentSpeed = Mathf.Min(otherVehicleSpeed, currentSpeed);
+                }
+            }
+            closeDistance = true;
+            otherObjectLastPosition = hit.transform.position;
+        }
+        else
+        {
+            closeDistance = false;
+            currentSpeed += accelerationCurve.Evaluate(currentSpeed / vehicle.speed) * vehicle.accelerationSpeed * Time.deltaTime;
+        }
 
     }
+
+
     private void Move()
     {
-        transform.position += dir * Time.deltaTime * vehicle.speed * 0.1f;
+        transform.position += dir * Time.deltaTime * currentSpeed * 0.1f;
         NextField();
     }
 
     private void NextField()
     {
-
-        //Bedingung ist falsch
-        Debug.Log("positive " + positive + "x " + path[idx].x  + "y " +path[idx].y);
         if ((positive && transform.position.x >= path[idx].x && transform.position.y >= path[idx].y) ||
             (!positive && transform.position.x <= path[idx].x && transform.position.y <= path[idx].y))
         {
             if (idx + 1 == path.Count)
             {
-                if(lastDrive) {
+                if (lastDrive)
+                {
                     Destroy(gameObject);
                     return;
                 }
                 idx++;
-                if(airplane) {
-                    if(!runway) AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count-1]);
-                    else {
+                if (airplane)
+                {
+                    if (!runway) AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
+                    else
+                    {
                         InitPath(AirportManager.Instance.runway);
                         lastDrive = true;
                     }
-                } 
-                else {
+                }
+                else
+                {
                     lastDrive = true;
-                    GetComponentInChildren<SpriteRenderer>().enabled = false;
+                    spriteRenderer.enabled = false;
+                    GetComponent<BoxCollider2D>().enabled = false;
                     Invoke("DriveBackToStart", 300f);
                 }
                 return;
@@ -104,9 +156,10 @@ public class ActiveVehicle : MonoBehaviour
         }
     }
 
-    private void DriveBackToStart() {
-        GetComponentInChildren<SpriteRenderer>().enabled = true;
-        //lasse es danach zurückfahren
+    private void DriveBackToStart()
+    {
+        spriteRenderer.enabled = true;
+        GetComponent<BoxCollider2D>().enabled = true;
         originalPath.Reverse();
         InitPath(originalPath);
     }

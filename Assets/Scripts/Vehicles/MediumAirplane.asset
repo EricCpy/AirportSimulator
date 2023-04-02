@@ -12,9 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5391682feb3fb7445ac310da99140384, type: 3}
   m_Name: MediumAirplane
   m_EditorClassIdentifier: 
-  speed: 30
+  speed: 13
+  sensorLength: 4
+  accelerationSpeed: 3
   capacity: 100
-  prefab: {fileID: 2803956323728831211, guid: d60aaf2c832e2844d81eab9c336aff85, type: 3}
+  prefab: {fileID: 207836498443358065, guid: a2ba2fb3259231b4dbae87ce9b83c6c0, type: 3}
   vehicleName: Airbus B
   type: 1
   color: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0.79607844}
