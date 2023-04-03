@@ -44,6 +44,10 @@ public class ActiveVehicle : MonoBehaviour
         this.runway = runway;
     }
 
+    public void SetLastDrive(bool lastDrive)
+    {
+        this.lastDrive = lastDrive;
+    }
     public void InitPath(List<Pathnode> path)
     {
         if (path == null) Destroy(gameObject);

@@ -22,6 +22,7 @@ public class ScheduelManager : MonoBehaviour, IData
         StartCoroutine(UpdateAirportTime());
         StartCoroutine(PrepareFlights(checkingSeconds));
         StartCoroutine(StartFlights(checkingSeconds));
+        StartCoroutine(CheckForLandings(checkingSeconds));
     }
 
     public void LoadData(Data data)
@@ -129,7 +130,7 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime)
+            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime && (landingScheduel.Count == 0 || (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(5)))
             {
                 var kvpair = activeAirplanes.First();
                 activeAirplanes.Remove(kvpair.Key);
@@ -144,6 +145,22 @@ public class ScheduelManager : MonoBehaviour, IData
                     DateTime dateTime = kvpair.Key.AddMinutes(10);
                     activeAirplanes.Add(dateTime, kvpair.Value);
                 }
+            }
+            yield return delay;
+        }
+    }
+
+    private IEnumerator CheckForLandings(int time)
+    {
+        var delay = new WaitForSeconds(time);
+        while (true)
+        {
+            if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
+            {
+                var kvpair = landingScheduel.First();
+                landingScheduel.Remove(kvpair.Key);
+                //create Airplane welche zu hangar fährt
+                AirportManager.Instance.PrepareRunwayForLanding(kvpair.Value.vehicleType);
             }
             yield return delay;
         }
