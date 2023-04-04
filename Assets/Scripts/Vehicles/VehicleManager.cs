@@ -41,7 +41,6 @@ public class VehicleManager : MonoBehaviour, IData
     {
         foreach (var airplane in airplanes.Values)
         {
-            Debug.Log(airplane.ToVehicleSaveObject().capacity);
             data.vehicleObjects.Add(airplane.ToVehicleSaveObject());
         }
     }

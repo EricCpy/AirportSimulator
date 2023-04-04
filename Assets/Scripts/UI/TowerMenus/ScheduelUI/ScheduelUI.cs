@@ -26,7 +26,6 @@ public class ScheduelUI : MonoBehaviour
     {
         standardColor = currentSelected.GetComponent<Image>().color;
         SelectButton(currentSelected);
-        InitalizeScheduelSlots();
     }
 
     private void OnEnable() {
@@ -50,6 +49,7 @@ public class ScheduelUI : MonoBehaviour
             int hour = int.Parse(time[0]);
             int minute = int.Parse(time[1]);
             DateTime inputDt = new DateTime(year, month, day, hour, minute, 0);
+            if(inputDt <= ScheduelManager.Instance.airportTime) throw new Exception();
             createButton.GetComponent<Image>().color = standardColor;
             ScheduelObject.FlightType flightType = (ScheduelObject.FlightType) Enum.Parse(typeof(ScheduelObject.FlightType), flightTypeInput.captionText.text);
             string airplane = airplaneTypeInput.captionText.text;
@@ -110,12 +110,6 @@ public class ScheduelUI : MonoBehaviour
     public void RemoveScheduelEntries()
     {
         scheduelSlotMenu.RemoveScheduelEntries();
-    }
-
-    private void InitalizeScheduelSlots()
-    {
-        ICollection<ScheduelObject> scheduelEntries = ScheduelManager.Instance.GetAllScheduelEntries();
-        scheduelSlotMenu.InitalizeScheduelSlots(scheduelEntries);
     }
 
     private void OnDisable() {

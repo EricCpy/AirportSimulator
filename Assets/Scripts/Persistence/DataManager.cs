@@ -100,6 +100,7 @@ public class DataManager : MonoBehaviour
     {
         dataHandler.Delete(id);
         data = null;
+        initDataFromScene = false;
     }
 
     private void OnApplicationQuit()

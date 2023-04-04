@@ -7,8 +7,9 @@ public class ScheduelSlotMenu : MonoBehaviour
     [SerializeField] private GameObject scheduelSlot;
     [SerializeField] private Transform buttonBox;
     public Dictionary<ScheduelObject, ScheduelSlot> remove = new Dictionary<ScheduelObject, ScheduelSlot>();
-    public void InitalizeScheduelSlots(ICollection<ScheduelObject> scheduelEntries)
+    private void OnEnable()
     {
+        ICollection<ScheduelObject> scheduelEntries = ScheduelManager.Instance.GetAllScheduelEntries();
         foreach (var entry in scheduelEntries)
         {
             GameObject slot = Instantiate(scheduelSlot);
@@ -34,5 +35,14 @@ public class ScheduelSlotMenu : MonoBehaviour
             }
             remove.Clear();
         }
+    }
+
+    private void OnDisable()
+    {
+        foreach (Transform child in buttonBox)
+        {
+            Destroy(child.gameObject);
+        }
+        remove.Clear();
     }
 }

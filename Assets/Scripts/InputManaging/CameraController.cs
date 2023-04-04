@@ -17,13 +17,13 @@ public class CameraController : MonoBehaviour
     {
         if(GameManager.Instance.uiOpen) return;
         if(Input.GetKey(KeyCode.UpArrow)) {
-            transform.position += transform.up * movementSpeed * Time.deltaTime;
+            transform.position += transform.up * movementSpeed * Time.unscaledDeltaTime;
         } else if(Input.GetKey(KeyCode.DownArrow)) {
-            transform.position += -transform.up * movementSpeed * Time.deltaTime;
+            transform.position += -transform.up * movementSpeed * Time.unscaledDeltaTime;
         } else if(Input.GetKey(KeyCode.LeftArrow)) {
-            transform.position += -transform.right * movementSpeed * Time.deltaTime;
+            transform.position += -transform.right * movementSpeed * Time.unscaledDeltaTime;
         } else if(Input.GetKey(KeyCode.RightArrow)) {
-            transform.position += transform.right * movementSpeed * Time.deltaTime;
+            transform.position += transform.right * movementSpeed * Time.unscaledDeltaTime;
         }
 
         if(moveWithMouse) {

@@ -218,7 +218,10 @@ public class AirportManager : MonoBehaviour, IData
 
     public List<Pathnode> GetSpaceToRunwayPath(PlacedAsset space)
     {
-        return spaceRunwayPath[space];
+        if(!spaceRunwayPath.ContainsKey(space) || runway == null) return null;
+        List<Pathnode> way = new List<Pathnode>(spaceRunwayPath[space]);
+        way.AddRange(runway);
+        return way;
     }
 
     private void DetermineRunway()
@@ -248,7 +251,8 @@ public class AirportManager : MonoBehaviour, IData
     {
         Vector2Int bound = new Vector2Int(-1, -1);
         if (runwayEnd == bound) return;
-        runway = GetBestPathToPosition(hangars, runwayEnd);
+        runwayHangarPath = GetBestPathToPosition(hangars, runwayEnd);
+        runwayHangarPath.Reverse();
     }
 
     public void SetRunwayStart(Vector2Int xy)

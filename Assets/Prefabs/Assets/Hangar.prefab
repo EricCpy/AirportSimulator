@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7562095565911308882}
   - component: {fileID: 9203165968005158328}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hangar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -97,7 +97,7 @@ GameObject:
   - component: {fileID: 2982875976050475531}
   - component: {fileID: 6906684193689676630}
   - component: {fileID: 5222746207055983166}
-  m_Layer: 0
+  m_Layer: 2
   m_Name: Hangar
   m_TagString: Untagged
   m_Icon: {fileID: 0}

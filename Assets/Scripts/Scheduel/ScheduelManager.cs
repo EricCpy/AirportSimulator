@@ -138,7 +138,7 @@ public class ScheduelManager : MonoBehaviour, IData
                 {
                     var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
                     kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace));
-                    kvpair.Value.SetRunway(true);
+                    kvpair.Value.SetLastDrive(true);
                 }
                 else
                 {

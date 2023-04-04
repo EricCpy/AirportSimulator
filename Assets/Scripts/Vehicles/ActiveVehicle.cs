@@ -26,7 +26,7 @@ public class ActiveVehicle : MonoBehaviour
     private bool lastDrive, runway;
     private bool closeDistance;
     private LayerMask mask;
-    private float currentSpeed = 0f;
+    public float currentSpeed = 0f;
     private Vector2 otherObjectLastPosition;
     [SerializeField] private AnimationCurve accelerationCurve;
     private SpriteRenderer spriteRenderer;
@@ -34,7 +34,7 @@ public class ActiveVehicle : MonoBehaviour
     {
         this.airplane = airplane;
         this.vehicle = vehicle;
-        mask = ~LayerMask.NameToLayer("Default");
+        mask = LayerMask.GetMask("Default");
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         InitPath(path);
     }
@@ -80,6 +80,7 @@ public class ActiveVehicle : MonoBehaviour
         {
             if (closeDistance)
             {
+                Debug.Log(hit);
                 float otherVehicleSpeed = Vector2.Distance(otherObjectLastPosition, hit.transform.position) / Time.deltaTime / 0.1f;
                 if (currentSpeed > otherVehicleSpeed)
                 {
@@ -88,9 +89,10 @@ public class ActiveVehicle : MonoBehaviour
                     currentSpeed = Mathf.Max(currentSpeed, Mathf.Max(otherVehicleSpeed - 1, 0));
                     //wenn das vorder Vehicle noch
                     float sqDist = Vector3.Distance(hit.point, transform.position);
-                    if(currentSpeed < 1f && sqDist > 1f + spriteRenderer.bounds.size.x / 2) {
+                    if (currentSpeed < 1f && sqDist > 1f + spriteRenderer.bounds.size.x / 2)
+                    {
                         currentSpeed = 2f;
-                    } 
+                    }
                 }
                 else
                 {
@@ -132,12 +134,7 @@ public class ActiveVehicle : MonoBehaviour
                 idx++;
                 if (airplane)
                 {
-                    if (!runway) AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
-                    else
-                    {
-                        InitPath(AirportManager.Instance.runway);
-                        lastDrive = true;
-                    }
+                    AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
                 }
                 else
                 {

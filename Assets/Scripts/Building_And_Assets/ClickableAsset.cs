@@ -40,6 +40,6 @@ public class ClickableAsset : MonoBehaviour
 
     private void Update()
     {
-        if (clicked) timer += Time.deltaTime;
+        if (clicked) timer += Time.unscaledDeltaTime;
     }
 }

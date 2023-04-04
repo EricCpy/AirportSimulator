@@ -26,4 +26,8 @@ public class ScheduelObject
     {
         return new ScheduelSaveObject(time.ToString("o"), vehicleType, flightType);
     }
+
+    public override string ToString() {
+        return "Time: " + time + ", FlightType: " + flightType + ", VehicleType: " + vehicleType;
+    }
 }
