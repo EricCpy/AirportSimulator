@@ -64,32 +64,31 @@ public class Pathfinder
                 ans = GreedySearch(startNode, endNode);
                 break;
         }
-        closedList.Clear();
         List<Pathnode> list = new List<Pathnode>();
         if (ans) list = CalculatePath(endNode);
+        ClearVisitedNodes();
         return list;
+    }
+
+    private void ClearVisitedNodes()
+    {
+        foreach (var node in closedList)
+        {
+            node.gCost = int.MaxValue;
+            node.hCost = 0;
+            node.CalculateFCost();
+            node.previous = null;
+        }
+        closedList.Clear();
     }
 
     private bool AStarSearch(Pathnode startNode, Pathnode endNode)
     {
-        //TODO verbesseren
         MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
-        for (int x = 0; x < grid.GetWidth(); x++)
-        {
-            for (int y = 0; y < grid.GetHeight(); y++)
-            {
-                Pathnode pathnode = GetNode(x, y);
-                pathnode.gCost = int.MaxValue;
-                pathnode.CalculateFCost();
-                pathnode.previous = null;
-            }
-        }
-
         startNode.gCost = 0;
         startNode.hCost = CalculateDistance(startNode, endNode);
         startNode.CalculateFCost();
         openList.Add(startNode);
-
         while (openList.Count > 0)
         {
 
@@ -285,7 +284,7 @@ public class Pathfinder
         while (current.previous != null)
         {
             path.Add(current.previous);
-            current = current.previous;            
+            current = current.previous;
         }
         path.Reverse();
         return path;
