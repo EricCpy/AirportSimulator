@@ -178,4 +178,8 @@ public class InGameUI : MonoBehaviour
         hangarGeneralMenu.SetActive(true);
         GameManager.Instance.uiOpen = true;
     }
+
+    public void ToggleGrid() {
+        BuildingSystem.Instance.ToggleGrid();
+    }
 }

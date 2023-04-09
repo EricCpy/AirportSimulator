@@ -15,6 +15,9 @@ public class BuildingSystem : MonoBehaviour, IData
     public bool deletionMode { get; set; } = false;
     private int[,] dirs4 = new[,] { { 0, 1 }, { 1, 0 }, { 0, -1 }, { -1, 0 } };
     public bool assetsLoaded { get; private set; }
+    private bool helperLines = true;
+    [SerializeField] private Transform lineContainer;
+    [SerializeField] private GameObject linePrefab;
     private void Awake()
     {
         if (Instance != null)
@@ -46,11 +49,39 @@ public class BuildingSystem : MonoBehaviour, IData
                 PlaceAsset(loadedAsset.origin, loadedAsset.assetRotation, asset);
             }
         }
+        helperLines = data.helperLines;
+        InitalizeLines();
+        lineContainer.gameObject.SetActive(helperLines);
+    }
+
+    public void ToggleGrid()
+    {
+        helperLines = !helperLines;
+        lineContainer.gameObject.SetActive(helperLines);
+    }
+
+    private void InitalizeLines()
+    {
+        for (int x = 0; x <= grid.GetWidth(); x++)
+        {
+            GameObject lineObject = Instantiate(linePrefab);
+            lineObject.transform.SetParent(lineContainer);
+            lineObject.transform.localScale = new Vector3(.5f, grid.GetHeight() * cellSize, 1);
+            lineObject.transform.position = new Vector3(x * cellSize, grid.GetHeight() * cellSize / 2, 0);
+        }
+
+        for (int y = 0; y <= grid.GetHeight(); y++)
+        {
+            GameObject lineObject = Instantiate(linePrefab);
+            lineObject.transform.SetParent(lineContainer);
+            lineObject.transform.localScale = new Vector3(grid.GetWidth() * cellSize, .5f, 1);
+            lineObject.transform.position = new Vector3(grid.GetWidth() * cellSize / 2, y * cellSize, 0);
+        }
     }
 
     public void SaveData(Data data)
     {
-        //maybe save some data later here
+        data.helperLines = helperLines;
     }
 
     public void SetObjectType(InGameUI.ButtonType type)
@@ -132,7 +163,6 @@ public class BuildingSystem : MonoBehaviour, IData
         else
         {
             Debug.Log("Can not Build here!");
-            //TODO: ersetzen durch Schriftzug
         }
     }
 

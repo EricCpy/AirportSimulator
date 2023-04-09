@@ -13,6 +13,7 @@ public class Data
     public string time;
     public Vector2Int runwayStart;
     public Vector2Int runwayEnd;
+    public bool helperLines;
     public Data(int width, int height, DateTime time)
     {
         this.height = height;
@@ -24,6 +25,7 @@ public class Data
         this.airplaneCapacities = new List<StorageSaveObject>();
         this.runwayStart = new Vector2Int(-1, -1);
         this.runwayEnd = new Vector2Int(-1, -1);
+        this.helperLines = true;
     }
 
     public void Clear()

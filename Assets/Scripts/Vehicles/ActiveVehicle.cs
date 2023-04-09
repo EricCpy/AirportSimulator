@@ -228,7 +228,6 @@ public class ActiveVehicle : MonoBehaviour
             list.Add(new Vector3(path[i - 1].origin.x, path[i - 1].origin.y) + currAdditional);
         }
         list.Add(new Vector3(path[path.Count - 1].origin.x, path[path.Count - 1].origin.y) + nextAdditional);
-        //Später: fahre bei der letzten Node immer noch bis zum haus oder ende der straße
         return list;
     }
 }

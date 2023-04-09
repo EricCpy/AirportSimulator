@@ -23,7 +23,7 @@ public class Grid<T>
             }
         }
 
-        if (debug)
+        if (!debug)
         {
             for (int x = 0; x < grid.GetLength(0); x++)
             {
@@ -36,13 +36,8 @@ public class Grid<T>
                     txt.anchor = TextAnchor.MiddleCenter;
                     txt.fontSize = 40;
                     txt.GetComponent<MeshRenderer>().sortingOrder = 10;
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.gray, 100f);
-                    Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.gray, 100f);
                 }
             }
-
-            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.gray, 100f);
-            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.gray, 100f);
         }
     }
 
