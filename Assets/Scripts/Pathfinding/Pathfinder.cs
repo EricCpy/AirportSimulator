@@ -13,7 +13,8 @@ public class Pathfinder
         AStar,
         DStar,
         Greedy,
-        Ids //not yet implemented
+        Ids,
+        Dfs_Memorization
     }
 
     private const int MOVE_STRAIGHT_COST = 1;
@@ -43,8 +44,7 @@ public class Pathfinder
         Pathnode endNode = GetNode(endX, endY);
         startNode.previous = null;
         endNode.previous = null;
-        //es gibt noch andere Algorithmen wie ida* oder iddfs, diese vereinigen die unteren algorithmen und verbessern diese,
-        //aber dafür wird ein upper bound benötigt, den man setzen muss, da der Algorithmus sonst ineffizient ist
+        //es gibt noch andere Algorithmen wie ida* oder idgreedy, diese vereinigen die unteren algorithmen und verbessern diese teilweise
         bool ans = false;
         switch (searchMode)
         {
@@ -54,14 +54,18 @@ public class Pathfinder
             case SearchMode.Dijkstra:
                 ans = DijkstraSearch(startNode, endNode);
                 break;
+            case SearchMode.Dfs_Memorization:
             case SearchMode.Dfs:
-                ans = DfsSearch(startNode, endNode);
+                ans = DepthFirstSearch(startNode, endNode);
                 break;
             case SearchMode.Bfs:
                 ans = BfsSearch(startNode, endNode);
                 break;
             case SearchMode.Greedy:
                 ans = GreedySearch(startNode, endNode);
+                break;
+            case SearchMode.Ids:
+                ans = IterativeDeepeningSearch(startNode, endNode);
                 break;
         }
         List<Pathnode> list = new List<Pathnode>();
@@ -80,6 +84,34 @@ public class Pathfinder
             node.previous = null;
         }
         closedList.Clear();
+    }
+
+    private bool IterativeDeepeningSearch(Pathnode startNode, Pathnode endNode)
+    {
+        for (int i = 1; i < grid.MaxSize() / 2 + Mathf.Max(grid.GetWidth(), grid.GetHeight()); i++)
+        {
+            if (LimitedDfs(startNode, endNode, 0, i)) return true;
+        }
+        return false;
+    }
+
+    private bool LimitedDfs(Pathnode current, Pathnode end, int currLength, int lengthLimit)
+    {
+        if (currLength >= lengthLimit) return false;
+        if (current == end) return true;
+
+        closedList.Add(current);
+        foreach (Pathnode neighbour in GetNeighbours(current))
+        {
+            if (closedList.Contains(neighbour)) continue;
+            if (LimitedDfs(neighbour, end, currLength + 1, lengthLimit))
+            {
+                neighbour.previous = current;
+                return true;
+            }
+        }
+        closedList.Remove(current);
+        return false;
     }
 
     private bool AStarSearch(Pathnode startNode, Pathnode endNode)
@@ -123,58 +155,67 @@ public class Pathfinder
         return false;
     }
 
-    private bool DfsSearch(Pathnode startNode, Pathnode endNode)
-    {
-        if (Dfs(startNode, endNode, closedList, 0, int.MaxValue) != -1) return true;
-        return false;
-    }
-
     //normale dfs kann kürzesten path nicht finden, sondern würde irgendeinen finden
-    private bool DfsNormal(Pathnode current, Pathnode end)
+    private bool DepthFirstSearch(Pathnode current, Pathnode end)
     {
-        if (current == end)
-        {
-            return true;
-        }
-        closedList.Add(current);
-        foreach (Pathnode neighbour in GetNeighbours(current))
-        {
-            if (closedList.Contains(current)) continue;
-            if (DfsSearch(neighbour, end))
-            {
-                neighbour.previous = current;
-                return true;
-            };
-        }
+        if (searchMode == SearchMode.Dfs && Dfs(current, end, 0, int.MaxValue) != -1) return true;
+        if (searchMode == SearchMode.Dfs_Memorization && Dfs_Memorization(current, end, 0, int.MaxValue, new Dictionary<Pathnode, int>()) != -1) return true;
         return false;
     }
 
-    //dfs könnte mit memorization ausgebaut werden, wenn man vom ende startet
-    //momentan exponentielle Zeitkomplexität, da schon besuchte Nodes nochmal revisited werden müssen
-    private int Dfs(Pathnode current, Pathnode end, HashSet<Pathnode> visited, int pathLength, int minLength)
+    private int Dfs_Memorization(Pathnode current, Pathnode end, int currLength, int minLength, Dictionary<Pathnode, int> memo)
     {
-        if (pathLength >= minLength) return -1;
-        if (current == end)
+        if (currLength >= minLength) return -1;
+        if (current == end) return currLength;
+        if (memo.ContainsKey(current))
         {
-            if (pathLength < minLength)
-            {
-                return pathLength;
-            }
-            return -1;
+            if (memo[current] == -1) return -1;
+            return currLength + memo[current];
         }
-        visited.Add(current);
+
+        closedList.Add(current);
         Pathnode bestNeighbour = null;
         foreach (Pathnode neighbour in GetNeighbours(current))
         {
             if (closedList.Contains(neighbour)) continue;
-            int length = Dfs(neighbour, end, visited, pathLength + 1, minLength);
+            int length = Dfs_Memorization(neighbour, end, currLength + 1, minLength, memo);
             if (length != -1 && minLength > length)
             {
                 bestNeighbour = neighbour;
                 minLength = length;
             }
         }
-        visited.Remove(current);
+        closedList.Remove(current);
+        if (bestNeighbour != null)
+        {
+            memo[current] = minLength - currLength;
+            bestNeighbour.previous = current;
+            return minLength;
+        }
+        memo[current] = -1;
+        return -1;
+    }
+
+    //dfs könnte mit memorization ausgebaut werden, wenn man vom ende startet
+    //momentan exponentielle Zeitkomplexität, da schon besuchte Nodes nochmal revisited werden müssen
+    private int Dfs(Pathnode current, Pathnode end, int currLength, int minLength)
+    {
+        if (currLength >= minLength) return -1;
+        if (current == end) return currLength;
+
+        closedList.Add(current);
+        Pathnode bestNeighbour = null;
+        foreach (Pathnode neighbour in GetNeighbours(current))
+        {
+            if (closedList.Contains(neighbour)) continue;
+            int length = Dfs(neighbour, end, currLength + 1, minLength);
+            if (length != -1 && minLength > length)
+            {
+                bestNeighbour = neighbour;
+                minLength = length;
+            }
+        }
+        closedList.Remove(current);
         if (bestNeighbour != null)
         {
             bestNeighbour.previous = current;
