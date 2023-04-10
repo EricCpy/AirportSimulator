@@ -12,6 +12,7 @@ public class ScheduelManager : MonoBehaviour, IData
     private SortedList<DateTime, ScheduelObject> landingScheduel = new SortedList<DateTime, ScheduelObject>();
     private SortedList<DateTime, ActiveVehicle> activeAirplanes = new SortedList<DateTime, ActiveVehicle>();
     [SerializeField] private int checkingSeconds = 10;
+    [SerializeField] private int runwayBlockTime = 5;
     private void Awake()
     {
         if (Instance != null)
@@ -130,7 +131,7 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime && (landingScheduel.Count == 0 || (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(5)))
+            if (activeAirplanes.Count > 0 && activeAirplanes.First().Key <= airportTime && (landingScheduel.Count == 0 || (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime)))
             {
                 var kvpair = activeAirplanes.First();
                 activeAirplanes.Remove(kvpair.Key);
@@ -155,6 +156,12 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
+
+            if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
+            {
+                AirportManager.Instance.BlockRunway();  
+            } 
+
             if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
             {
                 var kvpair = landingScheduel.First();

@@ -27,7 +27,6 @@ public class PathfindingUI : MonoBehaviour
                 searchMode = Pathfinder.SearchMode.Dfs;
                 break;
             case 2:
-                Debug.Log("BFS");
                 searchMode = Pathfinder.SearchMode.Bfs;
                 break;
             case 3:
@@ -38,6 +37,9 @@ public class PathfindingUI : MonoBehaviour
                 break;
             case 5:
                 searchMode = Pathfinder.SearchMode.Ids;
+                break;
+            case 6:
+                searchMode = Pathfinder.SearchMode.Dfs_Memorization;
                 break;
         }
         PathfindingManager.Instance.ChangeSearchMode(searchMode);

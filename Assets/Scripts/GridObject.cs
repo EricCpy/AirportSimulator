@@ -55,4 +55,6 @@ public class GridObject
         neighbours.Remove(neighbour);
         node.DeleteNeighbour(neighbour.node);
     }
+
+    public List<GridObject> GetNeighbours() { return neighbours; }
 }

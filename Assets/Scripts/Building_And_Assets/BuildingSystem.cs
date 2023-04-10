@@ -219,7 +219,7 @@ public class BuildingSystem : MonoBehaviour, IData
 
     public Vector3 calculateAssetWorldPositon(Vector2Int xy, Vector2Int rotationOffset)
     {
-        return grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * grid.GetCellSize();
+        return grid.GetWorldPosition(xy.x, xy.y) + new Vector3(rotationOffset.x, rotationOffset.y) * cellSize;
     }
 
     public void AddNeighbourToGridObject(Vector2Int xy1, Vector2Int xy2)
@@ -237,4 +237,6 @@ public class BuildingSystem : MonoBehaviour, IData
         object1.DeleteNeighbour(object2);
         object2.DeleteNeighbour(object1);
     }
+
+    public float GetCellSize() { return cellSize; }
 }

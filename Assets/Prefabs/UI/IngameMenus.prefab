@@ -5316,6 +5316,14 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -18
       objectReference: {fileID: 0}
+    - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_Options.m_Options.Array.size
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[6].m_Text
+      value: DFS-Memorization
+      objectReference: {fileID: 0}
     - target: {fileID: 5558992035089969996, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

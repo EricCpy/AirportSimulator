@@ -78,6 +78,7 @@ public class ActiveVehicle : MonoBehaviour
 
         if (hit.collider != null)
         {
+            //TODO: adde Szenario, wenn Barricade oder Ampelcollider getroffen wird
             if (closeDistance)
             {
                 Debug.Log(hit);

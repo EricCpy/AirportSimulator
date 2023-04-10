@@ -14,16 +14,22 @@ public class RoadAsset : MonoBehaviour
         asset.OnPlacedAsset += OnAssetPlaced;
     }
 
-    private void OnAssetPlaced(object sender, EventArgs e) {
-        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-        Color oldColor = Color.white;
-        if(sr != null) oldColor = sr.color;
+    private void OnAssetPlaced(object sender, EventArgs e)
+    {
         AdaptToNeighbours(true);
-        if(sr != null) GetComponentInChildren<SpriteRenderer>().color = oldColor;
     }
 
     public void AdaptToNeighbours(bool placed)
     {
+        SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
+
+        Color oldColor = Color.white;
+        if (sr != null)
+        {
+            Debug.Log(placed);
+            Debug.Log(sr.color);
+            oldColor = sr.color;
+        }
         List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
         bool left = false, right = false, top = false, bottom = false;
         int count = 0;
@@ -35,7 +41,7 @@ public class RoadAsset : MonoBehaviour
                 if (placed)
                 {
                     BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
-                    
+
                     road.AdaptToNeighbours(false);
                 }
                 Vector2Int pos = asset.origin - neighbour.origin;
@@ -107,6 +113,8 @@ public class RoadAsset : MonoBehaviour
                 asset.SetRotation(GridAsset.AssetRotation.Up);
             }
         }
+        Debug.Log(GetComponentInChildren<SpriteRenderer>());
+        GetComponentInChildren<SpriteRenderer>().color = oldColor;
     }
 
     private void SetRoadsInactive()
@@ -117,14 +125,17 @@ public class RoadAsset : MonoBehaviour
         road1.SetActive(false);
     }
 
-    private void Update() {
-        if(EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
-        if(Input.GetKeyDown(KeyCode.A)) {
+    private void Update()
+    {
+        if (EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
+        if (Input.GetKeyDown(KeyCode.A))
+        {
             //anfang runway
             AirportManager.Instance.SetRunwayStart(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
         }
 
-        if(Input.GetKeyDown(KeyCode.E)) {
+        if (Input.GetKeyDown(KeyCode.E))
+        {
             //ende runway
             AirportManager.Instance.SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
         }
