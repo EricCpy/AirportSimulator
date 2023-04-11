@@ -78,10 +78,26 @@ public class ActiveVehicle : MonoBehaviour
 
         if (hit.collider != null)
         {
-            //TODO: adde Szenario, wenn Barricade oder Ampelcollider getroffen wird
+            Barrier barrier = hit.collider.GetComponent<Barrier>();
+            if (barrier != null && barrier.IsBlocked())
+            {
+                currentSpeed -= 30f * Time.deltaTime;
+                //fahre bis auf ein Meter ran
+                float sqDist = Vector3.Distance(hit.point, transform.position);
+                if (currentSpeed < 1f && sqDist > 1f + spriteRenderer.bounds.size.x / 2)
+                {
+                    currentSpeed = 2f;
+                }
+            }
+            else if (barrier != null)
+            {
+                closeDistance = false;
+                currentSpeed += accelerationCurve.Evaluate(currentSpeed / vehicle.speed) * vehicle.accelerationSpeed * Time.deltaTime;
+                return;
+            }
+
             if (closeDistance)
             {
-                Debug.Log(hit);
                 float otherVehicleSpeed = Vector2.Distance(otherObjectLastPosition, hit.transform.position) / Time.deltaTime / 0.1f;
                 if (currentSpeed > otherVehicleSpeed)
                 {
