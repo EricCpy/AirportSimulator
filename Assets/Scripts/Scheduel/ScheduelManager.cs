@@ -74,6 +74,10 @@ public class ScheduelManager : MonoBehaviour, IData
         {
             time = time.AddMilliseconds(1);
         }
+        if (!VehicleManager.Instance.IsVehicle(vehicleType))
+        {
+            VehicleManager.Instance.CreateNewAirplane(15, 100, vehicleType, Color.grey);
+        }
         ScheduelObject scheduelObj = new ScheduelObject(time, vehicleType, flightType);
         scheduel.Add(time, scheduelObj);
         return scheduelObj;
@@ -159,8 +163,8 @@ public class ScheduelManager : MonoBehaviour, IData
 
             if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
             {
-                AirportManager.Instance.BlockRunway();  
-            } 
+                AirportManager.Instance.BlockRunway();
+            }
 
             if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
             {

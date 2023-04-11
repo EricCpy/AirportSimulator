@@ -951,6 +951,11 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3172708345529691038, guid: 67fdaa5e08fc0a342b740beb7b44e56c, type: 3}
+      propertyPath: m_text
+      value: '{''arrivals'': [{"arrivalTime": "TIME", "airplaneType": "Name"}], ''departures'':
+        [{"departureTime":  "TIME", "airplaneType": "Name"}]}'
+      objectReference: {fileID: 0}
     - target: {fileID: 3172708345603510374, guid: 67fdaa5e08fc0a342b740beb7b44e56c, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0

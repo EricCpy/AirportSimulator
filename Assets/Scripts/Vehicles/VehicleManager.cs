@@ -45,27 +45,38 @@ public class VehicleManager : MonoBehaviour, IData
         }
     }
 
-    public Vehicle CreateNewAirplane(float speed, int capacity, string vehicleName, Color color) {
-        Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color, 5, speed/5);
+    public Vehicle CreateNewAirplane(float speed, int capacity, string vehicleName, Color color)
+    {
+        Vehicle newAirplane = new Vehicle(speed, capacity, airplane, vehicleName, Vehicle.VehicleType.Airplane, color, 5, speed / 5);
         airplanes.Add(newAirplane.vehicleName, newAirplane);
         return newAirplane;
     }
 
-    public ICollection<Vehicle> GetAllAirplanes() {
+    public ICollection<Vehicle> GetAllAirplanes()
+    {
         return airplanes.Values;
     }
 
-    public ICollection<string> GetAllAirplaneNames() {
+    public ICollection<string> GetAllAirplaneNames()
+    {
         return airplanes.Keys;
     }
 
-    public void RemoveAirplanes(ICollection<Vehicle> airplaneList) {
-        foreach(var airplane in airplaneList) {
+    public bool IsVehicle(string vehicleName)
+    {
+        return airplanes.ContainsKey(vehicleName);
+    }
+
+    public void RemoveAirplanes(ICollection<Vehicle> airplaneList)
+    {
+        foreach (var airplane in airplaneList)
+        {
             airplanes.Remove(airplane.vehicleName);
         }
     }
 
-    public Vehicle GetAirplane(string airplaneType) {
+    public Vehicle GetAirplane(string airplaneType)
+    {
         Vehicle vehicle = null;
         airplanes.TryGetValue(airplaneType, out vehicle);
         return vehicle;

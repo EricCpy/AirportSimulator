@@ -18,7 +18,9 @@ public class ScheduelUI : MonoBehaviour
     [SerializeField] private TMP_InputField flightTimeInput;
     [SerializeField] private TMP_Dropdown flightTypeInput;
     [SerializeField] private TMP_Dropdown airplaneTypeInput;
+    [SerializeField] private TMP_InputField importInput;
     [SerializeField] private Button createButton;
+    [SerializeField] private Button importButton;
     [Header("ScheduelSlotMenu")]
     [SerializeField] private ScheduelSlotMenu scheduelSlotMenu;
 
@@ -28,11 +30,13 @@ public class ScheduelUI : MonoBehaviour
         SelectButton(currentSelected);
     }
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         InitalizeDropdownSelection();
     }
 
-    private void InitalizeDropdownSelection() {
+    private void InitalizeDropdownSelection()
+    {
         ICollection<string> names = VehicleManager.Instance.GetAllAirplaneNames();
         airplaneTypeInput.AddOptions(names.ToList());
     }
@@ -49,9 +53,8 @@ public class ScheduelUI : MonoBehaviour
             int hour = int.Parse(time[0]);
             int minute = int.Parse(time[1]);
             DateTime inputDt = new DateTime(year, month, day, hour, minute, 0);
-            if(inputDt <= ScheduelManager.Instance.airportTime) throw new Exception();
-            createButton.GetComponent<Image>().color = standardColor;
-            ScheduelObject.FlightType flightType = (ScheduelObject.FlightType) Enum.Parse(typeof(ScheduelObject.FlightType), flightTypeInput.captionText.text);
+            if (inputDt <= ScheduelManager.Instance.airportTime) throw new Exception("Input Datetime too small");
+            ScheduelObject.FlightType flightType = (ScheduelObject.FlightType)Enum.Parse(typeof(ScheduelObject.FlightType), flightTypeInput.captionText.text);
             string airplane = airplaneTypeInput.captionText.text;
             ScheduelObject scheduelEntry = ScheduelManager.Instance.CreateNewScheduelEntry(inputDt, airplane, flightType);
             scheduelSlotMenu.CreateScheduelSlot(scheduelEntry);
@@ -112,12 +115,36 @@ public class ScheduelUI : MonoBehaviour
         scheduelSlotMenu.RemoveScheduelEntries();
     }
 
-    private void OnDisable() {
+    private void OnDisable()
+    {
         airplaneTypeInput.ClearOptions();
     }
 
     public void ImportScheduelEntries()
     {
-        //TODO
+        try
+        {
+            ScheduelJsonData data = JsonUtility.FromJson<ScheduelJsonData>(importInput.text);
+            foreach (var arrival in data.arrivals)
+            {
+                DateTime time = DateTime.Parse(arrival.arrivalTime);
+                if (time <= ScheduelManager.Instance.airportTime) continue;
+                ScheduelManager.Instance.CreateNewScheduelEntry(time, arrival.airplaneType, ScheduelObject.FlightType.Landing);
+            }
+            foreach (var departure in data.departures)
+            {
+                DateTime time = DateTime.Parse(departure.departureTime);
+                if (time <= ScheduelManager.Instance.airportTime) continue;
+                ScheduelManager.Instance.CreateNewScheduelEntry(time, departure.airplaneType, ScheduelObject.FlightType.Takeoff);
+            }
+            importInput.text = "";
+            importButton.GetComponent<Image>().color = standardColor;
+        }
+        catch (Exception e)
+        {
+            importButton.GetComponent<Image>().color = failColor;
+            Debug.Log(e);
+        }
+
     }
 }
