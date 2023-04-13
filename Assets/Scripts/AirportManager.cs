@@ -28,6 +28,7 @@ public class AirportManager : MonoBehaviour, IData
     private Barrier driveOnBarrier;
     private List<Barrier> driveOffBarriers = new List<Barrier>();
     [SerializeField] private GameObject barrierPrefab;
+    private bool airplaneOnRunway = false;
     private void Awake()
     {
         if (Instance != null)
@@ -68,6 +69,7 @@ public class AirportManager : MonoBehaviour, IData
         airplaneCapacities[airplaneType]--;
         PlacedAsset parkingSpace = GetFreeSpace();
         if (parkingSpace == null) return null;
+        airplaneOnRunway = true;
         ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace], true);
         spaceOfActiveAirplane[activeVehicle] = parkingSpace;
         return activeVehicle;
@@ -330,24 +332,24 @@ public class AirportManager : MonoBehaviour, IData
         {
             barrier.ToggleBlockStatus(true);
         }
+        airplaneOnRunway = false;
     }
 
     public void AirplaneLeftOrEnteredRunway(bool enteredRunway)
     {
         if (enteredRunway)
         {
-            foreach (var barrier in driveOffBarriers)
-            {
-                barrier.ToggleBlockStatus(true);
-            }
+            BlockRunway();
+            airplaneOnRunway = true;
         }
-        else
+        else if (airplaneOnRunway)
         {
             driveOnBarrier.ToggleBlockStatus(false);
             foreach (var barrier in driveOffBarriers)
             {
-                barrier.ToggleBlockStatus(true);
+                barrier.ToggleBlockStatus(false);
             }
+            airplaneOnRunway = false;
         }
     }
 

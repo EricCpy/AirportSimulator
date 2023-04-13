@@ -246,4 +246,12 @@ public class ActiveVehicle : MonoBehaviour
         list.Add(new Vector3(path[path.Count - 1].origin.x, path[path.Count - 1].origin.y) + nextAdditional);
         return list;
     }
+
+    private void OnDestroy()
+    {
+        if (airplane)
+        {
+            AirportManager.Instance.AirplaneLeftOrEnteredRunway(false);
+        }
+    }
 }
