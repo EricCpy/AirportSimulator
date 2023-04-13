@@ -36,7 +36,6 @@ public class TestPathfidner : MonoBehaviour
             Debug.DrawLine(worldPosition, worldPosition + (Vector3.one * 5f), Color.red, 1000f);
             Vector2Int xy = pathfinder.GetGrid().GetXY(worldPosition);
             Pathnode node = pathfinder.GetGrid().GetValue(xy.x,xy.y).node;
-            node.isReachable = false;
         }
     }
 }

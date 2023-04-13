@@ -20,12 +20,13 @@ public class Pathfinder
     private const int MOVE_STRAIGHT_COST = 1;
     private Grid<GridObject> grid;
     private HashSet<Pathnode> closedList;
-    public SearchMode searchMode = SearchMode.Greedy;
-
+    public SearchMode searchMode = SearchMode.AStar;
+    private MinHeap<Pathnode> openList;
     public Pathfinder(Grid<GridObject> grid)
     {
         this.grid = grid;
         closedList = new HashSet<Pathnode>();
+        openList = new MinHeap<Pathnode>(grid.MaxSize());
     }
 
     public Grid<GridObject> GetGrid()
@@ -76,6 +77,10 @@ public class Pathfinder
 
     private void ClearVisitedNodes()
     {
+        while (openList.Count > 0)
+        {
+            closedList.Add(openList.RemoveMin());
+        }
         foreach (var node in closedList)
         {
             node.gCost = int.MaxValue;
@@ -116,20 +121,15 @@ public class Pathfinder
 
     private bool AStarSearch(Pathnode startNode, Pathnode endNode)
     {
-        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         startNode.gCost = 0;
         startNode.hCost = CalculateDistance(startNode, endNode);
         startNode.CalculateFCost();
         openList.Add(startNode);
         while (openList.Count > 0)
         {
-
             Pathnode current = openList.RemoveMin();
-            if (current == endNode)
-            {
-                return true;
-            }
             closedList.Add(current);
+            if (current == endNode) return true;
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
                 if (closedList.Contains(neighbour)) continue;
@@ -253,7 +253,6 @@ public class Pathfinder
         HashSet<Pathnode> distances = new HashSet<Pathnode>();
         startNode.fCost = 0;
         distances.Add(startNode);
-        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         openList.Add(startNode);
         while (openList.Count > 0)
         {
@@ -289,7 +288,6 @@ public class Pathfinder
     private bool GreedySearch(Pathnode startNode, Pathnode endNode)
     {
         startNode.fCost = CalculateDistance(startNode, endNode);
-        MinHeap<Pathnode> openList = new MinHeap<Pathnode>(grid.MaxSize());
         openList.Add(startNode);
         while (openList.Count > 0)
         {

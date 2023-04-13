@@ -104,7 +104,6 @@ public class ActiveVehicle : MonoBehaviour
                     //bremse ab auf 1 m/s weniger als das vordere Vehicle
                     currentSpeed -= 30f * Time.deltaTime;
                     currentSpeed = Mathf.Max(currentSpeed, Mathf.Max(otherVehicleSpeed - 1, 0));
-                    //wenn das vorder Vehicle noch
                     float sqDist = Vector3.Distance(hit.point, transform.position);
                     if (currentSpeed < 1f && sqDist > 1f + spriteRenderer.bounds.size.x / 2)
                     {

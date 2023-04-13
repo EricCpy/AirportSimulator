@@ -5252,6 +5252,22 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -18
       objectReference: {fileID: 0}
+    - target: {fileID: 318537087, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 3172708346613645914}
+    - target: {fileID: 318537087, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: RecalculatePaths
+      objectReference: {fileID: 0}
+    - target: {fileID: 318537087, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: PathfindingUI, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 318537087, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 1006544325, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -5319,6 +5335,14 @@ PrefabInstance:
     - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_Options.m_Options.Array.size
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[0].m_Text
+      value: A*
+      objectReference: {fileID: 0}
+    - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+      propertyPath: m_Options.m_Options.Array.data[4].m_Text
+      value: Greedy
       objectReference: {fileID: 0}
     - target: {fileID: 5558992034934736233, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_Options.m_Options.Array.data[6].m_Text
@@ -5562,8 +5586,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5558992036301113929, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_text
-      value: '{''arrivals'': [{"arrivalTime": , "airplaneType": }], ''departures'':
-        [{"departureTime": , "airplaneType": }]}'
+      value: '{''arrivals'': [{"arrivalTime": "TIME", "airplaneType": "Name"}], ''departures'':
+        [{"departureTime":  "TIME", "airplaneType": "Name"}]}'
       objectReference: {fileID: 0}
     - target: {fileID: 5558992036301113929, guid: 74aead59012c4074298fe443fa87781f, type: 3}
       propertyPath: m_fontSize
@@ -5635,6 +5659,17 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 5558992035089969996, guid: 74aead59012c4074298fe443fa87781f, type: 3}
   m_PrefabInstance: {fileID: 6999219047237870039}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3172708346613645914 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5558992035212436365, guid: 74aead59012c4074298fe443fa87781f, type: 3}
+  m_PrefabInstance: {fileID: 6999219047237870039}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdd576b5690e795468d8f35a0fd13f57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &3172708346749738454 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 5558992035348593665, guid: 74aead59012c4074298fe443fa87781f, type: 3}

@@ -21,7 +21,7 @@ public class PathfindingUI : MonoBehaviour
         switch (algorithm.value)
         {
             case 0:
-                searchMode = Pathfinder.SearchMode.Greedy;
+                searchMode = Pathfinder.SearchMode.AStar;
                 break;
             case 1:
                 searchMode = Pathfinder.SearchMode.Dfs;
@@ -33,7 +33,7 @@ public class PathfindingUI : MonoBehaviour
                 searchMode = Pathfinder.SearchMode.Dijkstra;
                 break;
             case 4:
-                searchMode = Pathfinder.SearchMode.AStar;
+                searchMode = Pathfinder.SearchMode.Greedy;
                 break;
             case 5:
                 searchMode = Pathfinder.SearchMode.Ids;

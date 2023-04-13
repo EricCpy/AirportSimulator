@@ -73,8 +73,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
-  streetLight: 1
-  lights: []
+  trafficLight: 1
+  lights:
+  - {fileID: 7126468004352340708}
 --- !u!1 &368723258345946302
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,8 +266,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
-  streetLight: 1
-  lights: []
+  trafficLight: 1
+  lights:
+  - {fileID: 4464580074437821625}
 --- !u!1 &935552557911897023
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,8 +479,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
-  streetLight: 1
-  lights: []
+  trafficLight: 1
+  lights:
+  - {fileID: 9087234895209281202}
 --- !u!1 &2586797978204821031
 GameObject:
   m_ObjectHideFlags: 0
@@ -552,8 +555,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
-  streetLight: 1
-  lights: []
+  trafficLight: 1
+  lights:
+  - {fileID: 2763192387352358158}
 --- !u!1 &3609922802731141336
 GameObject:
   m_ObjectHideFlags: 0

@@ -23,7 +23,7 @@ public class Grid<T>
             }
         }
 
-        if (!debug)
+        if (debug)
         {
             for (int x = 0; x < grid.GetLength(0); x++)
             {

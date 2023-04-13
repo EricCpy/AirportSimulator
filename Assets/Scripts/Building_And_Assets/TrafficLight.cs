@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StreetLight : MonoBehaviour
+public class TrafficLight : MonoBehaviour
 {
     [SerializeField] private Barrier upLight;
     [SerializeField] private Barrier downLight;

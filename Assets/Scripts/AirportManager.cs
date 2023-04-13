@@ -168,11 +168,10 @@ public class AirportManager : MonoBehaviour, IData
             //ermittle besten Path von allen Hangars zum AirplaneSpace
             List<Pathnode> bestHangarPath = GetBestPathToPosition(hangars, airplaneSpace.origin);
             if (bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
-
             List<Pathnode> bestTerminalPath = GetBestPathToPosition(terminals, airplaneSpace.origin);
             if (bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
 
-            if (runway != null)
+            if (runwayStart != new Vector2Int(-1, -1))
             {
                 List<Pathnode> bestRunwayPath = PathfindingManager.Instance.CalculatePath(airplaneSpace.origin.x, airplaneSpace.origin.y, runwayStart.x, runwayStart.y);
                 spaceRunwayPath[airplaneSpace] = bestRunwayPath;
@@ -321,8 +320,6 @@ public class AirportManager : MonoBehaviour, IData
         }
         data.runwayEnd = runwayEnd;
         data.runwayStart = runwayStart;
-        Debug.Log(data.runwayEnd);
-        Debug.Log(data.runwayStart);
     }
 
     public void BlockRunway()
@@ -347,6 +344,10 @@ public class AirportManager : MonoBehaviour, IData
         else
         {
             driveOnBarrier.ToggleBlockStatus(false);
+            foreach (var barrier in driveOffBarriers)
+            {
+                barrier.ToggleBlockStatus(true);
+            }
         }
     }
 

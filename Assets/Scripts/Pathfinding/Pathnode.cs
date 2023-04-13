@@ -7,11 +7,10 @@ public class Pathnode : IMinHeapItem<Pathnode>
 {
     private Grid<GridObject> grid;
     public int x, y;
-    public int gCost;
+    public int gCost = int.MaxValue;
     public int hCost;
     public int fCost;
     public Pathnode previous;
-    public bool isReachable;
     private int minHeapIndex;
     private List<Pathnode> neighbours;
     public Vector2 origin {get; private set;}
@@ -30,7 +29,6 @@ public class Pathnode : IMinHeapItem<Pathnode>
         this.origin = grid.GetWorldPosition(x, y);
         this.gridPosition = new Vector2Int(x,y);
         this.neighbours = new List<Pathnode>();
-        this.isReachable = true;
         this.previous = null;
     }
 

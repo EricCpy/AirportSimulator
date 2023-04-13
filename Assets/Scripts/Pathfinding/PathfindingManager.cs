@@ -7,7 +7,7 @@ public class PathfindingManager : MonoBehaviour
 {
     // Start is called before the first frame update
     Pathfinder pathfinder;
-    private Pathfinder.SearchMode searchMode = Pathfinder.SearchMode.Greedy;
+    private Pathfinder.SearchMode searchMode = Pathfinder.SearchMode.AStar;
     public bool debug = true;
     private int length = 0, searches = 0;
     private float runTime = 0f;

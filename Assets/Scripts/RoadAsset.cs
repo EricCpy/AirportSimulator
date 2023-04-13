@@ -22,14 +22,9 @@ public class RoadAsset : MonoBehaviour
     public void AdaptToNeighbours(bool placed)
     {
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
-
         Color oldColor = Color.white;
-        if (sr != null)
-        {
-            Debug.Log(placed);
-            Debug.Log(sr.color);
-            oldColor = sr.color;
-        }
+        if (sr != null) oldColor = sr.color;
+        
         List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
         bool left = false, right = false, top = false, bottom = false;
         int count = 0;
@@ -113,7 +108,6 @@ public class RoadAsset : MonoBehaviour
                 asset.SetRotation(GridAsset.AssetRotation.Up);
             }
         }
-        Debug.Log(GetComponentInChildren<SpriteRenderer>());
         GetComponentInChildren<SpriteRenderer>().color = oldColor;
     }
 
