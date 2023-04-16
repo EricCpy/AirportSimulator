@@ -14,7 +14,6 @@ public class MainMenu : MonoBehaviour
 
     [Header("LoadingMenu")]
     [SerializeField] private GameObject saveSlotMenu;
-    [SerializeField] private GameObject emptyMenu;
 
     [Header("CreationMenu InputFields")]
     [SerializeField] private TMP_InputField airportName;
