@@ -4,9 +4,8 @@ from datetime import datetime
 
 def verwende_custom_date_on_date(custom_date: datetime, input_date: datetime) -> datetime:
     if custom_date:
-        input_date.year = custom_date.year
-        input_date.month = custom_date.month
-        input_date.day = custom_date.day
+        return input_date.replace(year=custom_date.year,month=custom_date.month,day=custom_date.day)
+    return input_date
 
 if __name__ == "__main__":
     data_dir = os.path.join(os.path.dirname(__file__), 'data')
@@ -34,11 +33,11 @@ if __name__ == "__main__":
     # }
 
     result = {'arrivals': [], "departures": []}
-    custom_date: datetime = None # datetime(.., .., ..) Or None
-
+    custom_date: datetime = datetime(2023, 4, 23) # datetime(.., .., ..) Or None
+    
     for x in arrival_data:
         time = datetime.fromisoformat(x['plannedArrivalTime'].split('[')[0])
-        verwende_custom_date_on_date(custom_date, time)
+        time = verwende_custom_date_on_date(custom_date, time)
         arrival = {'arrivalTime': str(time), "airplaneType": "Airbus A"}
         result['arrivals'].append(arrival)
 

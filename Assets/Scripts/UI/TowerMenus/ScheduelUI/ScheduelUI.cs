@@ -5,6 +5,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Linq;
+using UnityEditor;
+using System.IO;
 
 public class ScheduelUI : MonoBehaviour
 {
@@ -145,6 +147,23 @@ public class ScheduelUI : MonoBehaviour
             importButton.GetComponent<Image>().color = failColor;
             Debug.Log(e);
         }
+    }
 
+    public void OpenFile()
+    {
+        string path = EditorUtility.OpenFilePanel("Select Json (.json)", "", "json");
+        if (!string.IsNullOrEmpty(path))
+        {
+            try
+            {
+                string json = File.ReadAllText(path);
+                importInput.text = json;
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e);
+            }
+
+        }
     }
 }
