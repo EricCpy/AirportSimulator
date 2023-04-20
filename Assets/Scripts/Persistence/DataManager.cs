@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -54,9 +55,9 @@ public class DataManager : MonoBehaviour
         //if (currentScene.buildIndex != 0) SaveGame();
     }
 
-    public void CreateGame(int width, int height)
+    public void CreateGame(int width, int height, DateTime time)
     {
-        data = new Data(width, height, System.DateTime.Now);
+        data = new Data(width, height, time);
         PlayerPrefs.SetString("LastSaveSlotID", selectedGameId);
     }
 
@@ -67,7 +68,7 @@ public class DataManager : MonoBehaviour
         {
             if (initDataFromScene)
             {
-                CreateGame(10, 10);
+                CreateGame(10, 10, DateTime.Now);
             }
             else return;
         }

@@ -19,6 +19,7 @@ public class MainMenu : MonoBehaviour
     [SerializeField] private TMP_InputField airportName;
     [SerializeField] private TMP_InputField height;
     [SerializeField] private TMP_InputField width;
+    [SerializeField] private TMP_InputField datetime;
     private void Start()
     {
         if (!DataManager.Instance.HasData())
@@ -26,6 +27,7 @@ public class MainMenu : MonoBehaviour
             continueButton.interactable = false;
         }
         if (!InitalizeSaveSlots()) loadButton.interactable = false;
+        datetime.text = DateTime.Now.ToString();
     }
 
     public void CreateGame()
@@ -36,8 +38,10 @@ public class MainMenu : MonoBehaviour
             int creationWidth = 10;
             if (!height.text.Equals("")) creationHeight = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(height.text)), 10), 1000);
             if (!width.text.Equals("")) creationWidth = Mathf.Min(Mathf.Max(Mathf.Abs(int.Parse(width.text)), 10), 1000);
+            DateTime time;
+            if(!DateTime.TryParse(datetime.text, out time)) time = DateTime.Now;
             DataManager.Instance.SetSelectedGameId(airportName.text);
-            DataManager.Instance.CreateGame(creationWidth, creationHeight);
+            DataManager.Instance.CreateGame(creationWidth, creationHeight, time);
             SceneManager.LoadSceneAsync(1);
         }
         catch (Exception e)
