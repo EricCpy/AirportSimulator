@@ -138,7 +138,6 @@ public class BuildingSystem : MonoBehaviour, IData
                     // Destroy Object in Grid
                     placedObject.DestroyAsset();
                     DeleteObject(placedObject.GetPositions());
-
                 }
                 return;
             }
@@ -156,8 +155,8 @@ public class BuildingSystem : MonoBehaviour, IData
             Vector2Int rotationOffset = asset.GetRotationOffset(assetRot);
             Vector3 placedAssetPositon = calculateAssetWorldPositon(xy, rotationOffset);
             PlacedAsset placedAsset = PlacedAsset.Init(placedAssetPositon, xy, assetRot, asset);
-
             ReserveGrid(gridPositionList, placedAsset);
+            UpdateNeighbours(gridPositionList, placedAsset);
             placedAsset.TriggerPlacedAsset();
         }
         else
@@ -215,6 +214,24 @@ public class BuildingSystem : MonoBehaviour, IData
             }
         }
         return new List<PlacedAsset>(neighbours);
+    }
+
+    private void UpdateNeighbours(List<Vector2Int> positions, PlacedAsset asset)
+    {
+        foreach (Vector2Int pos in positions)
+        {
+            for (int i = 0; i < dirs4.GetLength(0); i++)
+            {
+                int x = pos.x + dirs4[i, 0];
+                int y = pos.y + dirs4[i, 1];
+                if (!grid.InBorder(new Vector2Int(x, y))) continue;
+                PlacedAsset neighbour = grid.GetValue(x, y).GetPlacedObject();
+                if (neighbour != null && neighbour != asset)
+                {
+                    AddNeighbourToGridObject(pos, new Vector2Int(x, y));
+                }
+            }
+        }
     }
 
     public Vector3 calculateAssetWorldPositon(Vector2Int xy, Vector2Int rotationOffset)

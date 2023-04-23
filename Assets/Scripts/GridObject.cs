@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 //Objekte des Grids
 public class GridObject
@@ -57,4 +58,8 @@ public class GridObject
     }
 
     public List<GridObject> GetNeighbours() { return neighbours; }
+    public Vector2Int GetPosition()
+    {
+        return new Vector2Int(x, y);
+    }
 }

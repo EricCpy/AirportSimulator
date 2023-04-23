@@ -16,36 +16,29 @@ public class RoadAsset : MonoBehaviour
 
     private void OnAssetPlaced(object sender, EventArgs e)
     {
-        AdaptToNeighbours(true);
+        AdaptToNeighbours();
     }
 
-    public void AdaptToNeighbours(bool placed)
+    public void AdaptToNeighbours()
     {
         SpriteRenderer sr = GetComponentInChildren<SpriteRenderer>();
         Color oldColor = Color.white;
         if (sr != null) oldColor = sr.color;
-        
-        List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
+
         bool left = false, right = false, top = false, bottom = false;
         int count = 0;
-        foreach (var neighbour in neighbours)
+        foreach (var neighbour in BuildingSystem.Instance.grid.GetValue(asset.origin.x, asset.origin.y).GetNeighbours())
         {
-            RoadAsset road = neighbour.GetComponent<RoadAsset>();
-            if (road != null)
-            {
-                if (placed)
-                {
-                    BuildingSystem.Instance.AddNeighbourToGridObject(asset.origin, neighbour.origin);
-
-                    road.AdaptToNeighbours(false);
-                }
-                Vector2Int pos = asset.origin - neighbour.origin;
-                if (pos.y == -1) top = true;
-                else if (pos.y == 1) bottom = true;
-                else if (pos.x == -1) right = true;
-                else left = true;
-                count++;
-            }
+            //RoadAsset road = neighbour.GetPlacedObject().GetComponent<RoadAsset>();
+            //if (road != null)
+            //{
+            Vector2Int pos = asset.origin - neighbour.GetPosition();
+            if (pos.y == -1) top = true;
+            else if (pos.y == 1) bottom = true;
+            else if (pos.x == -1) right = true;
+            else left = true;
+            count++;
+            //}
         }
 
         SetRoadsInactive();
@@ -132,20 +125,6 @@ public class RoadAsset : MonoBehaviour
         {
             //ende runway
             AirportManager.Instance.SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
-        }
-    }
-
-    private void OnDestroy()
-    {
-        List<PlacedAsset> neighbours = BuildingSystem.Instance.GetNeighbourAssets(asset);
-        foreach (var neighbour in neighbours)
-        {
-            RoadAsset road = neighbour.GetComponent<RoadAsset>();
-            if (road != null)
-            {
-                BuildingSystem.Instance.DeleteNeighbourFromGridObject(asset.origin, neighbour.origin);
-                road.AdaptToNeighbours(false);
-            }
         }
     }
 }

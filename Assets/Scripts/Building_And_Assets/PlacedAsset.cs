@@ -24,6 +24,7 @@ public class PlacedAsset : MonoBehaviour, IData
         this.gridAsset = gridAsset;
         this.origin = origin;
         this.rot = rot;
+        OnPlacedAsset += OnAssetPlaced;
     }
 
     public List<Vector2Int> GetPositions()
@@ -65,11 +66,42 @@ public class PlacedAsset : MonoBehaviour, IData
         transform.rotation = Quaternion.Euler(0, 0, -gridAsset.GetRotationAngle(rot));
     }
 
-    public void TriggerPlacedAsset() {
+    public void TriggerPlacedAsset()
+    {
         OnPlacedAsset?.Invoke(this, EventArgs.Empty);
     }
 
-    public GridAsset GetGridAsset() {
+    private void OnAssetPlaced(object sender, EventArgs e)
+    {
+        foreach (var position in GetPositions())
+        {
+            foreach (var neighbour in BuildingSystem.Instance.grid.GetValue(position.x, position.y).GetNeighbours())
+            {
+                RoadAsset road = neighbour.GetPlacedObject().GetComponent<RoadAsset>();
+                if (road != null)
+                {
+                    road.AdaptToNeighbours();
+                }
+            }
+        }
+    }
+    private void OnDestroy()
+    {
+        foreach (var position in GetPositions())
+        {
+            foreach (var neighbour in BuildingSystem.Instance.grid.GetValue(position.x, position.y).GetNeighbours())
+            {
+                RoadAsset road = neighbour.GetPlacedObject().GetComponent<RoadAsset>();
+                if (road != null)
+                {
+                    BuildingSystem.Instance.DeleteNeighbourFromGridObject(position, neighbour.GetPosition());
+                    road.AdaptToNeighbours();
+                }
+            }
+        }
+    }
+    public GridAsset GetGridAsset()
+    {
         return gridAsset;
     }
 }
