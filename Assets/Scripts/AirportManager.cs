@@ -353,4 +353,7 @@ public class AirportManager : MonoBehaviour, IData
         }
     }
 
+    public bool IsAirplaneOnRunway() {
+        return airplaneOnRunway;
+    }
 }
