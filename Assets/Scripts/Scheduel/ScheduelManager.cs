@@ -160,7 +160,7 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if(AirportManager.Instance.IsAirplaneOnRunway(AirportManager.Instance.arrivalRunwayIndex)) yield return delay;
+            if(AirportManager.Instance == null || AirportManager.Instance.IsAirplaneOnRunway(AirportManager.Instance.arrivalRunwayIndex)) yield return delay;
             if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
             {
                 AirportManager.Instance.BlockRunway(AirportManager.Instance.arrivalRunwayIndex);

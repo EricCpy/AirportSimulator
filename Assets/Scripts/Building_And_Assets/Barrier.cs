@@ -24,7 +24,6 @@ public class Barrier : MonoBehaviour
     }
     private void SetLightsColor(Color color)
     {
-        Debug.Log(color);
         foreach (var light in lights)
         {
             light.color = color;

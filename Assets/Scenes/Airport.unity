@@ -572,7 +572,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1765002056
 GameObject:
@@ -604,7 +604,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1765002058
 MonoBehaviour:
@@ -620,6 +620,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   hangars: []
   terminals: []
+  arrivalRunwayIndex: 0
   sendingInterval: 15
   runwayColor: {r: 1, g: 0.75, b: 0, a: 1}
   barrierPrefab: {fileID: 2575540160741259621, guid: 93dfed905936fec41ab3324ac2a18bd7, type: 3}
@@ -693,7 +694,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 872042993310116016, guid: f38e919109d92a341a9ffe4b30f410ac, type: 3}
       propertyPath: useEncryption
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 872042993310116016, guid: f38e919109d92a341a9ffe4b30f410ac, type: 3}
       propertyPath: initDataFromScene

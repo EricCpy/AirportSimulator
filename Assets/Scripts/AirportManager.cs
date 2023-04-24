@@ -21,10 +21,10 @@ public class AirportManager : MonoBehaviour, IData
     public HashSet<ActiveVehicle> readyToStartAirplanes = new HashSet<ActiveVehicle>();
     public static AirportManager Instance { get; private set; }
     private Vector2Int lastSelectedRunwayStart = new Vector2Int(-1, -1), lastSelectedRunwayEnd = new Vector2Int(-1, -1);
-    public List<List<Vector2Int>> runwayStartAndEnds { get; private set; }
-    public List<List<Pathnode>> runways { get; private set; }
-    private List<Pathnode> arrivalPath;
-    public int arrivalRunwayIndex = 0;
+    public List<List<Vector2Int>> runwayStartAndEnds { get; private set; } = new List<List<Vector2Int>>();
+    public List<List<Pathnode>> runways { get; private set; } = new List<List<Pathnode>>();
+    private List<Pathnode> arrivalPath = new List<Pathnode>();
+    public int arrivalRunwayIndex = -1;
     private List<Barrier> driveOnBarriers = new List<Barrier>();
     private List<List<Barrier>> driveOffBarriers = new List<List<Barrier>>();
     [SerializeField] private float sendingInterval = 15f;
@@ -48,7 +48,7 @@ public class AirportManager : MonoBehaviour, IData
         {
             lastSelectedRunwayStart = runwayStartAndEnd[0];
             lastSelectedRunwayEnd = runwayStartAndEnd[1];
-            DetermineRunway();
+            DetermineRunway(false);
         }
         DetermineArrivalPath();
     }
@@ -199,7 +199,7 @@ public class AirportManager : MonoBehaviour, IData
         //ermittle besten Path von allen objects zum AirplaneSpace
         List<Pathnode> bestList = new List<Pathnode>();
         int bestIndex = 0;
-        for(int i = 0; i < objects.Count; i++)
+        for (int i = 0; i < objects.Count; i++)
         {
             Vector2Int start = objects[i];
             List<Pathnode> path = PathfindingManager.Instance.CalculatePath(start.x, start.y, end.x, end.y);
@@ -259,7 +259,7 @@ public class AirportManager : MonoBehaviour, IData
         return way;
     }
 
-    private void DetermineRunway()
+    private void DetermineRunway(bool addToStartAndEnd)
     {
         Vector2Int bound = new Vector2Int(-1, -1);
         if (lastSelectedRunwayStart == bound || lastSelectedRunwayEnd == bound) return;
@@ -278,7 +278,7 @@ public class AirportManager : MonoBehaviour, IData
             if (sr != null) sr.color = runwayColor;
             foreach (var neighbour in gridObject.GetNeighbours())
             {
-                if ((i > 0 && neighbour.node == runway[i - 1]) || (i < runway.Count && neighbour.node == runway[i + 1])) continue;
+                if ((i > 0 && neighbour.node == runway[i - 1]) || (i < runway.Count - 1 && neighbour.node == runway[i + 1])) continue;
                 if (neighbour.GetPlacedObject().GetComponent<RoadAsset>() != null)
                 {
                     Pathnode neighbourNode = neighbour.node;
@@ -305,17 +305,25 @@ public class AirportManager : MonoBehaviour, IData
                 }
             }
         }
+        if (addToStartAndEnd)
+        {
+            List<Vector2Int> runwayStartAndEnd = new List<Vector2Int>();
+            runwayStartAndEnd.Add(lastSelectedRunwayStart);
+            runwayStartAndEnd.Add(lastSelectedRunwayEnd);
+            runwayStartAndEnds.Add(runwayStartAndEnd);
+        }
         lastSelectedRunwayStart = new Vector2Int(-1, -1);
         lastSelectedRunwayEnd = new Vector2Int(-1, -1);
     }
 
     private void DetermineArrivalPath()
     {
-        if (runways.Count == 0) return;
+        if (runways.Count == 0 || hangars.Count == 0) return;
         for (int i = 0; i < runwayStartAndEnds.Count; i++)
         {
             List<Pathnode> hangarPath = GetBestPathToPosition(hangars, runwayStartAndEnds[i][1]);
-            if (arrivalPath.Count == 0 || hangarPath.Count < arrivalPath.Count) {
+            if (arrivalPath.Count == 0 || hangarPath.Count < arrivalPath.Count)
+            {
                 arrivalPath = hangarPath;
                 arrivalRunwayIndex = i;
             }
@@ -326,13 +334,13 @@ public class AirportManager : MonoBehaviour, IData
     public void SetRunwayStart(Vector2Int xy)
     {
         lastSelectedRunwayStart = xy;
-        DetermineRunway();
+        DetermineRunway(true);
     }
 
     public void SetRunwayEnd(Vector2Int xy)
     {
         lastSelectedRunwayEnd = xy;
-        DetermineRunway();
+        DetermineRunway(true);
         DetermineArrivalPath();
     }
 
@@ -340,14 +348,19 @@ public class AirportManager : MonoBehaviour, IData
     {
         if (runways == null || index < 0 || index >= runways.Count) return;
         runwayStartAndEnds.RemoveAt(index);
+        Destroy(driveOnBarriers[index].gameObject);
         driveOnBarriers.RemoveAt(index);
         foreach (var barrier in driveOffBarriers[index]) Destroy(barrier.gameObject);
         driveOffBarriers.RemoveAt(index);
         foreach (Pathnode node in runways[index])
         {
-            var sr = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject().GetComponentInChildren<SpriteRenderer>();
+            var placedAsset = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject();
+            placedAsset.GetComponent<RoadAsset>().runwayIndex = -1;
+            var sr = placedAsset.GetComponentInChildren<SpriteRenderer>();
             if (sr != null) sr.color = Color.white;
         }
+        runways.RemoveAt(index);
+        RecalculatePaths();
         DetermineArrivalPath();
     }
 
@@ -359,7 +372,7 @@ public class AirportManager : MonoBehaviour, IData
         }
         foreach (var startAndEnd in data.runwayStartAndEnds)
         {
-            runwayStartAndEnds.Add(new List<Vector2Int>(startAndEnd));
+            runwayStartAndEnds.Add(new List<Vector2Int>(startAndEnd.list));
         }
     }
 
@@ -371,7 +384,9 @@ public class AirportManager : MonoBehaviour, IData
         }
         foreach (var startAndEnd in runwayStartAndEnds)
         {
-            data.runwayStartAndEnds.Add(new List<Vector2Int>(startAndEnd));
+            var nl = new NestedList();
+            nl.list = new List<Vector2Int>(startAndEnd);
+            data.runwayStartAndEnds.Add(nl);
         }
     }
 
@@ -406,6 +421,7 @@ public class AirportManager : MonoBehaviour, IData
 
     public bool IsAirplaneOnRunway(int runwayIndex)
     {
+        if (runwayIndex < 0 || runwayIndex >= airplaneOnRunwayList.Count) return false;
         return airplaneOnRunwayList[runwayIndex];
     }
 }
