@@ -38,7 +38,7 @@ public class PathfindingManager : MonoBehaviour
             Vector2Int xy = BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition);
             Debug.Log(xy);
             List<Pathnode> path = CalculatePath(0, 0, xy.x, xy.y);
-            ActiveVehicle.Init(VehicleManager.Instance.taxi, path, false);
+            ActiveVehicle.Init(VehicleManager.Instance.taxi, path, -1);
             if (path != null)
             {
                 for (int i = 0; i < path.Count - 1; i++)

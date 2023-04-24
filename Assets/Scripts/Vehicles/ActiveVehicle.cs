@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class ActiveVehicle : MonoBehaviour
 {
-    public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path, bool airplane)
+    public static ActiveVehicle Init(Vehicle vehicle, List<Pathnode> path, int runwayIndex = -1)
     {
         if (path == null || path.Count < 2) return null;
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
         ActiveVehicle aVehicle = vehicleTransform.GetComponent<ActiveVehicle>();
-        aVehicle.Create(vehicle, new List<Pathnode>(path), airplane);
+        aVehicle.Create(vehicle, new List<Pathnode>(path), runwayIndex);
         return aVehicle;
     }
 
@@ -22,7 +22,7 @@ public class ActiveVehicle : MonoBehaviour
     private int idx = 0;
     private float left = 0f, right = 0f;
     private float CellSize { get => BuildingSystem.Instance.grid.GetCellSize(); }
-    private bool airplane;
+    private int runwayIndex = -1;
     private bool lastDrive, runway;
     private bool closeDistance;
     private LayerMask mask;
@@ -30,9 +30,9 @@ public class ActiveVehicle : MonoBehaviour
     private Vector2 otherObjectLastPosition;
     [SerializeField] private AnimationCurve accelerationCurve;
     private SpriteRenderer spriteRenderer;
-    private void Create(Vehicle vehicle, List<Pathnode> path, bool airplane)
+    private void Create(Vehicle vehicle, List<Pathnode> path, int runwayIndex)
     {
-        this.airplane = airplane;
+        this.runwayIndex = runwayIndex;
         this.vehicle = vehicle;
         mask = LayerMask.GetMask("Default");
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
@@ -148,7 +148,7 @@ public class ActiveVehicle : MonoBehaviour
                     return;
                 }
                 idx++;
-                if (airplane)
+                if (runwayIndex != -1)
                 {
                     AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
                 }
@@ -249,9 +249,13 @@ public class ActiveVehicle : MonoBehaviour
 
     private void OnDestroy()
     {
-        if (airplane)
+        if (runwayIndex != -1)
         {
-            AirportManager.Instance.AirplaneLeftOrEnteredRunway(false);
+            AirportManager.Instance.AirplaneLeftOrEnteredRunway(false, runwayIndex);
         }
+    }
+
+    public int GetRunwayIndex() {
+        return runwayIndex;
     }
 }

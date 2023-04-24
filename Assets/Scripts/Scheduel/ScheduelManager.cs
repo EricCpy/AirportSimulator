@@ -142,7 +142,7 @@ public class ScheduelManager : MonoBehaviour, IData
                 if (AirportManager.Instance.AirplaneReady(kvpair.Value))
                 {
                     var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
-                    kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace));
+                    kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace, kvpair.Value.GetRunwayIndex()));
                     kvpair.Value.SetLastDrive(true);
                 }
                 else
@@ -160,10 +160,10 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if(AirportManager.Instance.IsAirplaneOnRunway()) yield return delay;
+            if(AirportManager.Instance.IsAirplaneOnRunway(AirportManager.Instance.arrivalRunwayIndex)) yield return delay;
             if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
             {
-                AirportManager.Instance.BlockRunway();
+                AirportManager.Instance.BlockRunway(AirportManager.Instance.arrivalRunwayIndex);
             }
 
             if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
