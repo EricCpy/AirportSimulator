@@ -6,6 +6,7 @@ public class Barrier : MonoBehaviour
 {
     private bool blocked = false;
     public bool runwayDriveOn = false;
+    public int runwayIndex = 0;
     [SerializeField] private bool trafficLight = false;
     private Color red = new Color(0.9f, 0.1f, 0.1f, 1f);
     private Color green = new Color(0.3f, 0.7f, 0.3f, 1f);
@@ -33,7 +34,7 @@ public class Barrier : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if(trafficLight) return;
-        AirportManager.Instance.AirplaneLeftOrEnteredRunway(runwayDriveOn);
+        AirportManager.Instance.AirplaneLeftOrEnteredRunway(runwayDriveOn, runwayIndex);
     }
 
 }

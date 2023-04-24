@@ -294,6 +294,7 @@ public class AirportManager : MonoBehaviour, IData
                         pos.y += BuildingSystem.Instance.GetCellSize();
                     }
                     Barrier barrier = Instantiate(barrierPrefab, pos, Quaternion.Euler(0, 0, rot)).GetComponent<Barrier>();
+                    barrier.runwayIndex = runwayIndex;
                     if (driveOnBarriers.Count < runways.Count)
                     {
                         barrier.runwayDriveOn = true;
