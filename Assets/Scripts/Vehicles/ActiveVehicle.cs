@@ -61,6 +61,7 @@ public class ActiveVehicle : MonoBehaviour
         Rotate();
         transform.position = this.path[0] + dir * transform.localScale.magnitude / 2;
         currentSpeed = 0;
+        if(GetComponent<BoxCollider2D>()) GetComponent<BoxCollider2D>().enabled = true;
     }
     private void Update()
     {
@@ -151,6 +152,7 @@ public class ActiveVehicle : MonoBehaviour
                 if (runwayIndex != -1)
                 {
                     AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
+                    GetComponent<BoxCollider2D>().enabled = false;
                 }
                 else
                 {
