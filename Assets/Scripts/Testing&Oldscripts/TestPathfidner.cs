@@ -20,7 +20,8 @@ public class TestPathfidner : MonoBehaviour
             Vector2Int xy = pathfinder.GetGrid().GetXY(worldPosition);
             pathfinder.searchMode = searchMode;
             Debug.Log(xy);
-            List<Pathnode> path = pathfinder.FindPath(0,0, xy.x, xy.y);
+            (List<Pathnode>, int) result = pathfinder.FindPath(0,0, xy.x, xy.y);
+            var path = result.Item1;
             print(path.Count);
             if(path != null) {
                 for(int i = 0; i < path.Count - 1; i++) {

@@ -18,6 +18,7 @@ public class BuildingSystem : MonoBehaviour, IData
     private bool helperLines = true;
     [SerializeField] private Transform lineContainer;
     [SerializeField] private GameObject linePrefab;
+    [SerializeField] private bool gridDebug = false;
     private void Awake()
     {
         if (Instance != null)
@@ -38,7 +39,7 @@ public class BuildingSystem : MonoBehaviour, IData
 
     public void LoadData(Data data)
     {
-        grid = new Grid<GridObject>(data.width, data.height, cellSize, Vector3.zero, (g, x, y) => new GridObject(g, x, y), true);
+        grid = new Grid<GridObject>(data.width, data.height, cellSize, Vector3.zero, (g, x, y) => new GridObject(g, x, y), gridDebug);
         //Gridassets
         foreach (var loadedAsset in data.gridObjects)
         {

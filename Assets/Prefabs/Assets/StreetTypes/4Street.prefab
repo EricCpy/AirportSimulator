@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2208733215900867788}
   m_Layer: 0
   m_Name: RightLight
-  m_TagString: Untagged
+  m_TagString: CollisionAvoidanceObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -73,6 +73,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
+  runwayIndex: 0
   trafficLight: 1
   lights:
   - {fileID: 7126468004352340708}
@@ -206,7 +207,7 @@ GameObject:
   - component: {fileID: 3101755003141042505}
   m_Layer: 0
   m_Name: LeftLight
-  m_TagString: Untagged
+  m_TagString: CollisionAvoidanceObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -266,6 +267,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
+  runwayIndex: 0
   trafficLight: 1
   lights:
   - {fileID: 4464580074437821625}
@@ -419,7 +421,7 @@ GameObject:
   - component: {fileID: 3341486948353821848}
   m_Layer: 0
   m_Name: DownLight
-  m_TagString: Untagged
+  m_TagString: CollisionAvoidanceObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -479,6 +481,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
+  runwayIndex: 0
   trafficLight: 1
   lights:
   - {fileID: 9087234895209281202}
@@ -495,7 +498,7 @@ GameObject:
   - component: {fileID: 5455722556419381718}
   m_Layer: 0
   m_Name: UpLight
-  m_TagString: Untagged
+  m_TagString: CollisionAvoidanceObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -555,6 +558,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   runwayDriveOn: 0
+  runwayIndex: 0
   trafficLight: 1
   lights:
   - {fileID: 2763192387352358158}

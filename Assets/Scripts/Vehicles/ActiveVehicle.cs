@@ -77,7 +77,7 @@ public class ActiveVehicle : MonoBehaviour
         RaycastHit2D hit = Physics2D.Raycast(transform.position, dir, vehicle.sensorLength, mask);
         Debug.DrawRay(transform.position, dir * vehicle.sensorLength, Color.yellow);
 
-        if (hit.collider != null)
+        if (hit.collider != null && hit.collider.tag.Equals("CollisionAvoidanceObject"))
         {
             Barrier barrier = hit.collider.GetComponent<Barrier>();
             if (barrier != null && barrier.IsBlocked())

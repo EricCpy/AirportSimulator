@@ -39,7 +39,7 @@ public class Pathfinder
         return grid.GetValue(x, y).node;
     }
 
-    public List<Pathnode> FindPath(int startX, int startY, int endX, int endY)
+    public (List<Pathnode>, int) FindPath(int startX, int startY, int endX, int endY)
     {
         Pathnode startNode = GetNode(startX, startY);
         Pathnode endNode = GetNode(endX, endY);
@@ -71,8 +71,9 @@ public class Pathfinder
         }
         List<Pathnode> list = new List<Pathnode>();
         if (ans) list = CalculatePath(endNode);
+        int traversedNodes = closedList.Count;
         ClearVisitedNodes();
-        return list;
+        return (list, traversedNodes);
     }
 
     private void ClearVisitedNodes()
@@ -198,6 +199,7 @@ public class Pathfinder
 
     //dfs könnte mit memorization ausgebaut werden, wenn man vom ende startet
     //momentan exponentielle Zeitkomplexität, da schon besuchte Nodes nochmal revisited werden müssen
+    //keine "Dfs" im eigentlichen Sinne, sondern eine, die den besten Pfad sucht
     private int Dfs(Pathnode current, Pathnode end, int currLength, int minLength)
     {
         if (currLength >= minLength) return -1;

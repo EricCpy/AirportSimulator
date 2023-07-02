@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
 
 public class AirportManager : MonoBehaviour, IData
@@ -168,6 +169,7 @@ public class AirportManager : MonoBehaviour, IData
 
     public void RecalculatePaths()
     {
+        PathfindingManager.Instance.ClearStats();
         AddRoadNeighbours(hangars);
         AddRoadNeighbours(terminals);
         AddRoadNeighbours(airplaneSpaces.Keys);
@@ -177,24 +179,31 @@ public class AirportManager : MonoBehaviour, IData
         {
             runwayStarts.Add(runwayStartAndEnd[0]);
         }
-
-        foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+        for (int i = 0; i < 10000; i++)
         {
-            //ermittle besten Path von allen Hangars zum AirplaneSpace
-            List<Pathnode> bestHangarPath = GetBestPathToPosition(hangars, airplaneSpace.origin);
-            if (bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
-            List<Pathnode> bestTerminalPath = GetBestPathToPosition(terminals, airplaneSpace.origin);
-            if (bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
-
-            if (runwayStarts.Count > 0)
+            foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
             {
-                (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
-                bestRunway.Item2.Reverse();
-                spaceRunwayPath[airplaneSpace] = bestRunway;
+                //ermittle besten Path von allen Hangars zum AirplaneSpace
+                List<Pathnode> bestHangarPath = GetBestPathToPosition(hangars, airplaneSpace.origin);
+                if (bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
+                List<Pathnode> bestTerminalPath = GetBestPathToPosition(terminals, airplaneSpace.origin);
+                if (bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
+
+                if (runwayStarts.Count > 0)
+                {
+                    (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
+                    bestRunway.Item2.Reverse();
+                    spaceRunwayPath[airplaneSpace] = bestRunway;
+                }
             }
         }
+        stopwatch.Stop();
+        runTime = stopwatch.ElapsedMilliseconds;
+        Console.Write(runTime);
     }
-
+    public double runTime = 0;
     private (int, List<Pathnode>) GetBestPathToRunway(List<Vector2Int> objects, Vector2Int end)
     {
         //ermittle besten Path von allen objects zum AirplaneSpace

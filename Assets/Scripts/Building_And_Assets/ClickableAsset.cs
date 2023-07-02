@@ -19,12 +19,14 @@ public class ClickableAsset : MonoBehaviour
         if (EventSystem.current.IsPointerOverGameObject()) return;
         if (clicked && doubleClickTime - timer >= 0f)
         {
+            Debug.Log("a");
             if (assetType == AssetType.Tower)
             {
                 InGameUI.Instance.OpenAirportManagerUI();
             }
             else if (assetType == AssetType.Hangar)
             {
+                
                 InGameUI.Instance.OpenHangarGeneralUI();
             }
 

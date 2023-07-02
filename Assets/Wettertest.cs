@@ -6,7 +6,6 @@ using UnityEngine;
 public class Wettertest : MonoBehaviour
 {
     // Start is called before the first frame update
-    [SerializeField] private int minHeight = 1000;
     [SerializeField] private int minSight = 50; 
     [SerializeField] private int maxWindSpeed = 50; 
     public enum Weathertypes {
@@ -26,10 +25,6 @@ public class Wettertest : MonoBehaviour
         rule = new Rule("Extremereignis");
         rule.AddAntecedent(new IsClause("extremereignis", "True"));
         rule.setConsequent(new IsClause("anweisung", "verschieben"));
-        rie.AddRule(rule);
-
-        rule.AddAntecedent(new LEClause("wolkenuntergrenze", minHeight.ToString()));
-        rule.setConsequent(new IsClause("anweisung", "warten"));
         rie.AddRule(rule);
 
         rule = new Rule("Sicht");
