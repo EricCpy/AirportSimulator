@@ -109,8 +109,9 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
+            //TODO frage Expertsystem, ob Flüge gerade starten können
             if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) &&
-                AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType))
+                AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType) && ExpertSystemManager.Instance.AllowedToStart())
             {
                 ActiveVehicle plane = AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType);
                 var kvpair = takeOffScheduel.First();
