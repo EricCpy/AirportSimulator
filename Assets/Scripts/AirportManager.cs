@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class AirportManager : MonoBehaviour, IData
 {
@@ -40,6 +41,28 @@ public class AirportManager : MonoBehaviour, IData
         }
         Instance = this;
         PathfindingManager.Instance.OnInitialized += InitPaths;
+    }
+
+    private void Update()
+    {
+        if (EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+            //anfang runway
+            SetRunwayStart(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            //ende runway
+            SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.D) && Input.GetKeyDown(KeyCode.LeftShift))
+        {
+            DeleteRunways();
+        }
     }
 
     private void InitPaths()
@@ -179,29 +202,29 @@ public class AirportManager : MonoBehaviour, IData
         {
             runwayStarts.Add(runwayStartAndEnd[0]);
         }
-        Stopwatch stopwatch = new Stopwatch();
-        stopwatch.Start();
-        for (int i = 0; i < 10000; i++)
+        //Stopwatch stopwatch = new Stopwatch();
+        //stopwatch.Start();
+        //for (int i = 0; i < 10000; i++)
+        //{
+        foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
         {
-            foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
-            {
-                //ermittle besten Path von allen Hangars zum AirplaneSpace
-                List<Pathnode> bestHangarPath = GetBestPathToPosition(hangars, airplaneSpace.origin);
-                if (bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
-                List<Pathnode> bestTerminalPath = GetBestPathToPosition(terminals, airplaneSpace.origin);
-                if (bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
+            //ermittle besten Path von allen Hangars zum AirplaneSpace
+            List<Pathnode> bestHangarPath = GetBestPathToPosition(hangars, airplaneSpace.origin);
+            if (bestHangarPath.Count > 0) spaceHangarPaths[airplaneSpace] = bestHangarPath;
+            List<Pathnode> bestTerminalPath = GetBestPathToPosition(terminals, airplaneSpace.origin);
+            if (bestTerminalPath.Count > 0) spaceTerminalPaths[airplaneSpace] = bestTerminalPath;
 
-                if (runwayStarts.Count > 0)
-                {
-                    (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
-                    bestRunway.Item2.Reverse();
-                    spaceRunwayPath[airplaneSpace] = bestRunway;
-                }
+            if (runwayStarts.Count > 0)
+            {
+                (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
+                bestRunway.Item2.Reverse();
+                spaceRunwayPath[airplaneSpace] = bestRunway;
             }
         }
-        stopwatch.Stop();
-        runTime = stopwatch.ElapsedMilliseconds;
-        Console.Write(runTime);
+        //}
+        //stopwatch.Stop();
+        //runTime = stopwatch.ElapsedMilliseconds;
+        //Console.Write(runTime);
     }
     public double runTime = 0;
     private (int, List<Pathnode>) GetBestPathToRunway(List<Vector2Int> objects, Vector2Int end)
@@ -283,7 +306,6 @@ public class AirportManager : MonoBehaviour, IData
             Pathnode node = runway[i];
             GridObject gridObject = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y);
             PlacedAsset asset = gridObject.GetPlacedObject();
-            asset.GetComponent<RoadAsset>().runwayIndex = runwayIndex;
             SpriteRenderer sr = asset.GetComponentInChildren<SpriteRenderer>();
             if (sr != null) sr.color = runwayColor;
             foreach (var neighbour in gridObject.GetNeighbours())
@@ -349,27 +371,36 @@ public class AirportManager : MonoBehaviour, IData
 
     public void SetRunwayEnd(Vector2Int xy)
     {
+        UnityEngine.Debug.Log("aa");
         lastSelectedRunwayEnd = xy;
         DetermineRunway(true);
         DetermineArrivalPath();
     }
 
-    public void DeleteRunway(int index)
+    public void DeleteRunways()
     {
-        if (runways == null || index < 0 || index >= runways.Count) return;
-        runwayStartAndEnds.RemoveAt(index);
-        Destroy(driveOnBarriers[index].gameObject);
-        driveOnBarriers.RemoveAt(index);
-        foreach (var barrier in driveOffBarriers[index]) Destroy(barrier.gameObject);
-        driveOffBarriers.RemoveAt(index);
-        foreach (Pathnode node in runways[index])
+        if (runways == null) return;
+        runwayStartAndEnds.Clear();
+        for (int i = 0; i < driveOnBarriers.Count; i++)
         {
-            var placedAsset = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject();
-            placedAsset.GetComponent<RoadAsset>().runwayIndex = -1;
-            var sr = placedAsset.GetComponentInChildren<SpriteRenderer>();
-            if (sr != null) sr.color = Color.white;
+            Destroy(driveOnBarriers[i].gameObject);
         }
-        runways.RemoveAt(index);
+        driveOnBarriers.Clear();
+        for (int i = 0; i < driveOnBarriers.Count; i++)
+        {
+            foreach (var barrier in driveOffBarriers[i]) Destroy(barrier.gameObject);
+        }
+        driveOffBarriers.Clear();
+        for (int i = 0; i < driveOnBarriers.Count; i++)
+        {
+            foreach (Pathnode node in runways[i])
+            {
+                var placedAsset = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject();
+                var sr = placedAsset.GetComponentInChildren<SpriteRenderer>();
+                if (sr != null) sr.color = Color.white;
+            }
+        }
+        runways.Clear();
         RecalculatePaths();
         DetermineArrivalPath();
     }

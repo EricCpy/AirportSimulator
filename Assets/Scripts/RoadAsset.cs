@@ -8,7 +8,6 @@ public class RoadAsset : MonoBehaviour
 {
     public PlacedAsset asset;
     public GameObject road1, road2, road3, road4;
-    public int runwayIndex = -1;
     private void Awake()
     {
         asset = GetComponent<PlacedAsset>();
@@ -118,26 +117,6 @@ public class RoadAsset : MonoBehaviour
         road3.SetActive(false);
         road2.SetActive(false);
         road1.SetActive(false);
-    }
-
-    private void Update()
-    {
-        if (EventSystem.current.IsPointerOverGameObject() || GameManager.Instance.uiOpen) return;
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            //anfang runway
-            AirportManager.Instance.SetRunwayStart(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
-        }
-
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            //ende runway
-            AirportManager.Instance.SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
-        }
-
-        if(Input.GetKeyDown(KeyCode.D)) {
-            AirportManager.Instance.DeleteRunway(runwayIndex);
-        }
     }
 
     private void OnDestroy()
