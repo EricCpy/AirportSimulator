@@ -79,7 +79,7 @@ public class ExpertSystemManager : MonoBehaviour
         var delay = new WaitForSeconds(28800);
         while (true)
         {
-            maxSideWindSpeed = Random.Range(0, 60);
+            windSpeed = Random.Range(0, 60);
             yield return delay;
         }
     }
