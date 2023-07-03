@@ -114,7 +114,7 @@ public class ExpertSystemManager : MonoBehaviour
 
     public void SetWindSpeed(int speed)
     {
-        this.windSpeed = Mathf.Min(0, speed);
+        this.windSpeed = Mathf.Max(0, speed);
     }
 
     public void SetExtremeEvent(bool extremeEvent)
@@ -151,13 +151,5 @@ public class ExpertSystemManager : MonoBehaviour
         conclusion = rie.Infer("anweisung", unproved_conditions);
         rie.ClearFacts();
         return conclusion == null;
-    }
-    public bool update = false;
-    private void Update() {
-        if(update) {
-            print(AllowedToStart());
-            Debug.Log(conclusion);
-            update = false;
-        }
     }
 }

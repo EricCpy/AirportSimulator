@@ -24,8 +24,10 @@ public class ExpertSystemUI : MonoBehaviour
         while (true)
         {
             extremeEvent.isOn = expertSystem.GetExtremeEvent();
+            Debug.Log(expertSystem.GetWindSpeed());
             windSpeed.text = expertSystem.GetWindSpeed() + "";
             weather.value = weatherOrder.IndexOf(expertSystem.GetWeatherAsString());
+            expertSystem.AllowedToStart();
             conclusion.text = expertSystem.GetConclusion().Equals("warten") ? "Airplanes can't start!" : "Airplanes can start!";
             yield return delay;
         }
@@ -48,7 +50,6 @@ public class ExpertSystemUI : MonoBehaviour
 
     public void SetWeather()
     {
-        Debug.Log(weather.value);
         ExpertSystemManager.Instance.SetWeather(weatherOrder[weather.value]);
     }
 

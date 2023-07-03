@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 
 //Objekte des Grids
 public class GridObject
@@ -22,6 +23,10 @@ public class GridObject
     public override string ToString()
     {
         return x + ", " + y + "\n" + asset;
+    }
+
+    public Vector2Int GetOrigin() {
+        return new Vector2Int(x,y);
     }
 
     public void SetPlacedObject(PlacedAsset asset)

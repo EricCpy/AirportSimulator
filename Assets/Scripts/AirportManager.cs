@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -58,8 +59,7 @@ public class AirportManager : MonoBehaviour, IData
             SetRunwayEnd(BuildingSystem.Instance.MousePositionToGridPosition(Input.mousePosition));
 
         }
-
-        if (Input.GetKeyDown(KeyCode.D) && Input.GetKeyDown(KeyCode.LeftShift))
+        if (Input.GetKeyDown(KeyCode.D) && Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.LeftShift))
         {
             DeleteRunways();
         }
@@ -100,6 +100,7 @@ public class AirportManager : MonoBehaviour, IData
         airplaneCapacities[airplaneType]--;
         PlacedAsset parkingSpace = GetFreeSpace();
         if (parkingSpace == null) return null;
+        airplaneSpaces[parkingSpace] = true;
         ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, spaceHangarPaths[parkingSpace], spaceRunwayPath[parkingSpace].Item1);
         spaceOfActiveAirplane[activeVehicle] = parkingSpace;
         return activeVehicle;
@@ -160,7 +161,7 @@ public class AirportManager : MonoBehaviour, IData
     {
         foreach (var asset in BuildingSystem.Instance.GetNeighbourAssets(airplaneSpace))
         {
-            if (asset.GetGridAsset().assetName == "Planestop") return true;
+            if (asset.GetGridAsset().assetName == "Terminal") return true;
         }
         return false;
     }
@@ -175,6 +176,7 @@ public class AirportManager : MonoBehaviour, IData
     {
         if (readyToStartAirplanes.Contains(vehicle))
         {
+            airplaneSpaces[spaceOfActiveAirplane[vehicle]] = false;
             readyToStartAirplanes.Remove(vehicle);
             return true;
         }
@@ -218,8 +220,20 @@ public class AirportManager : MonoBehaviour, IData
             {
                 (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
                 bestRunway.Item2.Reverse();
+                bestRunway.Item2.RemoveAt(bestRunway.Item2.Count - 1);
                 spaceRunwayPath[airplaneSpace] = bestRunway;
             }
+        }
+
+        foreach (var path in spaceHangarPaths)
+        {
+            StringBuilder s = new StringBuilder("[");
+            for (int i = 0; i < path.Value.Count; i++)
+            {
+                s.Append(path.Value[i] + ", ");
+            }
+            s.Append("]");
+            UnityEngine.Debug.Log(s);
         }
         //}
         //stopwatch.Stop();
@@ -266,6 +280,8 @@ public class AirportManager : MonoBehaviour, IData
         //bestimme nachbarn, welche roads sind
         foreach (PlacedAsset obj in objects)
         {
+            //lösche alle nachbarn von der obj origin
+            BuildingSystem.Instance.DeleteNeighboursFromPlacedAsset(obj.origin);
             List<PlacedAsset> assets = BuildingSystem.Instance.GetNeighbourAssets(obj);
             //ermittle ob Nachbarn Straßen sind, wenn ja, dann adde sie zum Pathnode vom jeweiligen Objekt
             foreach (var asset in assets)
@@ -371,7 +387,6 @@ public class AirportManager : MonoBehaviour, IData
 
     public void SetRunwayEnd(Vector2Int xy)
     {
-        UnityEngine.Debug.Log("aa");
         lastSelectedRunwayEnd = xy;
         DetermineRunway(true);
         DetermineArrivalPath();
@@ -380,19 +395,21 @@ public class AirportManager : MonoBehaviour, IData
     public void DeleteRunways()
     {
         if (runways == null) return;
+        UnityEngine.Debug.Log("1");
         runwayStartAndEnds.Clear();
         for (int i = 0; i < driveOnBarriers.Count; i++)
         {
             Destroy(driveOnBarriers[i].gameObject);
         }
         driveOnBarriers.Clear();
-        for (int i = 0; i < driveOnBarriers.Count; i++)
+        for (int i = 0; i < driveOffBarriers.Count; i++)
         {
             foreach (var barrier in driveOffBarriers[i]) Destroy(barrier.gameObject);
         }
         driveOffBarriers.Clear();
-        for (int i = 0; i < driveOnBarriers.Count; i++)
+        for (int i = 0; i < runways.Count; i++)
         {
+            UnityEngine.Debug.Log("unrway " + i);
             foreach (Pathnode node in runways[i])
             {
                 var placedAsset = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject();
@@ -400,9 +417,8 @@ public class AirportManager : MonoBehaviour, IData
                 if (sr != null) sr.color = Color.white;
             }
         }
-        runways.Clear();
-        RecalculatePaths();
-        DetermineArrivalPath();
+        UnityEngine.Debug.Log("2");
+        runways.Clear(); ;
     }
 
     public void LoadData(Data data)
@@ -446,6 +462,7 @@ public class AirportManager : MonoBehaviour, IData
     {
         if (enteredRunway)
         {
+            UnityEngine.Debug.Log("ff32");
             BlockRunway(runwayIndex);
             airplaneOnRunwayList[runwayIndex] = true;
         }

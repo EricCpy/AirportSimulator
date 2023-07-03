@@ -34,7 +34,7 @@ public class Grid<T>
                     TextMesh txt = obj.GetComponent<TextMesh>();
                     txt.text = grid[x, y].ToString();
                     txt.anchor = TextAnchor.MiddleCenter;
-                    txt.fontSize = 40;
+                    txt.fontSize = 20;
                     txt.GetComponent<MeshRenderer>().sortingOrder = 10;
                 }
             }

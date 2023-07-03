@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -237,6 +236,14 @@ public class BuildingSystem : MonoBehaviour, IData
         GridObject object2 = grid.GetValue(xy2.x, xy2.y);
         object1.DeleteNeighbour(object2);
         object2.DeleteNeighbour(object1);
+    }
+
+    public void DeleteNeighboursFromPlacedAsset(Vector2Int xy) {
+        GridObject object1 = grid.GetValue(xy.x, xy.y);
+        List<GridObject> neighbours = new List<GridObject>(object1.GetNeighbours());
+        foreach(var neighbour in neighbours) {
+            DeleteNeighbourFromGridObject(xy, neighbour.GetOrigin());
+        }
     }
 
     public float GetCellSize() { return cellSize; }

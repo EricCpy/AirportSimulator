@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 
 public class ActiveVehicle : MonoBehaviour
@@ -53,15 +54,19 @@ public class ActiveVehicle : MonoBehaviour
         if (path == null) Destroy(gameObject);
         this.originalPath = path;
         this.path = PathnodesToVector3List(originalPath);
+        StringBuilder s = new StringBuilder("[");
+        for (int i = 0; i < this.path.Count; i++)
+        {
+            s.Append(this.path[i] + ", ");
+        }
+        s.Append("]");
+        UnityEngine.Debug.Log(s);
         this.dir = (originalPath[1].origin - originalPath[0].origin).normalized;
         this.idx = 1;
-        //left und right berechnen
-        if (dir.x > 0 || dir.y > 0) positive = true;
-        else positive = false;
         Rotate();
         transform.position = this.path[0] + dir * transform.localScale.magnitude / 2;
         currentSpeed = 0;
-        if(GetComponent<BoxCollider2D>()) GetComponent<BoxCollider2D>().enabled = true;
+        if (GetComponent<BoxCollider2D>()) GetComponent<BoxCollider2D>().enabled = true;
     }
     private void Update()
     {
@@ -138,8 +143,8 @@ public class ActiveVehicle : MonoBehaviour
 
     private void NextField()
     {
-        if ((positive && transform.position.x >= path[idx].x && transform.position.y >= path[idx].y) ||
-            (!positive && transform.position.x <= path[idx].x && transform.position.y <= path[idx].y))
+        if (((dir.x > 0 || dir.y > 0) && (transform.position.x > path[idx].x || transform.position.y > path[idx].y)) ||
+            ((dir.x < 0 || dir.y < 0) && (transform.position.x < path[idx].x || transform.position.y < path[idx].y)))
         {
             if (idx + 1 == path.Count)
             {
@@ -164,8 +169,6 @@ public class ActiveVehicle : MonoBehaviour
                 return;
             }
             dir = (path[idx + 1] - path[idx]).normalized;
-            if (dir.x > 0 || dir.y > 0) positive = true;
-            else positive = false;
             Rotate();
             Vector3 nextPosition = new Vector3(path[idx].x, path[idx].y, 0f);
             transform.position = nextPosition;
@@ -212,7 +215,10 @@ public class ActiveVehicle : MonoBehaviour
     private List<Vector3> PathnodesToVector3List(List<Pathnode> path)
     {
         List<Vector3> list = new List<Vector3>();
-        Vector3 nextAdditional = vehicle.type == Vehicle.VehicleType.Airplane ? new Vector3(CellSize * 0.5f, CellSize * 0.5f) : Vector3.zero;
+        float onequarter = CellSize * 1 / 4;
+        float half = CellSize * 0.5f;
+        float threequarters = CellSize * 3 / 4;
+        Vector3 nextAdditional = vehicle.type == Vehicle.VehicleType.Airplane ? new Vector3(half, half) : Vector3.zero;
         for (int i = 1; i < path.Count; i++)
         {
             if (vehicle.type == Vehicle.VehicleType.Airplane)
@@ -225,27 +231,35 @@ public class ActiveVehicle : MonoBehaviour
             Vector3 direction = (path[i].origin - path[i - 1].origin).normalized;
             if (direction.x > 0)
             {
-                currAdditional.y = CellSize * 1 / 4 + transform.localScale.y / 2;
-                nextAdditional.y = CellSize * 1 / 4 + transform.localScale.y / 2;
+                currAdditional.y = onequarter + transform.localScale.y / 2;
+                nextAdditional.y = currAdditional.y;
             }
             else if (direction.x < 0)
             {
-                currAdditional.y = CellSize * 3 / 4;
-                nextAdditional.y = CellSize * 3 / 4;
+                currAdditional.y = threequarters;
+                nextAdditional.y = currAdditional.y;
             }
             else if (direction.y > 0)
             {
-                currAdditional.x = CellSize * 3 / 4;
-                nextAdditional.x = CellSize * 3 / 4;
+                currAdditional.x = threequarters;
+                nextAdditional.x = currAdditional.x ;
             }
             else
             {
-                currAdditional.x = CellSize * 1 / 4;
-                nextAdditional.x = CellSize * 1 / 4;
+                currAdditional.x = onequarter;
+                nextAdditional.x = currAdditional.x;
             }
             list.Add(new Vector3(path[i - 1].origin.x, path[i - 1].origin.y) + currAdditional);
         }
+        if (vehicle.type == Vehicle.VehicleType.Car) {
+            if(nextAdditional.x != 0) {
+                nextAdditional.y += half;
+            } else {
+                nextAdditional.x += half;
+            }
+        }    
         list.Add(new Vector3(path[path.Count - 1].origin.x, path[path.Count - 1].origin.y) + nextAdditional);
+
         return list;
     }
 
@@ -257,7 +271,8 @@ public class ActiveVehicle : MonoBehaviour
         }
     }
 
-    public int GetRunwayIndex() {
+    public int GetRunwayIndex()
+    {
         return runwayIndex;
     }
 }
