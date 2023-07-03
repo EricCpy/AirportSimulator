@@ -1,9 +1,5 @@
-
-
 using System.Collections.Generic;
-using System;
-using System.Collections;
-using UnityEngine;
+
 [System.Serializable]
 public class ScheduelJsonData
 {

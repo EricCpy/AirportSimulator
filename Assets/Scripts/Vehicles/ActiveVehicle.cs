@@ -1,6 +1,4 @@
-using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 public class ActiveVehicle : MonoBehaviour
@@ -54,13 +52,6 @@ public class ActiveVehicle : MonoBehaviour
         if (path == null) Destroy(gameObject);
         this.originalPath = path;
         this.path = PathnodesToVector3List(originalPath);
-        StringBuilder s = new StringBuilder("[");
-        for (int i = 0; i < this.path.Count; i++)
-        {
-            s.Append(this.path[i] + ", ");
-        }
-        s.Append("]");
-        UnityEngine.Debug.Log(s);
         this.dir = (originalPath[1].origin - originalPath[0].origin).normalized;
         this.idx = 1;
         Rotate();

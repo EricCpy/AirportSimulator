@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Stopwatch = System.Diagnostics.Stopwatch;
 public class PathfindingManager : MonoBehaviour

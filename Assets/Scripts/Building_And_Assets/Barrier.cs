@@ -17,7 +17,6 @@ public class Barrier : MonoBehaviour
     public bool IsBlocked() { return blocked; }
     public void ToggleBlockStatus(bool blockStatus)
     {
-        UnityEngine.Debug.Log("blockkkkk " + blockStatus);
         blocked = blockStatus;
         SetLightsColor(blockStatus ? red : green);
     }

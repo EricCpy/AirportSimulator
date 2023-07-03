@@ -528,7 +528,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a7b9a1befc2546e4db2195dc338be588, type: 2}
   lineContainer: {fileID: 1002203515}
   linePrefab: {fileID: 7839504545653488705, guid: d791981fe37cdc848a48c93c76abd21f, type: 3}
-  gridDebug: 1
+  gridDebug: 0
 --- !u!1 &1426912029
 GameObject:
   m_ObjectHideFlags: 0

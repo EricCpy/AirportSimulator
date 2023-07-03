@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Bus
   m_EditorClassIdentifier: 
   speed: 40
-  sensorLength: 7
+  sensorLength: 8
   accelerationSpeed: 10
   capacity: 50
   prefab: {fileID: 3003976560002721874, guid: 35f30facf95e88147ad03bf9cc08834d, type: 3}

@@ -224,17 +224,6 @@ public class AirportManager : MonoBehaviour, IData
                 spaceRunwayPath[airplaneSpace] = bestRunway;
             }
         }
-
-        foreach (var path in spaceHangarPaths)
-        {
-            StringBuilder s = new StringBuilder("[");
-            for (int i = 0; i < path.Value.Count; i++)
-            {
-                s.Append(path.Value[i] + ", ");
-            }
-            s.Append("]");
-            UnityEngine.Debug.Log(s);
-        }
         //}
         //stopwatch.Stop();
         //runTime = stopwatch.ElapsedMilliseconds;
@@ -395,7 +384,6 @@ public class AirportManager : MonoBehaviour, IData
     public void DeleteRunways()
     {
         if (runways == null) return;
-        UnityEngine.Debug.Log("1");
         runwayStartAndEnds.Clear();
         for (int i = 0; i < driveOnBarriers.Count; i++)
         {
@@ -409,7 +397,6 @@ public class AirportManager : MonoBehaviour, IData
         driveOffBarriers.Clear();
         for (int i = 0; i < runways.Count; i++)
         {
-            UnityEngine.Debug.Log("unrway " + i);
             foreach (Pathnode node in runways[i])
             {
                 var placedAsset = BuildingSystem.Instance.grid.GetValue(node.gridPosition.x, node.gridPosition.y).GetPlacedObject();
@@ -417,7 +404,6 @@ public class AirportManager : MonoBehaviour, IData
                 if (sr != null) sr.color = Color.white;
             }
         }
-        UnityEngine.Debug.Log("2");
         runways.Clear(); ;
     }
 
@@ -462,7 +448,6 @@ public class AirportManager : MonoBehaviour, IData
     {
         if (enteredRunway)
         {
-            UnityEngine.Debug.Log("ff32");
             BlockRunway(runwayIndex);
             airplaneOnRunwayList[runwayIndex] = true;
         }

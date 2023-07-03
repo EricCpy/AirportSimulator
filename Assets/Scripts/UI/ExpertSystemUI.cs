@@ -24,7 +24,6 @@ public class ExpertSystemUI : MonoBehaviour
         while (true)
         {
             extremeEvent.isOn = expertSystem.GetExtremeEvent();
-            Debug.Log(expertSystem.GetWindSpeed());
             windSpeed.text = expertSystem.GetWindSpeed() + "";
             weather.value = weatherOrder.IndexOf(expertSystem.GetWeatherAsString());
             expertSystem.AllowedToStart();
