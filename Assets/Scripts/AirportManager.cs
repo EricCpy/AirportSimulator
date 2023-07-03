@@ -1,8 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -204,10 +202,6 @@ public class AirportManager : MonoBehaviour, IData
         {
             runwayStarts.Add(runwayStartAndEnd[0]);
         }
-        //Stopwatch stopwatch = new Stopwatch();
-        //stopwatch.Start();
-        //for (int i = 0; i < 10000; i++)
-        //{
         foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
         {
             //ermittle besten Path von allen Hangars zum AirplaneSpace
@@ -224,12 +218,9 @@ public class AirportManager : MonoBehaviour, IData
                 spaceRunwayPath[airplaneSpace] = bestRunway;
             }
         }
-        //}
-        //stopwatch.Stop();
-        //runTime = stopwatch.ElapsedMilliseconds;
-        //Console.Write(runTime);
+
     }
-    public double runTime = 0;
+
     private (int, List<Pathnode>) GetBestPathToRunway(List<Vector2Int> objects, Vector2Int end)
     {
         //ermittle besten Path von allen objects zum AirplaneSpace

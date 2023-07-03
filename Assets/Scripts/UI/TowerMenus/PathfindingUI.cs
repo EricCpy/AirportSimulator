@@ -7,7 +7,7 @@ public class PathfindingUI : MonoBehaviour
 {
     [SerializeField] private TMP_Text averageRuntime;
     [SerializeField] private TMP_Text averagePathlength;
-    [SerializeField] private Toggle debug;
+    [SerializeField] private TMP_Text averageTraversedNodes;
     [SerializeField] private TMP_Dropdown algorithm;
     private void OnEnable()
     {
@@ -44,19 +44,14 @@ public class PathfindingUI : MonoBehaviour
         PathfindingManager.Instance.ChangeSearchMode(searchMode);
     }
 
-    public void ToggleDebug()
-    {
-        PathfindingManager.Instance.debug = !PathfindingManager.Instance.debug;
-    }
-
-
     private IEnumerator UpdateAverages(float secs)
     {
         var delay = new WaitForSecondsRealtime(secs);
         while (true)
         {
-            averageRuntime.text = PathfindingManager.Instance.GetAverageRuntime() + "s";
-            averagePathlength.text = PathfindingManager.Instance.GetAveragePathlength() + "Nodes";
+            averageRuntime.text = PathfindingManager.Instance.GetAverageRuntime().ToString("0.00000000") + " ms";
+            averagePathlength.text = PathfindingManager.Instance.GetAveragePathlength().ToString("0.00") + " Nodes";
+            averageTraversedNodes.text = PathfindingManager.Instance.GetAverageTraversedNodes().ToString("0.00") + " Nodes";
             yield return delay;
         }
     }

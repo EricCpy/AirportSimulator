@@ -132,7 +132,7 @@ public class Pathfinder
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
                 if (closedList.Contains(neighbour)) continue;
-                int nextGCost = current.gCost + CalculateDistance(current, neighbour);
+                float nextGCost = current.gCost + 1;
                 if (nextGCost < neighbour.gCost)
                 {
                     neighbour.previous = current;
@@ -265,7 +265,7 @@ public class Pathfinder
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
                 if (closedList.Contains(neighbour)) continue;
-                int nextCost = current.fCost + 1;
+                float nextCost = current.fCost + 1;
                 if (!distances.Contains(neighbour) || nextCost < neighbour.fCost)
                 {
                     neighbour.fCost = nextCost;
@@ -330,12 +330,15 @@ public class Pathfinder
     }
 
     //Manhattan Distance
-    private int CalculateDistance(Pathnode a, Pathnode b)
+    private float CalculateDistance(Pathnode a, Pathnode b)
     {
         int xDistance = Mathf.Abs(a.x - b.x);
         int yDistance = Mathf.Abs(a.y - b.y);
         int distance = xDistance + yDistance;
         return distance;
+        /*return Mathf.Sqrt(
+        (a.x - b.x) * (a.x - b.x)
+        + (a.y - b.y) * (a.y - b.y));*/
     }
 
     private Pathnode GetMinFCostNode(List<Pathnode> pathNodes)

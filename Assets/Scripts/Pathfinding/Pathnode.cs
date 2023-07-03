@@ -5,9 +5,9 @@ public class Pathnode : IMinHeapItem<Pathnode>
 {
     private Grid<GridObject> grid;
     public int x, y;
-    public int gCost = int.MaxValue;
-    public int hCost;
-    public int fCost;
+    public float gCost = int.MaxValue;
+    public float hCost;
+    public float fCost;
     public Pathnode previous;
     private int minHeapIndex;
     private List<Pathnode> neighbours;
