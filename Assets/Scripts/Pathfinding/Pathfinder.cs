@@ -265,6 +265,8 @@ public class Pathfinder
             foreach (Pathnode neighbour in GetNeighbours(current))
             {
                 if (closedList.Contains(neighbour)) continue;
+                // hier wird +1 genommen anstatt die Distanz, weil die BFS sonst bessere Pfade finden könnte, 
+                // weil es schräge Nachbarn von Gebäuden, welche größer als 1Feld sind, gibt
                 float nextCost = current.fCost + 1;
                 if (!distances.Contains(neighbour) || nextCost < neighbour.fCost)
                 {
