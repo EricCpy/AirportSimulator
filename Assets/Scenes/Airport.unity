@@ -267,7 +267,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.16567284, g: 0.4811321, b: 0.19488199, a: 0}
+  m_BackGroundColor: {r: 0.3019608, g: 0.3019608, b: 0.3019608, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -329,7 +329,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 40
-  maxZoom: 100
+  maxZoom: 160
   minZoom: 50
   zoomSpeed: 20
 --- !u!1 &619394800
