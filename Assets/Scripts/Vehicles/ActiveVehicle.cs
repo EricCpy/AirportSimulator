@@ -109,7 +109,6 @@ public class ActiveVehicle : MonoBehaviour
                 }
                 else
                 {
-                    //beschleunige
                     currentSpeed += accelerationCurve.Evaluate(currentSpeed / vehicle.speed) * vehicle.accelerationSpeed * Time.deltaTime;
                     currentSpeed = Mathf.Min(otherVehicleSpeed, currentSpeed);
                 }
@@ -122,7 +121,7 @@ public class ActiveVehicle : MonoBehaviour
             closeDistance = false;
             currentSpeed += accelerationCurve.Evaluate(currentSpeed / vehicle.speed) * vehicle.accelerationSpeed * Time.deltaTime;
         }
-
+        currentSpeed = Mathf.Max(0, currentSpeed);
     }
 
 
@@ -157,6 +156,7 @@ public class ActiveVehicle : MonoBehaviour
                     GetComponent<BoxCollider2D>().enabled = false;
                     Invoke("DriveBackToStart", 300f);
                 }
+                currentSpeed = 0;
                 return;
             }
             dir = (path[idx + 1] - path[idx]).normalized;
