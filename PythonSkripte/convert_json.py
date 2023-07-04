@@ -33,7 +33,7 @@ if __name__ == "__main__":
     # }
 
     result = {'arrivals': [], "departures": []}
-    custom_date: datetime = datetime(2023, 4, 23) # datetime(.., .., ..) Or None
+    custom_date: datetime = datetime(2023, 4, 23) # datetime(.., .., ..) Or None # ENTER STARTDATE HERE
     
     for x in arrival_data:
         time = datetime.fromisoformat(x['plannedArrivalTime'].split('[')[0])
