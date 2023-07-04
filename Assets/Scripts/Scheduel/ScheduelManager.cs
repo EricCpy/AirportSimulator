@@ -161,18 +161,20 @@ public class ScheduelManager : MonoBehaviour, IData
         var delay = new WaitForSeconds(time);
         while (true)
         {
-            if(AirportManager.Instance == null || AirportManager.Instance.IsAirplaneOnRunway(AirportManager.Instance.arrivalRunwayIndex)) yield return delay;
-            if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
+            if (AirportManager.Instance != null && !AirportManager.Instance.IsAirplaneOnRunway(AirportManager.Instance.arrivalRunwayIndex))
             {
-                AirportManager.Instance.BlockRunway(AirportManager.Instance.arrivalRunwayIndex);
-            }
+                if (landingScheduel.Count > 0 && (landingScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(runwayBlockTime))
+                {
+                    AirportManager.Instance.BlockRunway(AirportManager.Instance.arrivalRunwayIndex);
+                }
 
-            if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
-            {
-                var kvpair = landingScheduel.First();
-                landingScheduel.Remove(kvpair.Key);
-                //create Airplane welche zu hangar fährt
-                AirportManager.Instance.PrepareRunwayForLanding(kvpair.Value.vehicleType);
+                if (landingScheduel.Count > 0 && landingScheduel.First().Key <= airportTime)
+                {
+                    var kvpair = landingScheduel.First();
+                    landingScheduel.Remove(kvpair.Key);
+                    //create Airplane welche zu hangar fährt
+                    AirportManager.Instance.PrepareRunwayForLanding(kvpair.Value.vehicleType);
+                }
             }
             yield return delay;
         }

@@ -114,7 +114,7 @@ public class AirportManager : MonoBehaviour, IData
         driveOnBarriers[arrivalRunwayIndex].ToggleBlockStatus(true);
         airplaneOnRunwayList[arrivalRunwayIndex] = true;
         foreach (var barrier in driveOffBarriers[arrivalRunwayIndex]) barrier.ToggleBlockStatus(false);
-        ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, arrivalPath, arrivalRunwayIndex);
+        ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, arrivalPath, -1);
         activeVehicle.SetLastDrive(true);
     }
 
