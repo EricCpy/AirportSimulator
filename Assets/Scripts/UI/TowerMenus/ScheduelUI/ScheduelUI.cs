@@ -22,11 +22,15 @@ public class ScheduelUI : MonoBehaviour
     [SerializeField] private TMP_InputField importInput;
     [SerializeField] private Button createButton;
     [SerializeField] private Button importButton;
+    [SerializeField] private GameObject openFileButton;
     [Header("ScheduelSlotMenu")]
     [SerializeField] private ScheduelSlotMenu scheduelSlotMenu;
 
     void Start()
     {
+        #if !UNITY_EDITOR
+            openFileButton.SetActive(false);
+        #endif
         standardColor = currentSelected.GetComponent<Image>().color;
         SelectButton(currentSelected);
     }
@@ -150,7 +154,10 @@ public class ScheduelUI : MonoBehaviour
 
     public void OpenFile()
     {
-        string path = EditorUtility.OpenFilePanel("Select Json (.json)", "", "json");
+        string path = "";
+        #if UNITY_EDITOR
+            path = EditorUtility.OpenFilePanel("Select Json (.json)", "", "json");
+        #endif
         if (!string.IsNullOrEmpty(path))
         {
             try

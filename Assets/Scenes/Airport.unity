@@ -625,7 +625,6 @@ MonoBehaviour:
   sendingInterval: 15
   runwayColor: {r: 1, g: 0.75, b: 0, a: 1}
   barrierPrefab: {fileID: 2575540160741259621, guid: 93dfed905936fec41ab3324ac2a18bd7, type: 3}
-  runTime: 0
 --- !u!1001 &776995032485458628
 PrefabInstance:
   m_ObjectHideFlags: 0
