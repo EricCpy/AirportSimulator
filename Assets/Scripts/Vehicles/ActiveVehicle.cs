@@ -7,6 +7,7 @@ public class ActiveVehicle : MonoBehaviour
     {
         if (path == null || path.Count < 2) return null;
         Transform vehicleTransform = Instantiate(vehicle.prefab, path[0].origin, Quaternion.Euler(0, 0, 0));
+        vehicleTransform.GetComponentInChildren<SpriteRenderer>().color = vehicle.color;
         ActiveVehicle aVehicle = vehicleTransform.GetComponent<ActiveVehicle>();
         aVehicle.Create(vehicle, new List<Pathnode>(path), runwayIndex);
         return aVehicle;

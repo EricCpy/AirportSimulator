@@ -36,7 +36,6 @@ public class Vehicle : ScriptableObject
         this.color = color;
         this.sensorLength = sensorLength;
         this.accelerationSpeed = accelerationSpeed;
-        prefab.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     public Vehicle(VehicleSaveObject vehicleSaveObject, Transform prefab)
@@ -49,7 +48,6 @@ public class Vehicle : ScriptableObject
         this.vehicleName = vehicleSaveObject.vehicleName;
         this.type = vehicleSaveObject.vehicleType;
         ColorUtility.TryParseHtmlString("#" + vehicleSaveObject.color, out this.color);
-        prefab.GetComponentInChildren<SpriteRenderer>().color = color;
     }
 
     public VehicleSaveObject ToVehicleSaveObject()

@@ -131,6 +131,7 @@ public class InGameUI : MonoBehaviour
 
     public void SaveAndExit()
     {
+        Time.timeScale = 1;
         DataManager.Instance.SaveGame();
         SceneManager.LoadSceneAsync(0);
     }

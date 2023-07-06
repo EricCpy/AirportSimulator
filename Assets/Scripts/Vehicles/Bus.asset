@@ -19,4 +19,4 @@ MonoBehaviour:
   prefab: {fileID: 3003976560002721874, guid: 35f30facf95e88147ad03bf9cc08834d, type: 3}
   vehicleName: Bus
   type: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}

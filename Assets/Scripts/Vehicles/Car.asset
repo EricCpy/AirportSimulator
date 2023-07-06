@@ -19,4 +19,4 @@ MonoBehaviour:
   prefab: {fileID: 6507405825582634677, guid: b8e62d68862387a48b9ceef3267255d4, type: 3}
   vehicleName: Taxi
   type: 0
-  color: {r: 0, g: 0, b: 0, a: 0}
+  color: {r: 1, g: 1, b: 1, a: 1}

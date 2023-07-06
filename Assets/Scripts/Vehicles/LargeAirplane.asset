@@ -19,4 +19,4 @@ MonoBehaviour:
   prefab: {fileID: 207836498443358065, guid: a2ba2fb3259231b4dbae87ce9b83c6c0, type: 3}
   vehicleName: Airbus C
   type: 1
-  color: {r: 0.7075472, g: 0.7075472, b: 0.7075472, a: 0.74509805}
+  color: {r: 0.5566038, g: 0.5566038, b: 0.5566038, a: 0.74509805}
