@@ -30,4 +30,5 @@ Um das Anwendungsbeispiel des Flughafens Hamburg in die Simulation zu importiere
 3. Kopieren Sie den Ordner "HamburgAirport" vom Stick in den Ordner "C:\Users\User\AppData\LocalLow\EricSimulation\Airportsystem 2D" auf Ihrem lokalen Computer.
 4. Starten Sie die Simulation erneut und laden Sie den importierten Flughafen.
 
-
+## Expertensystem
+In dieser Arbeit wurde ein [Expertensytem](https://github.com/chen0040/cs-expert-system-shell) verwendet, welches nicht selbst programmiert wurde. 
