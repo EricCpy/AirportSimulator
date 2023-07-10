@@ -387,7 +387,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2222579973260497397, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 118.2
+      value: 152.8
       objectReference: {fileID: 0}
     - target: {fileID: 2222579973260497397, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -395,13 +395,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2222579973260497397, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -860.9883
+      value: -878.2883
       objectReference: {fileID: 0}
     - target: {fileID: 3066742053069309498, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_text
       value: "Das Expertensytemmen\xFC kann \xFCber den EX-Button ge\xF6ffnet werden.\nIm
         Expertensytemmen\xFC k\xF6nnen Wettereinstellungen getroffen und das Wetter
-        eingesehen werden. Zudem werden Vorschl\xE4ge des Expertensystems angzeigt."
+        eingesehen werden. Zudem werden Vorschl\xE4ge des Expertensystems angzeigt.
+        Die Regeln des Expertensystems besagen, dass Flugzeuge bei Seitenwindgeschwindigkeiten
+        von \xFCber 55 km/h, Extremereignissen oder St\xFCrmen nicht fliegen k\xF6nnen."
       objectReference: {fileID: 0}
     - target: {fileID: 4559669130774126082, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_text
@@ -412,6 +414,54 @@ PrefabInstance:
     - target: {fileID: 5129945243934707987, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945243978345766, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945243978345766, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945243978345766, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945243978345766, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244611651266, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244611651266, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244611651266, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244611651266, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244689805944, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244689805944, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244689805944, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945244689805944, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5129945244996407018, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_Pivot.x
@@ -501,6 +551,38 @@ PrefabInstance:
       propertyPath: m_Name
       value: Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 5129945245158295874, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245158295874, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245158295874, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245158295874, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245716770364, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245716770364, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245716770364, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5129945245716770364, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5968059204860810002, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -543,7 +625,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5968059205116175063, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 985.3632
+      value: 1019.9632
       objectReference: {fileID: 0}
     - target: {fileID: 5968059205116175063, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -611,7 +693,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5968059205291880737, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.7006891
+      value: 0.71084255
       objectReference: {fileID: 0}
     - target: {fileID: 5968059205442165192, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchorMax.y
@@ -629,13 +711,18 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -676.48883
       objectReference: {fileID: 0}
+    - target: {fileID: 5968059205505263497, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_text
+      value: Vom Terminal werden die Passagiere zu den verschiedenen Flugzeugen gebracht
+        oder abgeholt.
+      objectReference: {fileID: 0}
     - target: {fileID: 5968059205668293106, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_Size
-      value: 0.30446756
+      value: 0.28915745
       objectReference: {fileID: 0}
     - target: {fileID: 5968059205668293106, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_Value
-      value: 1
+      value: 0.97
       objectReference: {fileID: 0}
     - target: {fileID: 5968059206404415065, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchorMax.y
@@ -653,6 +740,13 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: -410.84082
       objectReference: {fileID: 0}
+    - target: {fileID: 5968059206538474131, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
+      propertyPath: m_text
+      value: "Der Hangar stellt die Lagerstelle f\xFCr Flugzeuge dar. Landende Flugzeuge
+        fahren zum Hangar und startende Flugzeuge fahren aus dem Hangar zum Stellplatz.
+        Mit einem Doppelklick auf den Hangar k\xF6nnen die Fahrzeugkapazit\xE4ten
+        des Flughafens eingesehen werden."
+      objectReference: {fileID: 0}
     - target: {fileID: 5968059206825661770, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
@@ -667,7 +761,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5968059206825661770, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -952.72577
+      value: -987.32574
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d5b4eb9c8d98e6b44bb7acd169323918, type: 3}
