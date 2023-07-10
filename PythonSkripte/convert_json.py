@@ -2,6 +2,8 @@ import json
 import os
 from datetime import datetime
 
+custom_date: datetime = datetime(2023, 4, 14) # datetime(.., .., ..) Or None # ENTER STARTDATE HERE
+
 def verwende_custom_date_on_date(custom_date: datetime, input_date: datetime) -> datetime:
     if custom_date:
         return input_date.replace(year=custom_date.year,month=custom_date.month,day=custom_date.day)
@@ -33,7 +35,6 @@ if __name__ == "__main__":
     # }
 
     result = {'arrivals': [], "departures": []}
-    custom_date: datetime = datetime(2023, 4, 14) # datetime(.., .., ..) Or None # ENTER STARTDATE HERE
     
     for x in arrival_data:
         time = datetime.fromisoformat(x['plannedArrivalTime'].split('[')[0])
