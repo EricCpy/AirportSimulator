@@ -1,6 +1,6 @@
 # Bachelorarbeit AI Ansätze zur Umsetzung eines Flughafensteuerungssystems
 
-Die Simulation, die in der Bachelorarbeit entwickelt wurde, befindet sich als *Airportsystem 2D.exe* unter dem Ordner *Simulation* auf dem Stick. Zudem sind Videos auf dem Stick vorhanden, die zeigen, die die Bedienung der Simulation zeigen.
+Die Simulation, die in der Bachelorarbeit entwickelt wurde, befindet sich als *Airportsystem 2D.exe* unter dem Ordner *Simulation* auf dem Stick. Zudem sind Videos auf dem Stick vorhanden, die die Bedienung der Simulation zeigen.
 
 Zusätzlich dazu befindet sich der Code und die Assets für die Anwendung in dem Ordner *Airportsystem 2D* und in einem [Github Repository](https://github.com/EricCpy/AirportSimulator). 
 ## Set up
