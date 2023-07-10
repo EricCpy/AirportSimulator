@@ -18,13 +18,14 @@ public class AirportManager : MonoBehaviour, IData
     public Dictionary<PlacedAsset, (int, List<Pathnode>)> spaceRunwayPath = new Dictionary<PlacedAsset, (int, List<Pathnode>)>();
     //Dict aller Abstellplätze, welche frei oder besetzt sind
     public Dictionary<PlacedAsset, bool> airplaneSpaces = new Dictionary<PlacedAsset, bool>();
+    //Geordnete Liste mit dem ArrivalRunwayEnd zu airplaneSpaces
+    private List<(PlacedAsset, List<Pathnode>)> runwayEndsToAirplaneSpace = new List<(PlacedAsset, List<Pathnode>)>();
     private Dictionary<ActiveVehicle, PlacedAsset> spaceOfActiveAirplane = new Dictionary<ActiveVehicle, PlacedAsset>();
     public HashSet<ActiveVehicle> readyToStartAirplanes = new HashSet<ActiveVehicle>();
     public static AirportManager Instance { get; private set; }
     private Vector2Int lastSelectedRunwayStart = new Vector2Int(-1, -1), lastSelectedRunwayEnd = new Vector2Int(-1, -1);
     public List<List<Vector2Int>> runwayStartAndEnds { get; private set; } = new List<List<Vector2Int>>();
     public List<List<Pathnode>> runways { get; private set; } = new List<List<Pathnode>>();
-    private List<Pathnode> arrivalPath = new List<Pathnode>();
     public int arrivalRunwayIndex = -1;
     private List<Barrier> driveOnBarriers = new List<Barrier>();
     private List<List<Barrier>> driveOffBarriers = new List<List<Barrier>>();
@@ -104,26 +105,48 @@ public class AirportManager : MonoBehaviour, IData
         return activeVehicle;
     }
 
-    public void PrepareRunwayForLanding(string airplaneType)
+    public ActiveVehicle PrepareRunwayForLanding(string airplaneType)
     {
-        if (arrivalPath == null || arrivalPath.Count == 0) return;
+        if (runwayEndsToAirplaneSpace == null || runwayEndsToAirplaneSpace.Count == 0) return null;
         Vehicle airplane = VehicleManager.Instance.GetAirplane(airplaneType);
         driveOnBarriers[arrivalRunwayIndex].ToggleBlockStatus(false);
-        if (airplane == null) return;
+        foreach (var barrier in driveOffBarriers[arrivalRunwayIndex]) barrier.ToggleBlockStatus(false);
+        (PlacedAsset, List<Pathnode>) pathAndAsset = (null, null);
+        foreach (var airplaneSpace in runwayEndsToAirplaneSpace)
+        {
+            if (!airplaneSpaces[airplaneSpace.Item1])
+            {
+                pathAndAsset = airplaneSpace;
+                break;
+            }
+        }
+        if (airplane == null || pathAndAsset.Item2 == null) return null;
         airplaneCapacities[airplaneType]++;
         driveOnBarriers[arrivalRunwayIndex].ToggleBlockStatus(true);
         airplaneOnRunwayList[arrivalRunwayIndex] = true;
-        foreach (var barrier in driveOffBarriers[arrivalRunwayIndex]) barrier.ToggleBlockStatus(false);
-        ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, arrivalPath, -1);
-        activeVehicle.SetLastDrive(true);
+        airplaneSpaces[pathAndAsset.Item1] = true;
+        ActiveVehicle activeVehicle = ActiveVehicle.Init(airplane, pathAndAsset.Item2, -1);
+        spaceOfActiveAirplane.Add(activeVehicle, pathAndAsset.Item1);
+        return activeVehicle;
     }
 
-    public void SendVehiclesToAirplane(ActiveVehicle activeVehicle, Vehicle vehicle, Vector3 position)
+    public void SendAirplaneToHangar(ActiveVehicle vehicle)
+    {
+        PlacedAsset space = spaceOfActiveAirplane[vehicle];
+        List<Pathnode> path = new List<Pathnode>(spaceHangarPaths[space]);
+        path.Reverse();
+        vehicle.InitPath(path);
+        airplaneSpaces[space] = false;
+        vehicle.SetLastDrive(true);
+        spaceOfActiveAirplane.Remove(vehicle);
+    }
+
+    public void SendVehiclesToAirplane(ActiveVehicle activeVehicle, Vehicle vehicle, Vector3 position, bool startFlight)
     {
         PlacedAsset airplaneSpace = BuildingSystem.Instance.grid.GetValue(position).GetPlacedObject();
         if (IsTerminalSpace(airplaneSpace))
         {
-            readyToStartAirplanes.Add(activeVehicle);
+            if(startFlight) readyToStartAirplanes.Add(activeVehicle);
             return;
         }
         int capacity = vehicle.capacity;
@@ -212,6 +235,7 @@ public class AirportManager : MonoBehaviour, IData
 
             if (runwayStarts.Count > 0)
             {
+                //Für startende Flugzeuge
                 (int, List<Pathnode>) bestRunway = GetBestPathToRunway(runwayStarts, airplaneSpace.origin);
                 bestRunway.Item2.Reverse();
                 bestRunway.Item2.RemoveAt(bestRunway.Item2.Count - 1);
@@ -288,6 +312,13 @@ public class AirportManager : MonoBehaviour, IData
         return way;
     }
 
+    public void SendAirplaneToRunwayPath(ActiveVehicle vehicle, PlacedAsset space)
+    {
+        vehicle.InitPath(GetSpaceToRunwayPath(space, vehicle.GetRunwayIndex()));
+        vehicle.SetLastDrive(true);
+        spaceOfActiveAirplane.Remove(vehicle);
+    }
+
     private void DetermineRunway(bool addToStartAndEnd)
     {
         Vector2Int bound = new Vector2Int(-1, -1);
@@ -333,6 +364,12 @@ public class AirportManager : MonoBehaviour, IData
                 }
             }
         }
+        //Flugzeuge dürfen nicht selbe Auffahrt und Abfahrt zum Runway haben
+        if (runway.Count > 1)
+        {
+            runway[1].GetNeighbours().Remove(runway[0]);
+            runway[0].GetNeighbours().Remove(runway[1]);
+        }
         if (addToStartAndEnd)
         {
             List<Vector2Int> runwayStartAndEnd = new List<Vector2Int>();
@@ -347,6 +384,7 @@ public class AirportManager : MonoBehaviour, IData
     private void DetermineArrivalPath()
     {
         if (runways.Count == 0 || hangars.Count == 0) return;
+        List<Pathnode> arrivalPath = new List<Pathnode>();
         for (int i = 0; i < runwayStartAndEnds.Count; i++)
         {
             List<Pathnode> hangarPath = GetBestPathToPosition(hangars, runwayStartAndEnds[i][1]);
@@ -356,7 +394,16 @@ public class AirportManager : MonoBehaviour, IData
                 arrivalRunwayIndex = i;
             }
         }
-        arrivalPath.Reverse();
+        foreach (PlacedAsset airplaneSpace in airplaneSpaces.Keys)
+        {
+            //ermittle besten Path von allen Hangars zum AirplaneSpace
+            List<Pathnode> bestRunwayPath = GetBestPathToPosition(new List<PlacedAsset>() { airplaneSpace }, runwayStartAndEnds[arrivalRunwayIndex][1]);
+            if (bestRunwayPath.Count > 0) {
+                bestRunwayPath.Reverse();
+                runwayEndsToAirplaneSpace.Add((airplaneSpace, bestRunwayPath));
+            }
+        }
+        runwayEndsToAirplaneSpace.Sort(delegate ((PlacedAsset, List<Pathnode>) a, (PlacedAsset, List<Pathnode>) b) { return a.Item2.Count.CompareTo(b.Item2.Count); });
     }
 
     public void SetRunwayStart(Vector2Int xy)
@@ -437,6 +484,7 @@ public class AirportManager : MonoBehaviour, IData
 
     public void AirplaneLeftOrEnteredRunway(bool enteredRunway, int runwayIndex)
     {
+        //TODO
         if (enteredRunway)
         {
             BlockRunway(runwayIndex);

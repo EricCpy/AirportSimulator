@@ -145,9 +145,9 @@ public class ActiveVehicle : MonoBehaviour
                     return;
                 }
                 idx++;
-                if (runwayIndex != -1)
+                if (vehicle.type == Vehicle.VehicleType.Airplane)
                 {
-                    AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1]);
+                    AirportManager.Instance.SendVehiclesToAirplane(this, vehicle, path[path.Count - 1], runwayIndex != -1);
                     GetComponent<BoxCollider2D>().enabled = false;
                 }
                 else

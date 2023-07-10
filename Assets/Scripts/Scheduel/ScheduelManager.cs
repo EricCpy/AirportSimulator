@@ -11,6 +11,7 @@ public class ScheduelManager : MonoBehaviour, IData
     private SortedList<DateTime, ScheduelObject> takeOffScheduel = new SortedList<DateTime, ScheduelObject>();
     private SortedList<DateTime, ScheduelObject> landingScheduel = new SortedList<DateTime, ScheduelObject>();
     private SortedList<DateTime, ActiveVehicle> activeAirplanes = new SortedList<DateTime, ActiveVehicle>();
+    private SortedList<DateTime, ActiveVehicle> deboardingAirplanes = new SortedList<DateTime, ActiveVehicle>();
     [SerializeField] private int checkingSeconds = 10;
     [SerializeField] private int runwayBlockTime = 5;
     private void Awake()
@@ -24,6 +25,7 @@ public class ScheduelManager : MonoBehaviour, IData
         StartCoroutine(PrepareFlights(checkingSeconds));
         StartCoroutine(StartFlights(checkingSeconds));
         StartCoroutine(CheckForLandings(checkingSeconds));
+        StartCoroutine(CheckForFinishedDeboarding(checkingSeconds));
     }
 
     public void LoadData(Data data)
@@ -110,8 +112,7 @@ public class ScheduelManager : MonoBehaviour, IData
         while (true)
         {
             //TODO frage Expertsystem, ob Flüge gerade starten können
-            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) &&
-                AirportManager.Instance.AirplaneExists(takeOffScheduel.First().Value.vehicleType) && ExpertSystemManager.Instance.AllowedToStart())
+            if (takeOffScheduel.Count > 0 && (takeOffScheduel.First().Key - airportTime) <= TimeSpan.FromMinutes(30) && ExpertSystemManager.Instance.AllowedToStart())
             {
                 ActiveVehicle plane = AirportManager.Instance.PrepareAirplaneForTakeoff(takeOffScheduel.First().Value.vehicleType);
                 var kvpair = takeOffScheduel.First();
@@ -143,8 +144,7 @@ public class ScheduelManager : MonoBehaviour, IData
                 if (AirportManager.Instance.AirplaneReady(kvpair.Value))
                 {
                     var airplaneSpace = AirportManager.Instance.GetActiveAirplaneSpace(kvpair.Value);
-                    kvpair.Value.InitPath(AirportManager.Instance.GetSpaceToRunwayPath(airplaneSpace, kvpair.Value.GetRunwayIndex()));
-                    kvpair.Value.SetLastDrive(true);
+                    AirportManager.Instance.SendAirplaneToRunwayPath(kvpair.Value, airplaneSpace);
                 }
                 else
                 {
@@ -173,7 +173,26 @@ public class ScheduelManager : MonoBehaviour, IData
                     var kvpair = landingScheduel.First();
                     landingScheduel.Remove(kvpair.Key);
                     //create Airplane welche zu hangar fährt
-                    AirportManager.Instance.PrepareRunwayForLanding(kvpair.Value.vehicleType);
+                    var airplane = AirportManager.Instance.PrepareRunwayForLanding(kvpair.Value.vehicleType);
+                    // 5 min zum Stellplatz fahren + 15 min zum Ausladen
+                    deboardingAirplanes.Add(airportTime.AddMinutes(20), airplane);
+                }
+            }
+            yield return delay;
+        }
+    }
+
+    private IEnumerator CheckForFinishedDeboarding(int time)
+    {
+        var delay = new WaitForSeconds(time);
+        while (true)
+        {
+            if (AirportManager.Instance != null)
+            {
+                if (deboardingAirplanes.Count > 0 && deboardingAirplanes.First().Key <= airportTime) {
+                    var kvpair = deboardingAirplanes.First();
+                    AirportManager.Instance.SendAirplaneToHangar(kvpair.Value);
+                    deboardingAirplanes.Remove(kvpair.Key);
                 }
             }
             yield return delay;
